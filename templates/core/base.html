@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}{{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="wrap navbar__inner">
+    <a href="{% url 'core:home' %}" class="brand">
+      {% if profile.logo %}
+        <img src="{{ profile.logo.url }}" alt="Logo {{ profile.nama_sekolah }}" class="brand__logo">
+      {% else %}
+        <span class="brand__mark">SD</span>
+      {% endif %}
+      <span class="brand__text">
+        <strong>{{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</strong>
+        <small>Sekolah Dasar</small>
+      </span>
+    </a>
+
+    <button class="navbar__toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="navbar__nav" id="navMenu">
+      <a href="#tentang">Tentang</a>
+      <a href="#prestasi">Prestasi</a>
+      <a href="#overview">Sekolah Kami</a>
+      <a href="#dokumentasi">Dokumentasi</a>
+      <a href="#mitra">Kerja Sama</a>
+      <a href="{% url 'admin:index' %}" class="navbar__login">Masuk</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div class="footer__col footer__brand">
+      <span class="brand__text brand__text--light">
+        <strong>{{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</strong>
+      </span>
+      <p>{{ profile.alamat|default:"Jl. Pendidikan No. 1, Kota Belajar" }}</p>
+      <p>Berdiri sejak {{ profile.tahun_berdiri|default:"1990" }}</p>
+    </div>
+
+    <div class="footer__col">
+      <h4>Tautan</h4>
+      <a href="#tentang">Tentang Sekolah</a>
+      <a href="#prestasi">Prestasi</a>
+      <a href="#dokumentasi">Dokumentasi</a>
+      <a href="#mitra">Kerja Sama</a>
+    </div>
+
+    <div class="footer__col">
+      <h4>Portal</h4>
+      <a href="{% url 'admin:index' %}">Portal Wali Murid</a>
+      <a href="{% url 'admin:index' %}">Portal Guru</a>
+      <a href="{% url 'admin:index' %}">Portal Kepala Sekolah</a>
+    </div>
+
+    <div class="footer__col">
+      <h4>Kontak</h4>
+      <p>Telp: (031) 000-0000</p>
+      <p>Email: info@sekolah.sch.id</p>
+      <div class="footer__social">
+        <a href="#" aria-label="Facebook">FB</a>
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="YouTube">YT</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>&copy; {% now "Y" %} {{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}. Semua hak dilindungi.</span>
+  </div>
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

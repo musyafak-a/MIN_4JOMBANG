@@ -1,0 +1,197 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ============ HERO / CAROUSEL ============ -->
+<section class="hero" id="hero">
+  <div class="hero__track" id="heroTrack">
+    {% for slide in slides %}
+    <div class="hero__slide {% if forloop.first %}is-active{% endif %}" data-slide>
+      <img src="{{ slide.gambar.url }}" alt="{{ slide.judul }}">
+      <div class="hero__scrim"></div>
+      <div class="wrap hero__content">
+        <p class="eyebrow eyebrow--light">Selamat Datang</p>
+        <h1>{{ slide.judul }}</h1>
+        <p class="hero__subtitle">{{ slide.subjudul }}</p>
+        <a href="{{ slide.link_tombol }}" class="btn btn--accent">{{ slide.teks_tombol }}</a>
+      </div>
+    </div>
+    {% empty %}
+    <div class="hero__slide is-active" data-slide>
+      <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1600" alt="Siswa belajar bersama">
+      <div class="hero__scrim"></div>
+      <div class="wrap hero__content">
+        <p class="eyebrow eyebrow--light">Selamat Datang</p>
+        <h1>Tumbuh, Belajar, dan Bermain di {{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</h1>
+        <p class="hero__subtitle">{{ profile.tagline|default:"Membentuk generasi cerdas, ceria, dan berkarakter sejak bangku sekolah dasar." }}</p>
+        <a href="#tentang" class="btn btn--accent">Kenali Sekolah Kami</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <button class="hero__nav hero__nav--prev" id="heroPrev" aria-label="Slide sebelumnya">&#8249;</button>
+  <button class="hero__nav hero__nav--next" id="heroNext" aria-label="Slide berikutnya">&#8250;</button>
+  <div class="hero__dots" id="heroDots"></div>
+</section>
+
+<!-- ============ TENTANG SEKOLAH + VIDEO ============ -->
+<section class="about" id="tentang">
+  <div class="wrap about__grid">
+    <div class="about__text">
+      <p class="eyebrow">Tentang Kami</p>
+      <h2>Mengenal {{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</h2>
+      <p>{{ profile.deskripsi|default:"Kami percaya setiap anak membawa keajaibannya sendiri. Sejak tahun 1990, sekolah kami mendampingi tumbuh kembang siswa lewat pembelajaran yang aktif, menyenangkan, dan berpusat pada karakter — dibimbing oleh guru-guru yang hangat dan berpengalaman." }}</p>
+      <ul class="about__points">
+        <li><span class="dot dot--coral"></span> Kurikulum aktif berbasis proyek &amp; karakter</li>
+        <li><span class="dot dot--mint"></span> Guru berpengalaman &amp; bersertifikat</li>
+        <li><span class="dot dot--yellow"></span> Lingkungan belajar yang aman dan ceria</li>
+      </ul>
+      <a href="#overview" class="btn btn--outline">Lihat Profil Sekolah</a>
+    </div>
+
+    <div class="about__video">
+      <div class="video-frame">
+        {% if profile.video_url %}
+          <iframe src="{{ profile.video_url }}" title="Video Profil Sekolah" loading="lazy" allowfullscreen></iframe>
+        {% else %}
+          <img src="{% if profile.video_thumbnail %}{{ profile.video_thumbnail.url }}{% else %}https://images.unsplash.com/photo-1509062522246-3755977927d7?w=900{% endif %}" alt="Video profil sekolah">
+          <button class="video-frame__play" aria-label="Putar video profil">&#9658;</button>
+        {% endif %}
+      </div>
+      <span class="video-frame__label">Video Profil Sekolah</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRESTASI ============ -->
+<section class="achievements" id="prestasi">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <p class="eyebrow">Prestasi Siswa</p>
+      <h2>Sudah {{ total_prestasi }}+ Penghargaan Kami Raih Bersama</h2>
+      <p class="section-head__desc">Dari sains, matematika, hingga bahasa — semangat berkompetisi anak-anak kami terus kami dukung.</p>
+    </div>
+
+    <div class="badge-grid">
+      {% for a in achievements %}
+      <div class="badge-card badge-card--{% cycle 'coral' 'yellow' 'mint' 'navy' %}">
+        <span class="badge-card__number">{{ a.jumlah_prestasi }}</span>
+        <span class="badge-card__field">{{ a.bidang }}</span>
+        {% if a.tingkat_tertinggi %}<span class="badge-card__note">{{ a.tingkat_tertinggi }}</span>{% endif %}
+      </div>
+      {% empty %}
+        {% for demo in "1234" %}
+        <div class="badge-card badge-card--{% cycle 'coral' 'yellow' 'mint' 'navy' %}">
+          <span class="badge-card__number">{% cycle '18' '12' '9' '7' %}</span>
+          <span class="badge-card__field">{% cycle 'OSN IPA' 'OSN Matematika' 'Debat Bahasa Inggris' 'Essay Bahasa Inggris' %}</span>
+          <span class="badge-card__note">Juara Tingkat Kota</span>
+        </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ OVERVIEW SEKOLAH ============ -->
+<section class="overview" id="overview">
+  <div class="wrap">
+    <div class="section-head section-head--center section-head--onnavy">
+      <p class="eyebrow eyebrow--light">Sekilas Sekolah Kami</p>
+      <h2>Fasilitas &amp; Tenaga Pendidik</h2>
+    </div>
+
+    <div class="overview__grid">
+      <div class="overview__card">
+        <span class="overview__icon">&#127891;</span>
+        <h3>Jumlah Kelas per Tingkat</h3>
+        <div class="overview__mini-grid">
+          {% for stat in overview_grouped.kelas %}
+          <div class="overview__mini"><strong>{{ stat.nilai }}</strong><span>{{ stat.label }}</span></div>
+          {% empty %}
+            {% for demo in "123456" %}
+            <div class="overview__mini"><strong>{% cycle '3' '3' '2' '2' '2' '2' %}</strong><span>Kelas {{ forloop.counter }}</span></div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="overview__card overview__card--stat">
+        <span class="overview__icon">&#128104;&#8205;&#127979;</span>
+        <strong class="overview__big">
+          {% for stat in overview_grouped.guru %}{{ stat.nilai }}{% empty %}32{% endfor %}
+        </strong>
+        <span>Guru &amp; Tenaga Pendidik</span>
+      </div>
+
+      <div class="overview__card overview__card--stat">
+        <span class="overview__icon">&#127970;</span>
+        <strong class="overview__big">
+          {% for stat in overview_grouped.gedung %}{{ stat.nilai }}{% empty %}3{% endfor %}
+        </strong>
+        <span>Gedung Sekolah</span>
+      </div>
+
+      <div class="overview__card overview__card--stat">
+        <span class="overview__icon">&#9917;</span>
+        <strong class="overview__big">
+          {% for stat in overview_grouped.ekstrakurikuler %}{{ stat.nilai }}{% empty %}10{% endfor %}
+        </strong>
+        <span>Ekstrakurikuler</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOKUMENTASI ============ -->
+<section class="gallery" id="dokumentasi">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <p class="eyebrow">Dokumentasi</p>
+      <h2>Momen Belajar &amp; Kegiatan Sekolah</h2>
+      <p class="section-head__desc">Keseruan pembelajaran sehari-hari, kunjungan tamu spesial, hingga acara sekolah.</p>
+    </div>
+
+    <div class="gallery__grid">
+      {% for photo in gallery %}
+      <figure class="gallery__item gallery__item--{{ photo.kategori }}">
+        <img src="{{ photo.gambar.url }}" alt="{{ photo.judul }}">
+        <figcaption>{{ photo.judul }}</figcaption>
+      </figure>
+      {% empty %}
+        {% for demo in "12345678" %}
+        <figure class="gallery__item">
+          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&sig={{ forloop.counter }}" alt="Kegiatan sekolah">
+          <figcaption>Kegiatan Pembelajaran</figcaption>
+        </figure>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ KERJA SAMA / MITRA ============ -->
+<section class="partners" id="mitra">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <p class="eyebrow">Kerja Sama</p>
+      <h2>Mitra yang Mendukung Pendidikan Kami</h2>
+    </div>
+    <div class="partners__row">
+      {% for p in partners %}
+      <a href="{{ p.website|default:'#' }}" class="partners__logo" title="{{ p.nama }}">
+        <img src="{{ p.logo.url }}" alt="{{ p.nama }}">
+      </a>
+      {% empty %}
+        {% for demo in "UNICEF,Kumon,Ruangguru,Kemendikbud"|make_list %}{% endfor %}
+        <span class="partners__placeholder">UNICEF</span>
+        <span class="partners__placeholder">Kumon</span>
+        <span class="partners__placeholder">Ruangguru</span>
+        <span class="partners__placeholder">Kemendikbudristek</span>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
