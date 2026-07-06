@@ -13,7 +13,7 @@
       <div class="wrap hero__content">
         <p class="eyebrow eyebrow--secondary">Selamat Datang</p>
         <h1>{{ slide.judul }}</h1>
-        <p class="hero__subtitle">{{ slide.subjudul }}</p>
+        <p class="hero__subtitle">Membaca adalah jendela dunia, belajar adalah kunci masa depan.</p>
         <a href="{{ slide.link_tombol }}" class="btn btn--accent">{{ slide.teks_tombol }}</a>
       </div>
     </div>
@@ -232,11 +232,15 @@
         <img src="{{ p.logo.url }}" alt="{{ p.nama }}">
       </a>
       {% empty %}
-        {% for demo in "UNICEF,Kumon,Ruangguru,Kemendikbud"|make_list %}{% endfor %}
-        <span class="partners__placeholder">UNICEF</span>
-        <span class="partners__placeholder">Kumon</span>
-        <span class="partners__placeholder">Ruangguru</span>
-        <span class="partners__placeholder">Kemendikbudristek</span>
+        <a href="#" class="partners__logo" title="UNICEF">
+          <img src="{% static 'img/unicef.svg' %}" alt="UNICEF">
+        </a>
+        <a href="#" class="partners__logo" title="Kumon">
+          <img src="{% static 'img/kumon.svg' %}" alt="Kumon">
+        </a>
+        <a href="#" class="partners__logo" title="Ruangguru">
+          <img src="{% static 'img/ruangguru.svg' %}" alt="Ruangguru">
+        </a>
       {% endfor %}
     </div>
   </div>
