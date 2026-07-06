@@ -27,13 +27,26 @@ document.addEventListener("DOMContentLoaded", function () {
     dotsWrap.appendChild(dot);
   });
 
+  var track = document.getElementById("heroTrack");
+
   function goTo(index) {
     slides[current].classList.remove("is-active");
-    dotsWrap.children[current].classList.remove("is-active");
+    if(dotsWrap && dotsWrap.children[current]) {
+      dotsWrap.children[current].classList.remove("is-active");
+    }
+    
     current = (index + slides.length) % slides.length;
+    
+    if(track) {
+      track.style.transform = "translateX(-" + (current * 100) + "%)";
+    }
+    
     slides[current].classList.add("is-active");
-    dotsWrap.children[current].classList.add("is-active");
+    if(dotsWrap && dotsWrap.children[current]) {
+      dotsWrap.children[current].classList.add("is-active");
+    }
   }
+
 
   function next() { goTo(current + 1); }
   function prev() { goTo(current - 1); }

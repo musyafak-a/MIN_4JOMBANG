@@ -11,7 +11,7 @@
       <img src="{{ slide.gambar.url }}" alt="{{ slide.judul }}">
       <div class="hero__scrim"></div>
       <div class="wrap hero__content">
-        <p class="eyebrow eyebrow--light">Selamat Datang</p>
+        <p class="eyebrow eyebrow--secondary">Selamat Datang</p>
         <h1>{{ slide.judul }}</h1>
         <p class="hero__subtitle">{{ slide.subjudul }}</p>
         <a href="{{ slide.link_tombol }}" class="btn btn--accent">{{ slide.teks_tombol }}</a>
@@ -19,13 +19,43 @@
     </div>
     {% empty %}
     <div class="hero__slide is-active" data-slide>
-      <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1600" alt="Siswa belajar bersama">
+      <img src="{% static 'img/hero.jpg' %}" alt="Siswa belajar bersama">
       <div class="hero__scrim"></div>
       <div class="wrap hero__content">
-        <p class="eyebrow eyebrow--light">Selamat Datang</p>
+        <p class="eyebrow eyebrow--secondary">Selamat Datang</p>
         <h1>Tumbuh, Belajar, dan Bermain di {{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</h1>
-        <p class="hero__subtitle">{{ profile.tagline|default:"Membentuk generasi cerdas, ceria, dan berkarakter sejak bangku sekolah dasar." }}</p>
+        <p class="hero__subtitle">{{ profile.tagline|default:"Membaca adalah jendela dunia, belajar adalah kunci masa depan." }}</p>
         <a href="#tentang" class="btn btn--accent">Kenali Sekolah Kami</a>
+      </div>
+    </div>
+    <div class="hero__slide" data-slide>
+      <img src="{% static 'img/pembelajaran.jpg' %}" alt="Lingkungan Belajar Interaktif">
+      <div class="hero__scrim"></div>
+      <div class="wrap hero__content">
+        <p class="eyebrow eyebrow--secondary">Fasilitas</p>
+        <h1>Lingkungan Belajar yang Interaktif</h1>
+        <p class="hero__subtitle">Menciptakan suasana kelas yang menyenangkan untuk mengasah kreativitas anak secara optimal.</p>
+        <a href="#overview" class="btn btn--accent">Lihat Fasilitas</a>
+      </div>
+    </div>
+    <div class="hero__slide" data-slide>
+      <img src="{% static 'img/kegiatan4.jpg' %}" alt="Pentas Seni">
+      <div class="hero__scrim"></div>
+      <div class="wrap hero__content">
+        <p class="eyebrow eyebrow--secondary">Kegiatan</p>
+        <h1>Pentas Seni dan Bakat Siswa</h1>
+        <p class="hero__subtitle">Wadah bagi siswa untuk berekspresi dan mengembangkan minat mereka di luar bidang akademik.</p>
+        <a href="#dokumentasi" class="btn btn--accent">Lihat Dokumentasi</a>
+      </div>
+    </div>
+    <div class="hero__slide" data-slide>
+      <img src="{% static 'img/penghargaan.jpg' %}" alt="Meraih Prestasi">
+      <div class="hero__scrim"></div>
+      <div class="wrap hero__content">
+        <p class="eyebrow eyebrow--secondary">Prestasi</p>
+        <h1>Meraih Berbagai Prestasi Bersama</h1>
+        <p class="hero__subtitle">Kami selalu siap mendukung setiap langkah siswa dalam meraih impian dan prestasi gemilang.</p>
+        <a href="#prestasi" class="btn btn--accent">Daftar Prestasi</a>
       </div>
     </div>
     {% endfor %}
@@ -44,9 +74,9 @@
       <h2>Mengenal {{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</h2>
       <p>{{ profile.deskripsi|default:"Kami percaya setiap anak membawa keajaibannya sendiri. Sejak tahun 1990, sekolah kami mendampingi tumbuh kembang siswa lewat pembelajaran yang aktif, menyenangkan, dan berpusat pada karakter — dibimbing oleh guru-guru yang hangat dan berpengalaman." }}</p>
       <ul class="about__points">
-        <li><span class="dot dot--coral"></span> Kurikulum aktif berbasis proyek &amp; karakter</li>
-        <li><span class="dot dot--mint"></span> Guru berpengalaman &amp; bersertifikat</li>
-        <li><span class="dot dot--yellow"></span> Lingkungan belajar yang aman dan ceria</li>
+        <li><span class="dot dot--secondary"></span> Kurikulum aktif berbasis proyek &amp; karakter</li>
+        <li><span class="dot dot--tertiary"></span> Guru berpengalaman &amp; bersertifikat</li>
+        <li><span class="dot dot--secondary"></span> Lingkungan belajar yang aman dan ceria</li>
       </ul>
       <a href="#overview" class="btn btn--outline">Lihat Profil Sekolah</a>
     </div>
@@ -56,7 +86,7 @@
         {% if profile.video_url %}
           <iframe src="{{ profile.video_url }}" title="Video Profil Sekolah" loading="lazy" allowfullscreen></iframe>
         {% else %}
-          <img src="{% if profile.video_thumbnail %}{{ profile.video_thumbnail.url }}{% else %}https://images.unsplash.com/photo-1509062522246-3755977927d7?w=900{% endif %}" alt="Video profil sekolah">
+          <img src="{% if profile.video_thumbnail %}{{ profile.video_thumbnail.url }}{% else %}{% static 'img/about.jpg' %}{% endif %}" alt="Video profil sekolah">
           <button class="video-frame__play" aria-label="Putar video profil">&#9658;</button>
         {% endif %}
       </div>
@@ -76,14 +106,14 @@
 
     <div class="badge-grid">
       {% for a in achievements %}
-      <div class="badge-card badge-card--{% cycle 'coral' 'yellow' 'mint' 'navy' %}">
+      <div class="badge-card badge-card--{% cycle 'badge1' 'badge2' 'badge3' 'badge4' %}">
         <span class="badge-card__number">{{ a.jumlah_prestasi }}</span>
         <span class="badge-card__field">{{ a.bidang }}</span>
         {% if a.tingkat_tertinggi %}<span class="badge-card__note">{{ a.tingkat_tertinggi }}</span>{% endif %}
       </div>
       {% empty %}
         {% for demo in "1234" %}
-        <div class="badge-card badge-card--{% cycle 'coral' 'yellow' 'mint' 'navy' %}">
+        <div class="badge-card badge-card--{% cycle 'badge1' 'badge2' 'badge3' 'badge4' %}">
           <span class="badge-card__number">{% cycle '18' '12' '9' '7' %}</span>
           <span class="badge-card__field">{% cycle 'OSN IPA' 'OSN Matematika' 'Debat Bahasa Inggris' 'Essay Bahasa Inggris' %}</span>
           <span class="badge-card__note">Juara Tingkat Kota</span>
@@ -97,8 +127,8 @@
 <!-- ============ OVERVIEW SEKOLAH ============ -->
 <section class="overview" id="overview">
   <div class="wrap">
-    <div class="section-head section-head--center section-head--onnavy">
-      <p class="eyebrow eyebrow--light">Sekilas Sekolah Kami</p>
+    <div class="section-head section-head--center section-head--onprimary">
+      <p class="eyebrow eyebrow--secondary">Sekilas Sekolah Kami</p>
       <h2>Fasilitas &amp; Tenaga Pendidik</h2>
     </div>
 
@@ -160,12 +190,30 @@
         <figcaption>{{ photo.judul }}</figcaption>
       </figure>
       {% empty %}
-        {% for demo in "12345678" %}
         <figure class="gallery__item">
-          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&sig={{ forloop.counter }}" alt="Kegiatan sekolah">
-          <figcaption>Kegiatan Pembelajaran</figcaption>
+          <img src="{% static 'img/pembelajaran.jpg' %}" alt="Suasana Pembelajaran">
+          <figcaption>Pembelajaran di Kelas</figcaption>
         </figure>
-        {% endfor %}
+        <figure class="gallery__item">
+          <img src="{% static 'img/penghargaan.jpg' %}" alt="Siswa Mendapat Penghargaan">
+          <figcaption>Pemberian Penghargaan</figcaption>
+        </figure>
+        <figure class="gallery__item">
+          <img src="{% static 'img/kegiatan1.jpg' %}" alt="Kegiatan Lainnya">
+          <figcaption>Kerja Kelompok</figcaption>
+        </figure>
+        <figure class="gallery__item">
+          <img src="{% static 'img/kegiatan3.jpg' %}" alt="Kegiatan Lainnya">
+          <figcaption>Eksplorasi Lingkungan</figcaption>
+        </figure>
+        <figure class="gallery__item">
+          <img src="{% static 'img/kegiatan4.jpg' %}" alt="Kegiatan Lainnya">
+          <figcaption>Pentas Seni</figcaption>
+        </figure>
+        <figure class="gallery__item">
+          <img src="{% static 'img/kegiatan6.jpg' %}" alt="Kegiatan Lainnya">
+          <figcaption>Praktikum Sains</figcaption>
+        </figure>
       {% endfor %}
     </div>
   </div>

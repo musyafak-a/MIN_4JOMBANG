@@ -3,23 +3,26 @@
    Palette dibuat khusus untuk nuansa SD: ceria, hangat, terpercaya
    ========================================================== */
 :root{
-  --navy: #1E3A5F;
-  --navy-deep: #142a47;
-  --coral: #FF6B6B;
-  --yellow: #FFC94A;
-  --mint: #3EC6B3;
-  --bg: #F8F9FB;
+  --primary: #255F38;
+  --primary-dark: #184025;
+  --secondary: #A0C878;
+  --tertiary: #EFEFEF;
+  --badge-1: #FF6B6B;
+  --badge-2: #FFC94A;
+  --badge-3: #3EC6B3;
+  --badge-4: #4274D9;
+  --bg: #FDFAF6;
   --ink: #22303F;
   --ink-soft: #5C6B7A;
   --white: #FFFFFF;
 
-  --font-display: "Baloo 2", "Segoe UI", sans-serif;
-  --font-body: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --font-display: "Cambria", serif;
+  --font-body: "Cambria", serif;
 
   --radius-lg: 28px;
   --radius-md: 18px;
   --radius-sm: 10px;
-  --shadow-soft: 0 20px 40px -20px rgba(30, 58, 95, 0.35);
+  --shadow-soft: 0 20px 40px -20px rgba(37, 95, 56, 0.35);
 }
 
 *{ box-sizing: border-box; }
@@ -38,7 +41,7 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
 
 :focus-visible{
-  outline: 3px solid var(--coral);
+  outline: 3px solid var(--secondary);
   outline-offset: 3px;
 }
 
@@ -53,10 +56,10 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
   letter-spacing:.08em;
   text-transform:uppercase;
   font-size:.78rem;
-  color: var(--coral);
+  color: var(--secondary);
   margin:0 0 .6em;
 }
-.eyebrow--light{ color: var(--yellow); }
+.eyebrow--secondary{ color: var(--secondary); }
 
 .btn{
   display:inline-flex;
@@ -71,16 +74,16 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
   cursor:pointer;
   transition: transform .15s ease, box-shadow .15s ease;
 }
-.btn--accent{ background: var(--yellow); color: var(--navy-deep); }
-.btn--accent:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(255,201,74,.6); }
-.btn--outline{ border-color: var(--navy); color: var(--navy); background:transparent; }
-.btn--outline:hover{ background: var(--navy); color: var(--white); }
+.btn--accent{ background: var(--secondary); color: var(--primary-dark); }
+.btn--accent:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(160, 200, 120, 0.6); }
+.btn--outline{ border-color: var(--primary); color: var(--primary); background:transparent; }
+.btn--outline:hover{ background: var(--primary); color: var(--white); }
 
 .section-head{ max-width: 640px; margin-bottom: 48px; }
 .section-head--center{ margin-left:auto; margin-right:auto; text-align:center; }
 .section-head__desc{ font-size:1.02rem; }
-.section-head--onnavy h2{ color:var(--white); }
-.section-head--onnavy .section-head__desc{ color: rgba(255,255,255,.75); }
+.section-head--onprimary h2{ color:var(--white); }
+.section-head--onprimary .section-head__desc{ color: rgba(255,255,255,.75); }
 
 /* ==========================================================
    NAVBAR
@@ -88,7 +91,7 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 .navbar{
   position: sticky; top:0; z-index:50;
   background: var(--white);
-  box-shadow: 0 2px 16px rgba(20,42,71,.08);
+  box-shadow: 0 2px 16px rgba(24, 64, 37, 0.08);
 }
 .navbar__inner{
   display:flex; align-items:center; justify-content:space-between;
@@ -98,12 +101,12 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 .brand__logo{ width:44px; height:44px; object-fit:contain; }
 .brand__mark{
   width:44px; height:44px; border-radius:12px;
-  background: var(--navy); color:var(--yellow);
+  background: var(--primary); color:var(--secondary);
   display:flex; align-items:center; justify-content:center;
   font-family: var(--font-display); font-weight:800; font-size:1.1rem;
 }
 .brand__text{ display:flex; flex-direction:column; line-height:1.2; }
-.brand__text strong{ font-family: var(--font-display); font-size:1.05rem; color:var(--navy); }
+.brand__text strong{ font-family: var(--font-display); font-size:1.05rem; color:var(--primary); }
 .brand__text small{ color: var(--ink-soft); font-size:.75rem; }
 .brand__text--light strong{ color: var(--white); }
 
@@ -114,11 +117,11 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 }
 .navbar__nav a::after{
   content:""; position:absolute; left:0; bottom:-4px; height:3px; width:0;
-  background: var(--coral); border-radius:2px; transition: width .2s ease;
+  background: var(--secondary); border-radius:2px; transition: width .2s ease;
 }
 .navbar__nav a:hover::after{ width:100%; }
 .navbar__login{
-  background: var(--navy); color:var(--white) !important;
+  background: var(--primary); color:var(--white) !important;
   padding:10px 20px; border-radius:999px;
 }
 .navbar__login::after{ display:none; }
@@ -127,22 +130,27 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
   display:none; flex-direction:column; gap:5px;
   background:none; border:none; cursor:pointer; padding:8px;
 }
-.navbar__toggle span{ width:24px; height:2.5px; background:var(--navy); border-radius:2px; }
+.navbar__toggle span{ width:24px; height:2.5px; background:var(--primary); border-radius:2px; }
 
 /* ==========================================================
    HERO / CAROUSEL
    ========================================================== */
 .hero{ position:relative; height: 640px; max-height: 82vh; overflow:hidden; }
-.hero__track{ position:relative; height:100%; }
-.hero__slide{
-  position:absolute; inset:0; opacity:0; visibility:hidden;
-  transition: opacity .6s ease;
+.hero__track{ 
+  position:relative; height:100%; 
+  display: flex; 
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); 
 }
-.hero__slide.is-active{ opacity:1; visibility:visible; }
+.hero__slide{
+  flex: 0 0 100%;
+  height: 100%;
+  position: relative;
+}
+.hero__slide.is-active{ }
 .hero__slide img{ width:100%; height:100%; object-fit:cover; }
 .hero__scrim{
   position:absolute; inset:0;
-  background: linear-gradient(90deg, rgba(20,42,71,.88) 10%, rgba(20,42,71,.45) 55%, rgba(20,42,71,.15) 100%);
+  background: linear-gradient(90deg, rgba(34, 48, 63, 0.88) 10%, rgba(34, 48, 63, 0.45) 55%, rgba(34, 48, 63, 0.15) 100%);
 }
 .hero__content{
   position:relative; height:100%;
@@ -155,13 +163,13 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 .hero__nav{
   position:absolute; top:50%; transform:translateY(-50%);
   width:46px; height:46px; border-radius:50%; border:none;
-  background: rgba(255,255,255,.9); color: var(--navy);
+  background: rgba(255,255,255,.9); color: var(--primary);
   font-size:1.4rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
   z-index:5;
 }
 .hero__nav--prev{ left:24px; }
 .hero__nav--next{ right:24px; }
-.hero__nav:hover{ background: var(--yellow); }
+.hero__nav:hover{ background: var(--secondary); }
 
 .hero__dots{
   position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
@@ -171,7 +179,7 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
   width:10px; height:10px; border-radius:50%; border:none;
   background: rgba(255,255,255,.5); cursor:pointer; padding:0;
 }
-.hero__dots button.is-active{ background: var(--yellow); width:26px; border-radius:6px; }
+.hero__dots button.is-active{ background: var(--secondary); width:26px; border-radius:6px; }
 
 /* ==========================================================
    TENTANG SEKOLAH + VIDEO
@@ -183,9 +191,9 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 .about__points{ list-style:none; padding:0; margin: 0 0 32px; }
 .about__points li{ display:flex; align-items:center; gap:12px; margin-bottom:12px; font-weight:600; }
 .dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-.dot--coral{ background:var(--coral); }
-.dot--mint{ background:var(--mint); }
-.dot--yellow{ background:var(--yellow); }
+.dot--secondary{ background:var(--secondary); }
+.dot--tertiary{ background:var(--tertiary); }
+.dot--secondary2{ background:var(--secondary); }
 
 .video-frame{
   position:relative; border-radius: var(--radius-lg); overflow:hidden;
@@ -196,12 +204,12 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 .video-frame__play{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
   width:74px; height:74px; border-radius:50%; border:none;
-  background: var(--coral); color:var(--white); font-size:1.3rem;
-  cursor:pointer; box-shadow: 0 10px 30px rgba(255,107,107,.5);
+  background: var(--secondary); color:var(--white); font-size:1.3rem;
+  cursor:pointer; box-shadow: 0 10px 30px rgba(160, 200, 120, 0.5);
 }
 .video-frame__label{
   display:block; text-align:center; margin-top:14px;
-  font-family: var(--font-display); font-weight:600; color: var(--navy);
+  font-family: var(--font-display); font-weight:600; color: var(--primary);
 }
 
 /* ==========================================================
@@ -222,10 +230,10 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 }
 .badge-card:nth-child(even){ transform: rotate(1.5deg); }
 .badge-card:hover{ transform: rotate(0) translateY(-6px); }
-.badge-card--coral{ background: var(--coral); }
-.badge-card--yellow{ background: var(--yellow); color: var(--navy-deep); }
-.badge-card--mint{ background: var(--mint); }
-.badge-card--navy{ background: var(--navy); }
+.badge-card--badge1{ background: var(--badge-1); }
+.badge-card--badge2{ background: var(--badge-2); color: var(--primary-dark); }
+.badge-card--badge3{ background: var(--badge-3); }
+.badge-card--badge4{ background: var(--badge-4); }
 .badge-card__number{ font-family: var(--font-display); font-size:2.6rem; font-weight:800; }
 .badge-card__field{ font-weight:700; font-size:1rem; }
 .badge-card__note{ font-size:.82rem; opacity:.85; }
@@ -233,7 +241,7 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 /* ==========================================================
    OVERVIEW SEKOLAH
    ========================================================== */
-.overview{ padding: 100px 0; background: var(--navy); }
+.overview{ padding: 100px 0; background: var(--primary); }
 .overview__grid{
   display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:24px;
 }
@@ -253,10 +261,10 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
   background: rgba(255,255,255,.08); border-radius: var(--radius-sm);
   padding:12px; text-align:center;
 }
-.overview__mini strong{ display:block; font-family:var(--font-display); font-size:1.3rem; color: var(--yellow); }
+.overview__mini strong{ display:block; font-family:var(--font-display); font-size:1.3rem; color: var(--secondary); }
 .overview__mini span{ font-size:.72rem; color: rgba(255,255,255,.7); }
 .overview__card--stat{ display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
-.overview__big{ font-family: var(--font-display); font-size:2.6rem; color: var(--yellow); }
+.overview__big{ font-family: var(--font-display); font-size:2.6rem; color: var(--secondary); }
 
 /* ==========================================================
    DOKUMENTASI (gallery)
@@ -303,7 +311,7 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
 /* ==========================================================
    FOOTER
    ========================================================== */
-.footer{ background: var(--navy-deep); color: rgba(255,255,255,.75); padding-top:64px; }
+.footer{ background: var(--primary-dark); color: rgba(255,255,255,.75); padding-top:64px; }
 .footer__grid{
   display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:32px;
   padding-bottom:48px; border-bottom:1px solid rgba(255,255,255,.1);
@@ -313,7 +321,7 @@ p{ margin:0 0 1em; color: var(--ink-soft); }
   margin-bottom:16px; text-transform:uppercase; letter-spacing:.05em;
 }
 .footer__col a{ display:block; margin-bottom:10px; font-size:.9rem; }
-.footer__col a:hover{ color: var(--yellow); }
+.footer__col a:hover{ color: var(--secondary); }
 .footer__social{ display:flex; gap:10px; margin-top:8px; }
 .footer__social a{
   width:34px; height:34px; border-radius:50%; background: rgba(255,255,255,.08);
