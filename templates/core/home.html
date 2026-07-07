@@ -84,7 +84,7 @@
     <div class="about__video">
       <div class="video-frame">
         {% if profile.video_url %}
-          <iframe src="{{ profile.video_url }}" title="Video Profil Sekolah" loading="lazy" allowfullscreen></iframe>
+          <iframe src="{{ profile.video_url }}" title="Video Profil Sekolah" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         {% else %}
           <img src="{% if profile.video_thumbnail %}{{ profile.video_thumbnail.url }}{% else %}{% static 'img/about.jpg' %}{% endif %}" alt="Video profil sekolah">
           <button class="video-frame__play" aria-label="Putar video profil">&#9658;</button>
