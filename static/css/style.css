@@ -5,7 +5,7 @@
 :root {
   --primary: #255F38;
   --primary-dark: #184025;
-  --secondary: #A0C878;
+  --secondary: #F3FF90;
   --tertiary: #EFEFEF;
   --badge-1: #FF6B6B;
   --badge-2: #FFC94A;
@@ -57,6 +57,7 @@ h3 {
   font-family: var(--font-display);
   margin: 0 0 .4em;
   line-height: 1.15;
+  color: #111111;
 }
 
 p {
@@ -89,7 +90,7 @@ p {
   letter-spacing: .08em;
   text-transform: uppercase;
   font-size: .78rem;
-  color: var(--secondary);
+  color: var(--primary);
   margin: 0 0 .6em;
 }
 
@@ -141,6 +142,10 @@ p {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+
+.section-head h2 {
+  color: #111111;
 }
 
 .section-head__desc {
@@ -720,7 +725,7 @@ p {
    ========================================================== */
 .footer {
   background: var(--primary-dark);
-  color: rgba(255, 255, 255, .75);
+  color: var(--secondary);
   padding-top: 64px;
 }
 
@@ -730,6 +735,10 @@ p {
   gap: 32px;
   padding-bottom: 48px;
   border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.footer__brand strong {
+  color: var(--white) !important;
 }
 
 .footer__col h4 {
@@ -745,10 +754,19 @@ p {
   display: block;
   margin-bottom: 10px;
   font-size: .9rem;
+  color: var(--secondary);
+  opacity: 0.70;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer__col p {
+  color: var(--secondary);
+  opacity: 0.70;
 }
 
 .footer__col a:hover {
-  color: var(--secondary);
+  color: var(--white);
+  opacity: 1;
 }
 
 .footer__social {
