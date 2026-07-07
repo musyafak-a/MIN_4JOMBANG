@@ -18,7 +18,7 @@
       {% if profile.logo %}
         <img src="{{ profile.logo.url }}" alt="Logo {{ profile.nama_sekolah }}" class="brand__logo">
       {% else %}
-        <span class="brand__mark">MIN</span>
+        <img src="{% static 'img/kemenag.png' %}" alt="Logo Kementerian Agama" class="brand__logo">
       {% endif %}
       <span class="brand__text">
         <strong>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</strong>
@@ -48,10 +48,10 @@
 <footer class="footer">
   <div class="wrap footer__grid">
     <div class="footer__col footer__brand">
-      <span class="brand__text brand__text--secondary">
-        <strong>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</strong>
-      </span>
-      <a href="https://www.google.com/maps/place/MIN+4+Jombang/@-7.5437135,112.2729606,17z/data=!3m1!4b1!4m6!3m5!1s0x2e786ad00c55acd7:0x81793c10000b44f0!8m2!3d-7.5437135!4d112.2755355!16s%2Fg%2F11by_xjzzx?entry=tts&g_ep=EgoyMDI1MTAyMi4wIPu8ASoASAFQAw%3D%3D&skid=c4fe5008-da7b-4789-8fc7-751151b67bf1" target="_blank" style="color: inherit; text-decoration: underline;">{{ profile.alamat|default:"Wonokerto Selatan, Peterongan, Kec. Jombang, Kabupaten Jombang, Jawa Timur 61481" }}</a>
+      <h4>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</h4>
+      <p style="margin-bottom: 16px; line-height: 1.6;">
+        <a href="https://www.google.com/maps/place/MIN+4+Jombang/@-7.5437135,112.2729606,17z/data=!3m1!4b1!4m6!3m5!1s0x2e786ad00c55acd7:0x81793c10000b44f0!8m2!3d-7.5437135!4d112.2755355!16s%2Fg%2F11by_xjzzx?entry=tts&g_ep=EgoyMDI1MTAyMi4wIPu8ASoASAFQAw%3D%3D&skid=c4fe5008-da7b-4789-8fc7-751151b67bf1" target="_blank" style="display: inline; margin: 0;">{{ profile.alamat|default:"Wonokerto Selatan, Peterongan, Kec. Jombang, Kabupaten Jombang, Jawa Timur 61481" }}</a>
+      </p>
       <p>Berdiri sejak {{ profile.tahun_berdiri|default:"1990" }}</p>
     </div>
 
@@ -72,8 +72,10 @@
 
     <div class="footer__col">
       <h4>Kontak</h4>
-      <p>Telp: (031) 000-0000</p>
-      <p>Email: <a href="mailto:minrejoso602030@gmail.com" style="color: inherit; text-decoration: underline;">minrejoso602030@gmail.com</a></p>
+      <p style="margin-bottom: 12px;">Telp: (031) 000-0000</p>
+      <p style="margin-bottom: 16px;">
+        <a href="mailto:minrejoso602030@gmail.com" style="display: inline; margin: 0;">Email: minrejoso602030@gmail.com</a>
+      </p>
       <div class="footer__social">
         <a href="https://www.facebook.com/min.rejoso.7/?locale=id_ID" aria-label="Facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
         <a href="https://www.instagram.com/min4jombang/" aria-label="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
