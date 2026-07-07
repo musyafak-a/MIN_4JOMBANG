@@ -92,7 +92,6 @@
       </div>
       <span class="video-frame__label">Video Profil Sekolah</span>
     </div>
-  </div>
 </section>
 
 <!-- ============ PRESTASI ============ -->
@@ -169,6 +168,36 @@
           {% for stat in overview_grouped.ekstrakurikuler %}{{ stat.nilai }}{% empty %}10{% endfor %}
         </strong>
         <span>Ekstrakurikuler</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BERITA ============ -->
+<section class="news" id="berita">
+  <div class="wrap">
+    <p class="news__subtitle">Seluruh Kegiatan dan Dokumentasi Madrasah di tulis di sini</p>
+    
+    <div class="news__grid">
+      <div class="news__card">
+        <img src="{% static 'img/prestasi_baru.jpg' %}" alt="Berita 1">
+        <h3 class="news__card-title">MASUK 10 BESAR NILAI TERBAIK TKA KABUPATEN, 4 SISWA MIN 4 JOMBANG TERIMA APRESIASI DARI PLT. KEPALA KEMENAG JOMBANG</h3>
+        <p class="news__card-meta">17 Juni 2026 /// Tidak ada komentar</p>
+        <p class="news__card-excerpt">Prestasi membanggakan kembali diukir oleh peserta didik Madrasah Ibtidaiyah Negeri 4 Jombang dalam ajang Tes Kemampuan Akademik (TKA) jenjang MI...</p>
+      </div>
+      
+      <div class="news__card">
+        <img src="{% static 'img/kegiatan_baru.jpg' %}" alt="Berita 2">
+        <h3 class="news__card-title">ASAH JIWA ENTREPRENEUR MUDA, SISWA KELAS 6 MIN 4 JOMBANG SUKSES GELAR BUSINESS DAY</h3>
+        <p class="news__card-meta">12 Mei 2026 /// Tidak ada komentar</p>
+        <p class="news__card-excerpt">Lapangan belakang kantor sekretariat Pondok Pesantren Darul 'Ulum Jombang disulap menjadi pasar kreatif yang meriah dalam rangka pelaksanaan kegiatan Business...</p>
+      </div>
+
+      <div class="news__card">
+        <img src="{% static 'img/fasilitas_baru.jpg' %}" alt="Berita 3">
+        <h3 class="news__card-title">SINERGI PENDIDIKAN, MIN 4 JOMBANG GELAR PERTEMUAN WALI MURID BARU DAN SOSIALISASI PROGRAM MADRASAH</h3>
+        <p class="news__card-meta">11 Mei 2026 /// Tidak ada komentar</p>
+        <p class="news__card-excerpt">Madrasah Ibtidaiyah Negeri 4 Jombang sukses menyelenggarakan kegiatan pertemuan perdana bersama wali murid siswa baru tahun pelajaran 2026/2027. Bertempat di...</p>
       </div>
     </div>
   </div>
