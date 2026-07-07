@@ -19,9 +19,9 @@
   --font-display: "Cambria", serif;
   --font-body: "Cambria", serif;
 
-  --radius-lg: 28px;
-  --radius-md: 18px;
-  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --radius-md: 15px;
+  --radius-sm: 13px;
   --shadow-soft: 0 20px 40px -20px rgba(37, 95, 56, 0.35);
 }
 
@@ -103,7 +103,7 @@ p {
   align-items: center;
   gap: .5em;
   padding: 14px 28px;
-  border-radius: 999px;
+  border-radius: 1px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: .95rem;
@@ -258,8 +258,8 @@ p {
 .navbar__login {
   background: var(--primary);
   color: var(--white) !important;
-  padding: 10px 20px;
-  border-radius: 999px;
+  padding: 10px 32px;
+  border-radius: 10px;
 }
 
 .navbar__login::after {
