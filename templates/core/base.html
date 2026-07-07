@@ -7,7 +7,8 @@
 <title>{% block title %}{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.2">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.3">
 </head>
 <body>
 
@@ -50,7 +51,7 @@
       <span class="brand__text brand__text--secondary">
         <strong>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</strong>
       </span>
-      <p>{{ profile.alamat|default:"Jl. Pendidikan No. 1, Kota Belajar" }}</p>
+      <a href="https://www.google.com/maps/place/MIN+4+Jombang/@-7.5437135,112.2729606,17z/data=!3m1!4b1!4m6!3m5!1s0x2e786ad00c55acd7:0x81793c10000b44f0!8m2!3d-7.5437135!4d112.2755355!16s%2Fg%2F11by_xjzzx?entry=tts&g_ep=EgoyMDI1MTAyMi4wIPu8ASoASAFQAw%3D%3D&skid=c4fe5008-da7b-4789-8fc7-751151b67bf1" target="_blank" style="color: inherit; text-decoration: underline;">{{ profile.alamat|default:"Wonokerto Selatan, Peterongan, Kec. Jombang, Kabupaten Jombang, Jawa Timur 61481" }}</a>
       <p>Berdiri sejak {{ profile.tahun_berdiri|default:"1990" }}</p>
     </div>
 
@@ -72,11 +73,12 @@
     <div class="footer__col">
       <h4>Kontak</h4>
       <p>Telp: (031) 000-0000</p>
-      <p>Email: info@sekolah.sch.id</p>
+      <p>Email: <a href="mailto:minrejoso602030@gmail.com" style="color: inherit; text-decoration: underline;">minrejoso602030@gmail.com</a></p>
       <div class="footer__social">
-        <a href="#" aria-label="Facebook">FB</a>
-        <a href="#" aria-label="Instagram">IG</a>
-        <a href="#" aria-label="YouTube">YT</a>
+        <a href="https://www.facebook.com/min.rejoso.7/?locale=id_ID" aria-label="Facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/min4jombang/" aria-label="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@min.4.jombang" aria-label="TikTok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.youtube.com/@min4jombangtv54" aria-label="YouTube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
       </div>
     </div>
   </div>
