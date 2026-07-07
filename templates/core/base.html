@@ -4,10 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}{% endblock %}</title>
+<title>{% block title %}{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.5">
+<link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.2">
 </head>
 <body>
 
@@ -17,11 +17,11 @@
       {% if profile.logo %}
         <img src="{{ profile.logo.url }}" alt="Logo {{ profile.nama_sekolah }}" class="brand__logo">
       {% else %}
-        <span class="brand__mark">SD</span>
+        <span class="brand__mark">MIN</span>
       {% endif %}
       <span class="brand__text">
-        <strong>{{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</strong>
-        <small>Sekolah Dasar</small>
+        <strong>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</strong>
+        <small>Madrasah Ibtidaiyah</small>
       </span>
     </a>
 
@@ -48,7 +48,7 @@
   <div class="wrap footer__grid">
     <div class="footer__col footer__brand">
       <span class="brand__text brand__text--secondary">
-        <strong>{{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}</strong>
+        <strong>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</strong>
       </span>
       <p>{{ profile.alamat|default:"Jl. Pendidikan No. 1, Kota Belajar" }}</p>
       <p>Berdiri sejak {{ profile.tahun_berdiri|default:"1990" }}</p>
@@ -81,7 +81,7 @@
     </div>
   </div>
   <div class="footer__bottom">
-    <span>&copy; {% now "Y" %} {{ profile.nama_sekolah|default:"SDN Harapan Bangsa" }}. Semua hak dilindungi.</span>
+    <span>&copy; {% now "Y" %} {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}. Semua hak dilindungi.</span>
   </div>
 </footer>
 
