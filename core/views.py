@@ -132,3 +132,58 @@ def direktori_prestasi(request):
         "prestasi_list": dummy_prestasi,
     }
     return render(request, "core/direktori_prestasi.html", context)
+
+
+def direktori_dokumen(request):
+    profile = SchoolProfile.objects.first()
+    
+    # Dummy data for dokumen (Grouped by Category)
+    data_berkas = [
+        {"no": 1, "tanggal": "08/03/2026", "nama_berkas": "PIAGAM ADIWIYATA MANDIRI"},
+        {"no": 2, "tanggal": "07/03/2026", "nama_berkas": "PIAGAM ADIWIYATA NASIONAL"},
+        {"no": 3, "tanggal": "06/03/2026", "nama_berkas": "PIAGAM AKREDITASI 2022"},
+        {"no": 4, "tanggal": "05/03/2026", "nama_berkas": "SK KEPALA MADRASAH"},
+        {"no": 5, "tanggal": "04/03/2026", "nama_berkas": "NSM RESMI MADRASAH"},
+        {"no": 6, "tanggal": "03/03/2026", "nama_berkas": "NPSN RESMI MADRASAH"},
+        {"no": 7, "tanggal": "02/03/2026", "nama_berkas": "SERTIFIKAT TANAH MADRASAH"},
+    ]
+    data_profil = [
+        {"no": 1, "tanggal": "03/03/2026", "nama_berkas": "STRUKTUR PPID"},
+        {"no": 2, "tanggal": "02/03/2026", "nama_berkas": "VISI DAN MISI PPID"},
+        {"no": 3, "tanggal": "01/03/2026", "nama_berkas": "MAKLUMAT PELAYANAN"},
+    ]
+    data_rekap = [
+        {"no": 1, "tanggal": "23/06/2026", "nama_berkas": "REKAPITULASI PESERTA DIDIK TAHUN PELAJARAN 2025-2026 SEMESTER II"},
+        {"no": 2, "tanggal": "10/04/2026", "nama_berkas": "REKAPITULASI GURU MIN 4 JOMBANG SEMESTER GENAP 2026 PER 10 APRIL 2026"},
+        {"no": 3, "tanggal": "10/04/2026", "nama_berkas": "DATA GURU MIN 4 JOMBANG SEMESTER GENAP 2026 PER 10 APRIL 2026"},
+        {"no": 4, "tanggal": "10/04/2026", "nama_berkas": "REKAPITULASI SISWA SEMESTER GENAP PER 10 APRIL 2026"},
+        {"no": 5, "tanggal": "10/04/2026", "nama_berkas": "DATA SISWA SEMESTER GENAP PER 10 APRIL 2026"},
+        {"no": 6, "tanggal": "30/12/2025", "nama_berkas": "BAP_2025_2026_GANJIL_111135170004"},
+        {"no": 7, "tanggal": "05/11/2025", "nama_berkas": "EVALUASI DIRI MADRASAH 2025"},
+    ]
+    data_regulasi = [
+        {"no": 1, "tanggal": "20/11/2025", "nama_berkas": "KEPUTUSAN MENTERI AGAMA REPUBLIK INDONESIA NOMOR 92 TAHUN 2019 TENTANG PEDOMAN LAYANAN INFORMASI PUBLIK"},
+        {"no": 2, "tanggal": "20/11/2025", "nama_berkas": "KEPUTUSAN MENTERI AGAMA REPUBLIK INDONESIA NOMOR 657 TAHUN 2021 TENTANG PEJABAT PENGELOLA INFORMASI DAN DOKUMENTASI KEMENTERIAN AGAMA"},
+        {"no": 3, "tanggal": "20/11/2025", "nama_berkas": "RANCANGAN MENTERI AGAMA RI TENTANG PEJABAT PENGELOLA INFORMASI DAN DOKUMENTASI KEMENTERIAN AGAMA"},
+        {"no": 4, "tanggal": "20/11/2025", "nama_berkas": "RANCANGAN MENTERI AGAMA RI TENTANG PEDOMAN LAYANAN INFORMASI PUBLIK"},
+        {"no": 5, "tanggal": "19/11/2025", "nama_berkas": "PERATURAN MAHKAMAH AGUNG REPUBLIK INDONESIA NOMOR :02 TAHUN 2011 TENTANG TATA CARA PENYELESAIAN SENGKETA INFORMASI PUBLIK"},
+        {"no": 6, "tanggal": "18/11/2025", "nama_berkas": "PERATURAN KOMISI INFORMASI NOMOR 1 TAHUN 2013 TENTANG PROSEDUR PENYELESAIAN SENGKETA INFORMASI PUBLIK"},
+        {"no": 7, "tanggal": "17/11/2025", "nama_berkas": "PERATURAN KOMISI INFORMASI REPUBLIK INDONESIA NOMOR 1 TAHUN 2021 TENTANG STANDAR LAYANAN INFORMASI PUBLIK"},
+    ]
+    data_sk = [
+        {"no": 1, "tanggal": "02/06/2026", "nama_berkas": "SURAT KEPUTUSAN KELULUSAN PESERTA DIDIK TAHUN PELAJARAN 2025/2026"},
+        {"no": 2, "tanggal": "02/05/2026", "nama_berkas": "SK KRITERIA KELULUSAN 2026"},
+        {"no": 3, "tanggal": "03/03/2026", "nama_berkas": "SK PANITIA PONDOK RAMADHAN 1447 H"},
+        {"no": 4, "tanggal": "31/01/2026", "nama_berkas": "SK TIM PENGELOLA SP4N- LAPOR!"},
+        {"no": 5, "tanggal": "19/01/2026", "nama_berkas": "SK TIM MBG MADRASAH"},
+    ]
+    
+    context = {
+        "profile": profile,
+        "data_berkas": data_berkas,
+        "data_profil": data_profil,
+        "data_rekap": data_rekap,
+        "data_regulasi": data_regulasi,
+        "data_sk": data_sk,
+    }
+    return render(request, "core/direktori_dokumen.html", context)

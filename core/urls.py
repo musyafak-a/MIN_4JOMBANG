@@ -11,4 +11,5 @@ urlpatterns = [
     path("direktori/siswa/", views.direktori_siswa, name="direktori_siswa"),
     path("direktori/alumni/", views.direktori_alumni, name="direktori_alumni"),
     path("direktori/prestasi/", views.direktori_prestasi, name="direktori_prestasi"),
+    path("direktori/dokumen/", views.direktori_dokumen, name="direktori_dokumen"),
 ]

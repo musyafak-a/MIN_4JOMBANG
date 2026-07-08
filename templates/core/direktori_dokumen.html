@@ -1,0 +1,578 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Dokumen Informasi Publik - {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-color: var(--bg);
+  }
+
+  .dokumen-wrapper {
+    padding: 60px 0 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .dokumen-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .dokumen-header h1 {
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Main Tabs */
+  .main-tabs {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .main-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(24, 64, 37, 0.1);
+    cursor: pointer;
+  }
+
+  .main-tab.active {
+    background-color: var(--primary-dark);
+    color: var(--white);
+    border-color: var(--primary-dark);
+    box-shadow: 0 4px 12px rgba(24, 64, 37, 0.2);
+  }
+
+  .main-tab.active i {
+    color: var(--secondary); /* Yellowish green icon */
+  }
+
+  .main-tab.inactive {
+    background-color: var(--white);
+    color: var(--ink);
+  }
+
+  .main-tab.inactive i {
+    color: var(--primary);
+  }
+
+  .main-tab:hover:not(.active) {
+    background-color: #f9fafb;
+    border-color: rgba(24, 64, 37, 0.2);
+  }
+
+  /* Sub Tabs */
+  .sub-tabs-container {
+    background-color: rgba(37, 95, 56, 0.05); /* Light greyish green */
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .sub-tab {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(24, 64, 37, 0.2);
+    cursor: pointer;
+  }
+
+  .sub-tab.active {
+    background-color: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(37, 95, 56, 0.2);
+  }
+
+  .sub-tab.inactive {
+    background-color: var(--white);
+    color: var(--primary);
+  }
+
+  .sub-tab:hover:not(.active) {
+    background-color: var(--white);
+    color: var(--primary-dark);
+    border-color: var(--primary);
+  }
+
+  /* Table Card */
+  .table-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(24, 64, 37, 0.05);
+    border: 1px solid rgba(24, 64, 37, 0.05);
+    overflow: hidden;
+  }
+
+  .table-header-area {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(24, 64, 37, 0.05);
+  }
+
+  .table-header-area h2 {
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border: 1px solid rgba(24, 64, 37, 0.15);
+    border-radius: 6px;
+    padding: 10px 16px;
+    width: 350px;
+    transition: border-color 0.3s;
+  }
+
+  .search-bar:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 95, 56, 0.1);
+  }
+
+  .search-bar i {
+    color: var(--ink-soft);
+    margin-right: 12px;
+  }
+
+  .search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+
+  .search-bar input::placeholder {
+    color: #9ca3af;
+  }
+
+  /* Table */
+  .dokumen-table-wrapper {
+    overflow-x: auto;
+    padding: 0 32px;
+  }
+
+  .dokumen-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+  }
+
+  .dokumen-table th {
+    background-color: var(--primary-dark);
+    color: var(--white);
+    padding: 16px;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .dokumen-table th:first-child {
+    border-top-left-radius: 4px;
+  }
+  
+  .dokumen-table th:last-child {
+    border-top-right-radius: 4px;
+    text-align: center;
+  }
+
+  .dokumen-table td {
+    padding: 16px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .dokumen-table td.fw-bold {
+    font-weight: 700;
+  }
+
+  .dokumen-table td.text-center {
+    text-align: center;
+  }
+
+  .dokumen-table tr:hover td {
+    background-color: #f8fafc;
+  }
+
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: #3b82f6; /* Biru */
+    color: var(--white);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .btn-download:hover {
+    background-color: #2563eb; /* Biru gelap saat hover */
+  }
+
+  /* Table Footer */
+  .table-footer {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8fafc;
+    border-top: 1px solid rgba(24, 64, 37, 0.05);
+  }
+
+  .footer-total {
+    font-weight: 800;
+    color: var(--primary-dark);
+    font-size: 0.95rem;
+  }
+
+  .pagination-controls {
+    display: flex;
+    gap: 12px;
+  }
+
+  .page-btn {
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .page-btn.prev {
+    background: #cbd5e1;
+    color: var(--white);
+    pointer-events: none;
+  }
+
+  .page-btn.next {
+    background: var(--primary-dark);
+    color: var(--white);
+    transition: background 0.2s;
+  }
+
+  .page-btn.next:hover {
+    background: var(--primary);
+  }
+
+  /* Hide classes for tab switching */
+  .hidden {
+    display: none !important;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    .table-header-area {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .search-bar {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-tabs {
+      flex-direction: column;
+    }
+    .sub-tabs-container {
+      flex-wrap: wrap;
+    }
+    .table-footer {
+      flex-direction: column;
+      gap: 16px;
+    }
+    .dokumen-table-wrapper {
+      padding: 0 16px;
+    }
+    .table-header-area {
+      padding: 24px 16px;
+    }
+    .table-footer {
+      padding: 24px 16px;
+    }
+  }
+</style>
+
+<div class="dokumen-wrapper wrap">
+  
+  <div class="dokumen-header">
+    <h1>DOKUMEN INFORMASI PUBLIK</h1>
+  </div>
+
+  <!-- Main Tabs -->
+  <div class="main-tabs">
+    <div class="main-tab active" data-target="group-berkala" id="main-berkala">
+      <i class="fa-solid fa-folder-open"></i> INFORMASI BERKALA
+    </div>
+    <div class="main-tab inactive" data-target="group-setiapsaat" id="main-setiapsaat">
+      <i class="fa-solid fa-folder-closed"></i> INFORMASI SETIAP SAAT
+    </div>
+  </div>
+
+  <!-- Sub Tabs Group: INFORMASI BERKALA -->
+  <div class="sub-tabs-container" id="group-berkala">
+    <div class="sub-tab active" data-table="table-berkas">BERKAS MADRASAH</div>
+    <div class="sub-tab inactive" data-table="table-profil">PROFIL</div>
+    <div class="sub-tab inactive" data-table="table-rekapitulasi">REKAPITULASI</div>
+  </div>
+
+  <!-- Sub Tabs Group: INFORMASI SETIAP SAAT -->
+  <div class="sub-tabs-container hidden" id="group-setiapsaat">
+    <div class="sub-tab active" data-table="table-regulasi">REGULASI</div>
+    <div class="sub-tab inactive" data-table="table-sk">SURAT KEPUTUSAN</div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    
+    <div class="table-header-area">
+      <h2 id="table-title">BERKAS MADRASAH</h2>
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="CARI NAMA BERKAS...">
+      </div>
+    </div>
+
+    <div class="dokumen-table-wrapper">
+      
+      <!-- Table 1: Berkas -->
+      <table class="dokumen-table" id="table-berkas">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>TANGGAL</th>
+            <th>NAMA BERKAS</th>
+            <th>LIHAT</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in data_berkas %}
+          <tr>
+            <td class="fw-bold">{{ doc.no }}</td>
+            <td class="fw-bold">{{ doc.tanggal }}</td>
+            <td class="fw-bold">{{ doc.nama_berkas }}</td>
+            <td class="text-center">
+              <a href="#" class="btn-download" title="Unduh Berkas"><i class="fa-solid fa-download"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Table 2: Profil -->
+      <table class="dokumen-table hidden" id="table-profil">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>TANGGAL</th>
+            <th>NAMA BERKAS</th>
+            <th>LIHAT</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in data_profil %}
+          <tr>
+            <td class="fw-bold">{{ doc.no }}</td>
+            <td class="fw-bold">{{ doc.tanggal }}</td>
+            <td class="fw-bold">{{ doc.nama_berkas }}</td>
+            <td class="text-center">
+              <a href="#" class="btn-download" title="Unduh Berkas"><i class="fa-solid fa-download"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Table 3: Rekapitulasi -->
+      <table class="dokumen-table hidden" id="table-rekapitulasi">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>TANGGAL</th>
+            <th>NAMA BERKAS</th>
+            <th>LIHAT</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in data_rekap %}
+          <tr>
+            <td class="fw-bold">{{ doc.no }}</td>
+            <td class="fw-bold">{{ doc.tanggal }}</td>
+            <td class="fw-bold">{{ doc.nama_berkas }}</td>
+            <td class="text-center">
+              <a href="#" class="btn-download" title="Unduh Berkas"><i class="fa-solid fa-download"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Table 4: Regulasi -->
+      <table class="dokumen-table hidden" id="table-regulasi">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>TANGGAL</th>
+            <th>NAMA BERKAS</th>
+            <th>LIHAT</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in data_regulasi %}
+          <tr>
+            <td class="fw-bold">{{ doc.no }}</td>
+            <td class="fw-bold">{{ doc.tanggal }}</td>
+            <td class="fw-bold">{{ doc.nama_berkas }}</td>
+            <td class="text-center">
+              <a href="#" class="btn-download" title="Unduh Berkas"><i class="fa-solid fa-download"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Table 5: SK -->
+      <table class="dokumen-table hidden" id="table-sk">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>TANGGAL</th>
+            <th>NAMA BERKAS</th>
+            <th>LIHAT</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in data_sk %}
+          <tr>
+            <td class="fw-bold">{{ doc.no }}</td>
+            <td class="fw-bold">{{ doc.tanggal }}</td>
+            <td class="fw-bold">{{ doc.nama_berkas }}</td>
+            <td class="text-center">
+              <a href="#" class="btn-download" title="Unduh Berkas"><i class="fa-solid fa-download"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="table-footer">
+      <div class="footer-total" id="footer-total">{{ data_berkas|length }} BERKAS DITEMUKAN</div>
+      <div class="pagination-controls">
+        <a href="#" class="page-btn prev">< PREV</a>
+        <a href="#" class="page-btn next">NEXT ></a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainTabs = document.querySelectorAll('.main-tab');
+    const subTabGroups = document.querySelectorAll('.sub-tabs-container');
+    const subTabs = document.querySelectorAll('.sub-tab');
+    const tables = document.querySelectorAll('.dokumen-table');
+    const tableTitle = document.getElementById('table-title');
+    const footerTotal = document.getElementById('footer-total');
+
+    // Handle Main Tab Clicks
+    mainTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all main tabs and set them inactive
+        mainTabs.forEach(t => {
+          t.classList.remove('active');
+          t.classList.add('inactive');
+          t.querySelector('i').classList.remove('fa-folder-open');
+          t.querySelector('i').classList.add('fa-folder-closed');
+        });
+        
+        // Activate clicked tab
+        this.classList.remove('inactive');
+        this.classList.add('active');
+        this.querySelector('i').classList.remove('fa-folder-closed');
+        this.querySelector('i').classList.add('fa-folder-open');
+
+        // Hide all sub-tab groups
+        subTabGroups.forEach(g => g.classList.add('hidden'));
+
+        // Show the targeted sub-tab group
+        const targetGroup = document.getElementById(this.getAttribute('data-target'));
+        targetGroup.classList.remove('hidden');
+
+        // Automatically trigger click on the first sub-tab of this newly visible group
+        const firstSubTab = targetGroup.querySelector('.sub-tab');
+        if (firstSubTab) {
+          firstSubTab.click();
+        }
+      });
+    });
+
+    // Handle Sub Tab Clicks
+    subTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // In this group, deactivate all sub-tabs
+        const parentGroup = this.closest('.sub-tabs-container');
+        parentGroup.querySelectorAll('.sub-tab').forEach(t => {
+          t.classList.remove('active');
+          t.classList.add('inactive');
+        });
+
+        // Activate clicked sub-tab
+        this.classList.remove('inactive');
+        this.classList.add('active');
+
+        // Hide all tables
+        tables.forEach(tbl => tbl.classList.add('hidden'));
+
+        // Show the targeted table
+        const targetTable = document.getElementById(this.getAttribute('data-table'));
+        targetTable.classList.remove('hidden');
+
+        // Update Title and Row Count
+        tableTitle.textContent = this.textContent.toUpperCase();
+        
+        // Count rows in the tbody
+        const rowCount = targetTable.querySelectorAll('tbody tr').length;
+        footerTotal.textContent = rowCount + ' BERKAS DITEMUKAN';
+      });
+    });
+  });
+</script>
+
+{% endblock %}
