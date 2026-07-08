@@ -1,0 +1,243 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Visi & Misi - {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}
+
+{% block content %}
+<style>
+  .page-header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    color: var(--white);
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--bg);
+    transform: skewY(-2deg);
+  }
+
+  .page-header h1 {
+    font-size: 2.8rem;
+    color: var(--secondary);
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .vm-container {
+    padding: 60px 0 100px;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Decorative background blobs to make glassmorphism pop */
+  .vm-container::before,
+  .vm-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    opacity: 0.7;
+  }
+
+  .vm-container::before {
+    width: 500px;
+    height: 500px;
+    background: rgba(37, 95, 56, 0.2);
+    top: 5%;
+    left: -100px;
+  }
+
+  .vm-container::after {
+    width: 600px;
+    height: 600px;
+    background: rgba(23, 59, 138, 0.15);
+    bottom: 10%;
+    right: -150px;
+  }
+  
+  .vm-row {
+    display: flex;
+    align-items: stretch;
+    max-width: 1100px;
+    margin: 0 auto 80px auto;
+    position: relative;
+    z-index: 2; /* Ensure it stays above the blurred blobs */
+  }
+  
+  .vm-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .vm-row--reverse {
+    flex-direction: row-reverse;
+  }
+  
+  .vm-image {
+    width: 60%;
+    position: relative;
+    z-index: 1;
+    min-height: 400px;
+    background: #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vm-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .vm-box {
+    width: 50%;
+    /* Glassmorphism styles */
+    background: rgba(23, 59, 138, 0.75); /* Semi-transparent blue */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    
+    padding: 64px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    margin-top: 40px;
+    margin-bottom: -40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+  }
+  
+  /* Overlap logic */
+  .vm-row:not(.vm-row--reverse) .vm-box {
+    margin-left: -10%;
+  }
+  
+  .vm-row--reverse .vm-box {
+    margin-right: -10%;
+  }
+
+  .vm-box h2 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: #ffffff;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .vm-box p, .vm-box li {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    opacity: 0.95;
+    color: #ffffff;
+  }
+
+  .vm-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .vm-box ol {
+    padding-left: 24px;
+    margin: 0;
+  }
+
+  .vm-box li {
+    margin-bottom: 14px;
+  }
+  
+  @media (max-width: 980px) {
+    .vm-row, .vm-row--reverse {
+      flex-direction: column;
+      margin-bottom: 40px;
+    }
+    .vm-image {
+      width: 100%;
+      height: 300px;
+      min-height: auto;
+    }
+    .vm-box {
+      width: 100%;
+      margin: 0 !important;
+      padding: 40px 24px;
+    }
+  }
+</style>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>Visi, Misi & Tujuan</h1>
+  </div>
+</div>
+
+<div class="vm-container">
+  <div class="wrap">
+    
+    <!-- VISI -->
+    <div class="vm-row">
+      <div class="vm-image">
+        <img src="https://min4jombang.my.id/wp-content/uploads/2025/10/Gambar-WhatsApp-2025-10-13-pukul-13.17.28_96774b25.jpg" alt="Foto Visi">
+      </div>
+      <div class="vm-box">
+        <h2>Visi Kami</h2>
+        <p>
+          "Terwujudnya lulusan Madrasah yang beriman, berprestasi, berilmu, beramal sholeh, peduli lingkungan, serta menjalankan Amaliyah Pondok Pesantren Darul ‘Ulum Jombang"
+        </p>
+      </div>
+    </div>
+
+    <!-- MISI -->
+    <div class="vm-row vm-row--reverse">
+      <div class="vm-image">
+        <img src="https://min4jombang.my.id/wp-content/uploads/2020/12/WhatsApp-Image-2020-12-12-at-12.19.00-1024x768.jpeg" alt="Foto Misi">
+      </div>
+      <div class="vm-box">
+        <h2>Misi Kami</h2>
+        <ol>
+          <li>Menjadikan anak istiqomah dalam beribadah dan taat kepada Allah SWT serta RasulNya.</li>
+          <li>Meningkatkan anak gemar membaca, memahami, serta mengamalkan isi kandungan Al-Qur’an dengan baik dan benar.</li>
+          <li>Menjadikan anak rajin belajar, berpotensi dan berprestasi.</li>
+          <li>Membiasakan anak berbuat sopan kepada Guru, Orang tua, dan Sesama manusia.</li>
+          <li>Menciptakan kepedulian sosial pada diri anak untuk saling tolong menolong dengan sesama manusia dan melestarikan lingkungan.</li>
+          <li>Terlaksananya pembelajaran pendidikan agama islam yang inovatif serta menciptakan lingkungan yang sehat, bersih, rapi dan indah sehingga tercipta suasana madrasah yang nyaman.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- TUJUAN -->
+    <div class="vm-row">
+      <div class="vm-image">
+        <img src="https://min4jombang.my.id/wp-content/uploads/2020/07/WhatsApp-Image-2020-07-18-at-13.01.54-1024x768.jpeg" alt="Foto Tujuan">
+      </div>
+      <div class="vm-box">
+        <h2>Tujuan Kami</h2>
+        <ol>
+          <li>Memberikan dasar-dasar keimanan, ketaqwaan, dan akhlakul karimah, sehingga siswa mampu mengamalkannya dalam kehidupan sehari-hari.</li>
+          <li>Meningkatkan kegiatan yang dapat menumbuh kembangkan budaya baca dan tulis.</li>
+          <li>Melaksanakan pembelajaran yang Aktif, Kreatif, Inovatif, Efektif, dan Menyenangkan (PAKIEM), sehingga siswa mampu mencapai prestasi akademik dan non akademik secara optimal.</li>
+          <li>Mengoptimalkan pelaksanaan program perbaikan dan pengayaan, sehingga siswa mampu meningkatkan rata-rata nilai Ujian Nasional (UN) serta mampu berkompetisi pada tingkat nasional.</li>
+          <li>Meningkatkan kelengkapan sarana dan prasarana sebagai penunjang proses pembelajaran sehingga siswa betah berada di lingkungan madrasah.</li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

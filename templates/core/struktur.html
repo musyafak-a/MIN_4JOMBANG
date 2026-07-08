@@ -1,0 +1,170 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Struktur Organisasi - {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}
+
+{% block content %}
+<style>
+  .page-header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    color: var(--white);
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--bg);
+    transform: skewY(-2deg);
+  }
+
+  .page-header h1 {
+    font-size: 2.8rem;
+    color: var(--secondary);
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .page-header p {
+    font-size: 1.1rem;
+    color: #ffffff;
+    position: relative;
+    z-index: 2;
+  }
+
+  .struktur-container {
+    padding: 80px 0 120px;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Decorative Background */
+  .struktur-container::before,
+  .struktur-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .struktur-container::before {
+    width: 600px;
+    height: 600px;
+    background: rgba(37, 95, 56, 0.15);
+    top: -100px;
+    left: -200px;
+  }
+
+  .struktur-container::after {
+    width: 500px;
+    height: 500px;
+    background: rgba(243, 255, 144, 0.15); /* var(--secondary) but transparent */
+    bottom: -50px;
+    right: -100px;
+  }
+
+  .struktur-card {
+    position: relative;
+    z-index: 2;
+    background: var(--white);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 30px 60px rgba(24, 64, 37, 0.08);
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    border: 1px solid rgba(24, 64, 37, 0.05);
+  }
+
+  .struktur-image-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f8f9fa;
+    margin-bottom: 32px;
+  }
+
+  .struktur-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .struktur-image:hover {
+    transform: scale(1.02);
+  }
+
+  .struktur-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(37, 95, 56, 0.2);
+  }
+
+  .struktur-action:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(37, 95, 56, 0.3);
+    color: var(--white);
+  }
+
+  .struktur-action i {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .struktur-card {
+      padding: 16px;
+      border-radius: 16px;
+    }
+    
+    .page-header h1 {
+      font-size: 2.2rem;
+    }
+  }
+</style>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>Struktur Organisasi</h1>
+    <p>Bagan Susunan Kepengurusan di MIN 4 Jombang</p>
+  </div>
+</div>
+
+<div class="struktur-container">
+  <div class="wrap">
+    <div class="struktur-card">
+      <div class="struktur-image-wrapper">
+        <img 
+          src="https://min4jombang.my.id/wp-content/uploads/2026/01/STRUKTUR-ORBANISASI-1-724x1024.jpg" 
+          alt="Bagan Struktur Organisasi MIN 4 Jombang" 
+          class="struktur-image"
+        >
+      </div>
+      <a href="https://min4jombang.my.id/wp-content/uploads/2026/01/STRUKTUR-ORBANISASI-1-724x1024.jpg" target="_blank" class="struktur-action">
+        <i class="fa-solid fa-magnifying-glass-plus"></i> Lihat Gambar Penuh
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

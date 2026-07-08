@@ -33,3 +33,27 @@ def home(request):
         "partners": partners,
     }
     return render(request, "core/home.html", context)
+
+
+def sejarah(request):
+    profile = SchoolProfile.objects.first()
+    context = {
+        "profile": profile,
+    }
+    return render(request, "core/sejarah.html", context)
+
+
+def visi_misi(request):
+    profile = SchoolProfile.objects.first()
+    context = {
+        "profile": profile,
+    }
+    return render(request, "core/visi_misi.html", context)
+
+
+def struktur(request):
+    profile = SchoolProfile.objects.first()
+    context = {
+        "profile": profile,
+    }
+    return render(request, "core/struktur.html", context)
