@@ -187,3 +187,28 @@ def direktori_dokumen(request):
         "data_sk": data_sk,
     }
     return render(request, "core/direktori_dokumen.html", context)
+
+
+def spmb(request):
+    profile = SchoolProfile.objects.first()
+    context = {
+        "profile": profile,
+    }
+    return render(request, "core/spmb.html", context)
+
+
+def berita(request):
+    profile = SchoolProfile.objects.first()
+    context = {
+        "profile": profile,
+    }
+    return render(request, "core/berita.html", context)
+
+
+def pengumuman(request):
+    profile = SchoolProfile.objects.first()
+    context = {
+        "profile": profile,
+    }
+    return render(request, "core/pengumuman.html", context)
+

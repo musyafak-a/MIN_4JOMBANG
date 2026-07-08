@@ -52,12 +52,12 @@
         <div class="dropdown">
           <a href="#" class="dropdown__toggle">Informasi <i class="fa-solid fa-chevron-down"></i></a>
           <div class="dropdown__menu">
-            <a href="#">SPMB</a>
-            <a href="#">Berita</a>
-            <a href="#">E-Raport</a>
+            <a href="{% url 'core:spmb' %}">SPMB</a>
+            <a href="{% url 'core:berita' %}">Berita</a>
+            <a href="{% url 'admin:login' %}">E-Raport</a>
           </div>
         </div>
-        <a href="#">Pengumuman</a>
+        <a href="{% url 'core:pengumuman' %}">Pengumuman</a>
       </nav>
 
       <div class="navbar__actions">

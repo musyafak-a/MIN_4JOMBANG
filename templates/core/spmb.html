@@ -1,0 +1,903 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}SPMB - {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-color: var(--bg);
+  }
+
+  /* Dipakai berulang di semua section supaya senada dengan halaman Visi & Misi */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .num-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* --- Section 1: Hero --- */
+  .spmb-hero {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    padding: 90px 0 160px; /* Diperpanjang sedikit di bagian bawah */
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spmb-hero .blob--1 {
+    width: 420px;
+    height: 420px;
+    background: rgba(255, 255, 255, .08);
+    top: -160px;
+    right: -120px;
+  }
+
+  .spmb-hero .blob--2 {
+    width: 320px;
+    height: 320px;
+    background: rgba(254, 240, 138, .12);
+    bottom: -140px;
+    left: -80px;
+  }
+
+  .spmb-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-image {
+    flex: 1;
+    position: relative;
+  }
+
+  .hero-image img {
+    width: 100%;
+    max-width: 520px;
+    display: block;
+    position: relative;
+    z-index: 2;
+    /* Membuat bentuk gambar menjadi abstrak (blob) */
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    box-shadow: 0 25px 35px rgba(0, 0, 0, .25);
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    transition: border-radius 0.5s ease-in-out;
+  }
+  
+  .hero-image img:hover {
+    border-radius: 60% 40% 30% 70% / 50% 40% 50% 60%;
+  }
+
+  .hero-image::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 82%;
+    height: 92%;
+    background: rgba(255, 255, 255, .1);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    position: absolute;
+    bottom: 18px;
+    right: 4%;
+    z-index: 3;
+    background: rgba(255, 255, 255, .16);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, .3);
+    color: var(--white);
+    padding: 14px 22px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, .2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-badge span {
+    display: block;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--secondary);
+  }
+
+  .hero-content {
+    flex: 1.2;
+    color: var(--white);
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .25);
+    padding: 8px 18px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.8rem;
+    font-family: var(--font-display);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    color: transparent;
+    background: linear-gradient(to right, #fef08a, #f59e0b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, .2);
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, .85);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .hero-content p strong {
+    color: var(--white);
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-green {
+    background-color: var(--secondary);
+    color: var(--primary-dark);
+    padding: 12px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: .95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .15);
+    transition: transform .2s, background .2s, box-shadow .2s;
+  }
+
+  .btn-green:hover {
+    background-color: #d97706;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, .2);
+  }
+
+  .btn-grey {
+    background-color: transparent;
+    border: 2px solid rgba(255, 255, 255, .4);
+    color: var(--white);
+    padding: 10px 26px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: .95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .2s;
+  }
+
+  .btn-grey:hover {
+    background-color: rgba(255, 255, 255, .15);
+    border-color: var(--white);
+  }
+
+  /* --- Section 2: Persyaratan (overlapping glass, senada dengan vm-row) --- */
+  .section-syarat {
+    background: var(--bg);
+    padding: 40px 20px 110px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-syarat .blob--1 {
+    width: 460px;
+    height: 460px;
+    background: rgba(37, 95, 56, .12);
+    top: 10%;
+    left: -160px;
+  }
+
+  .section-syarat .blob--2 {
+    width: 380px;
+    height: 380px;
+    background: rgba(23, 59, 138, .1);
+    bottom: -10%;
+    right: -120px;
+  }
+
+  .syarat-row {
+    max-width: 1150px;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    z-index: 2;
+  }
+
+  .syarat-image {
+    width: 55%;
+    min-height: 480px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(160deg, #dcfce7, #f0fdf4);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .1);
+  }
+
+  .syarat-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .syarat-image .icon-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .syarat-image .icon-fallback i {
+    font-size: 6rem;
+    color: rgba(37, 95, 56, .14);
+  }
+
+  .syarat-box {
+    width: 58%;
+    margin-left: -13%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    background: rgba(23, 59, 138, .78);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 16px;
+    color: var(--white);
+    padding: 52px 48px;
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+  }
+
+  .syarat-box .section-title {
+    font-size: 1.9rem;
+    color: var(--white);
+    font-weight: 800;
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+  }
+
+  .syarat-box .section-subtitle {
+    color: rgba(255, 255, 255, .85);
+    font-size: .95rem;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .syarat-box .section-subtitle strong {
+    color: var(--secondary);
+  }
+
+  .syarat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .syarat-chip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: background .2s, transform .2s;
+  }
+
+  .syarat-chip:hover {
+    background: rgba(255, 255, 255, .14);
+    transform: translateY(-3px);
+  }
+
+  .syarat-chip .num-circle {
+    width: 30px;
+    height: 30px;
+    font-size: .85rem;
+    background: var(--secondary);
+    color: var(--primary-dark);
+  }
+
+  .syarat-chip-text strong {
+    display: block;
+    font-size: .88rem;
+    font-weight: 800;
+    margin-bottom: 3px;
+  }
+
+  .syarat-chip-text span {
+    font-size: .8rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, .8);
+  }
+
+  .syarat-note {
+    font-weight: 800;
+    color: var(--secondary);
+    font-size: .9rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    border-top: 1px solid rgba(255, 255, 255, .2);
+    padding-top: 20px;
+  }
+
+  /* --- Section 3: Prosedur (timeline glass, satu bahasa visual dgn info-list) --- */
+  .section-prosedur {
+    background: var(--primary);
+    padding: 90px 0 110px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-prosedur .blob--1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, .07);
+    top: -140px;
+    right: -100px;
+  }
+
+  .prosedur-header {
+    max-width: 700px;
+    margin: 0 auto 56px;
+    text-align: center;
+    color: var(--white);
+    position: relative;
+    z-index: 2;
+  }
+
+  .prosedur-header h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    color: var(--secondary);
+  }
+
+  .prosedur-header p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, .88);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .prosedur-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-green-light {
+    background-color: var(--white);
+    color: var(--primary-dark);
+    padding: 12px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: .9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
+    transition: transform .2s;
+  }
+
+  .btn-green-light:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-grey-dark {
+    background-color: transparent;
+    border: 2px solid rgba(255, 255, 255, .3);
+    color: var(--white);
+    padding: 10px 26px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: .9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .2s;
+  }
+
+  .btn-grey-dark:hover {
+    background-color: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .8);
+  }
+
+  .prosedur-timeline {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .prosedur-step {
+    background: rgba(255, 255, 255, .1);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 16px;
+    padding: 28px 22px;
+    color: var(--white);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, .12);
+    transition: transform .25s, background .25s;
+  }
+
+  .prosedur-step:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, .16);
+  }
+
+  .prosedur-step .num-circle {
+    background: var(--secondary);
+    color: var(--primary-dark);
+    margin-bottom: 16px;
+  }
+
+  .prosedur-step h3 {
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--white);
+  }
+
+  .prosedur-step p {
+    font-size: .86rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, .85);
+    margin: 0;
+  }
+
+  /* --- Section 4: Informasi & Kontak --- */
+  .section-info {
+    background: linear-gradient(135deg, #f0fdf4 0%, #e2e8f0 100%);
+    padding: 90px 20px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .section-info .blob--1 {
+    width: 300px;
+    height: 300px;
+    background: rgba(34, 197, 94, .1);
+    top: -50px;
+    left: -50px;
+  }
+
+  .section-info .blob--2 {
+    width: 400px;
+    height: 400px;
+    background: rgba(59, 130, 246, .1);
+    bottom: 10%;
+    right: 5%;
+  }
+
+  .info-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 50px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .info-header h2 {
+    font-size: 2.2rem;
+    color: var(--primary-dark);
+    font-weight: 800;
+    margin-bottom: 16px;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+  }
+
+  .info-list-container {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .info-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .info-list li {
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: 20px;
+    line-height: 1.65;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255, 255, 255, .4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 20px 28px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .6);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .05);
+    transition: transform .3s, box-shadow .3s, background .3s;
+  }
+
+  .info-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .1);
+    background: rgba(255, 255, 255, .6);
+  }
+
+  .info-list li strong {
+    font-weight: 800;
+    color: var(--primary-dark);
+  }
+
+  .info-list li::before {
+    content: attr(data-num);
+    font-weight: 800;
+    background-color: var(--primary);
+    color: var(--white);
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+
+  .info-bottom {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .kontak-area {
+    flex: 1;
+  }
+
+  .kontak-area h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .kontak-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .kontak-list li {
+    font-size: 1.05rem;
+    color: #4b5563;
+    margin-bottom: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .kontak-list li i {
+    color: var(--ink-soft);
+    font-size: 1.2rem;
+  }
+
+  .video-area {
+    flex: 1.2;
+    background-color: var(--primary-dark);
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .18);
+  }
+
+  .video-area h3 {
+    color: var(--white);
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  }
+
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+
+    .hero-container,
+    .info-bottom {
+      flex-direction: column;
+    }
+
+    .hero-image {
+      order: -1;
+    }
+
+    .hero-content h1 {
+      font-size: 2.2rem;
+    }
+
+    .syarat-row {
+      flex-direction: column;
+    }
+
+    .syarat-image {
+      width: 100%;
+      min-height: 260px;
+    }
+
+    .syarat-box {
+      width: 100%;
+      margin: -40px 0 0;
+      border-radius: 0 0 16px 16px;
+    }
+
+    .syarat-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .prosedur-timeline {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .prosedur-timeline {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<!-- SECTION 1: HERO -->
+<section class="spmb-hero">
+  <span class="blob blob--1"></span>
+  <span class="blob blob--2"></span>
+  <div class="hero-container">
+    <div class="hero-image">
+      <img src="{% static 'img/spmb.png' %}"
+        alt="Peserta Didik Berprestasi">
+      <div class="hero-badge"><span>2026/2027</span> Kuota Terbatas</div>
+    </div>
+    <div class="hero-content">
+      <span class="hero-eyebrow">SPMB &middot; Tahun Ajaran Baru</span>
+      <h1>SELAMAT DATANG<br>CALON PESERTA<br>DIDIK BARU</h1>
+      <p>
+        Bergabunglah menjadi <strong>Peserta Didik MIN 4 Jombang</strong>! Mari wujudkan masa depan gemilang di madrasah
+        unggul berprestasi untuk generasi islami berdaya saing. <strong>Daftar sekarang, kuota terbatas!</strong>
+      </p>
+      <div class="hero-buttons">
+        <a href="#" class="btn-green"><i class="fa-solid fa-file-lines"></i> FORMULIR</a>
+        <a href="#" class="btn-grey"><i class="fa-solid fa-download"></i> BROSUR</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: PERSYARATAN -->
+<section class="section-syarat">
+  <span class="blob blob--1"></span>
+  <span class="blob blob--2"></span>
+  <div class="syarat-row">
+    <div class="syarat-image">
+      <img src="https://cdn-jpr.jawapos.com/images/2/2026/06/30/pelayanan-spmb-di-smkn-1-jombang-Oa8Tp.webp" alt="Persyaratan Pendaftaran SPMB">
+    </div>
+    <div class="syarat-box">
+      <h2 class="section-title">Persyaratan Pendaftaran</h2>
+      <p class="section-subtitle">Persyaratan pendaftaran penerimaan murid baru yang harus disiapkan calon peserta didik
+        tahun pembelajaran <strong>2026 - 2027</strong></p>
+
+      <div class="syarat-grid">
+        <div class="syarat-chip">
+          <span class="num-circle">1</span>
+          <div class="syarat-chip-text"><strong>Berusia 6 Tahun</strong><span>Minimal 6 tahun per Juli 2026</span></div>
+        </div>
+        <div class="syarat-chip">
+          <span class="num-circle">2</span>
+          <div class="syarat-chip-text"><strong>NISN</strong><span>Fotokopi NISN dari TK/RA asal</span></div>
+        </div>
+        <div class="syarat-chip">
+          <span class="num-circle">3</span>
+          <div class="syarat-chip-text"><strong>Kartu Keluarga</strong><span>Fotokopi KK, 1 lembar</span></div>
+        </div>
+        <div class="syarat-chip">
+          <span class="num-circle">4</span>
+          <div class="syarat-chip-text"><strong>Akte Kelahiran</strong><span>Fotokopi, 1 lembar</span></div>
+        </div>
+        <div class="syarat-chip">
+          <span class="num-circle">5</span>
+          <div class="syarat-chip-text"><strong>KTP Orang Tua</strong><span>Fotokopi kedua orang tua</span></div>
+        </div>
+        <div class="syarat-chip">
+          <span class="num-circle">6</span>
+          <div class="syarat-chip-text"><strong>Ijazah RA/TK</strong><span>1 lembar, jika sudah keluar</span></div>
+        </div>
+        <div class="syarat-chip">
+          <span class="num-circle">7</span>
+          <div class="syarat-chip-text"><strong>KIP/KKS/PKH</strong><span>Jika memiliki, 1 lembar</span></div>
+        </div>
+      </div>
+
+      <div class="syarat-note">Semua berkas dimasukkan ke dalam map warna hijau</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: PROSEDUR -->
+<section class="section-prosedur">
+  <span class="blob blob--1"></span>
+  <div class="wrap">
+    <div class="prosedur-header">
+      <h2>Prosedur Pendaftaran Peserta Didik Baru</h2>
+      <p>Tahapan pendaftaran online SPMB MIN 4 Jombang tahun pembelajaran 2026-2027</p>
+      <div class="prosedur-buttons">
+        <a href="#" class="btn-green-light"><i class="fa-solid fa-file-signature"></i> FORMULIR</a>
+        <a href="#" class="btn-grey-dark"><i class="fa-solid fa-bullhorn"></i> BUKTI DAFTAR</a>
+      </div>
+    </div>
+
+    <div class="prosedur-timeline">
+      <div class="prosedur-step">
+        <span class="num-circle">1</span>
+        <h3>Formulir</h3>
+        <p>Mengisi formulir pendaftaran secara online</p>
+      </div>
+      <div class="prosedur-step">
+        <span class="num-circle">2</span>
+        <h3>Bukti Daftar</h3>
+        <p>Mencetak bukti pendaftaran SPMB online</p>
+      </div>
+      <div class="prosedur-step">
+        <span class="num-circle">3</span>
+        <h3>Konfirmasi</h3>
+        <p>Verifikasi ke kantor MIN 4 Jombang dengan membawa print out bukti daftar & berkas persyaratan</p>
+      </div>
+      <div class="prosedur-step">
+        <span class="num-circle">4</span>
+        <h3>Tes</h3>
+        <p>Tes CALISTUNG (baca, tulis, hitung) dan observasi minat & bakat</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: INFORMASI PENDAFTARAN & KONTAK -->
+<section class="section-info">
+  <span class="blob blob--1"></span>
+  <span class="blob blob--2"></span>
+
+  <div class="info-header">
+    <h2>Informasi Pendaftaran</h2>
+    <p style="color: var(--ink-soft);">Berikut adalah informasi sistem penerimaan murid baru MIN 4 Jombang</p>
+  </div>
+
+  <div class="info-list-container">
+    <ul class="info-list">
+      <li data-num="1">Pelaksanaan Penerimaan Peserta didik baru dibuka mulai tanggal <strong>________</strong></li>
+      <li data-num="2">Penyerahan berkas Persyaratan SPMB ke kantor MIN 4 Jombang pada hari Sabtu – Kamis pada jam kerja
+        (07.00 – 12.00 WIB)</li>
+      <li data-num="3">Pendaftaran sewaktu-waktu ditutup apabila sudah <strong>MEMENUHI KUOTA PESERTA DIDIK</strong>
+      </li>
+      <li data-num="4"><strong>Proses Seleksi Calon Peserta SPMB MIN 4 JOMBANG akan diinfokan lebih lanjut</strong></li>
+    </ul>
+  </div>
+
+  <div class="info-bottom">
+    <div class="kontak-area">
+      <h3>Kontak Person</h3>
+      <ul class="kontak-list">
+        <li><i class="fa-brands fa-whatsapp"></i> Indah Maf'ulah : 085755679301</li>
+        <li><i class="fa-brands fa-whatsapp"></i> Aimatul Fikriyah : 082118615934</li>
+        <li><i class="fa-brands fa-whatsapp"></i> Wahyuningsih : 085785751993</li>
+      </ul>
+    </div>
+
+    <div class="video-area">
+      <h3>Video Tutorial SPMB</h3>
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

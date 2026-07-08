@@ -1,0 +1,481 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Pengumuman - MIN 4 Jombang{% endblock %}
+
+{% block content %}
+<style>
+  /* === PAGE HEADER === */
+  .peng-header {
+    padding: 110px 0 0;
+    text-align: center;
+    background: transparent;
+  }
+  .peng-header h1 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    color: var(--primary-dark);
+    margin-bottom: 6px;
+  }
+  .peng-header p {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+  .peng-search-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+  .peng-search-wrap input {
+    width: 380px;
+    max-width: 90vw;
+    padding: 12px 20px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    text-align: center;
+  }
+  .peng-search-wrap input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 95, 56, 0.1);
+  }
+
+  /* === LAYOUT === */
+  .peng-container {
+    max-width: 1250px;
+    margin: 40px auto 80px;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+
+  /* === ANNOUNCEMENT LIST (KIRI) === */
+  .peng-list {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .peng-card {
+    background: var(--white);
+    border: 1px solid #f0f0f0;
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .peng-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.07);
+  }
+
+  /* Date Box */
+  .peng-date-box {
+    min-width: 68px;
+    text-align: center;
+    background: #f3f4f6;
+    border-radius: 12px;
+    padding: 10px 8px;
+    line-height: 1.1;
+    flex-shrink: 0;
+  }
+  .peng-date-box .day {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--primary-dark);
+    display: block;
+    font-family: var(--font-display);
+  }
+  .peng-date-box .month {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+  }
+
+  /* Content */
+  .peng-content {
+    flex: 1;
+  }
+  .peng-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 0.78rem;
+  }
+  .peng-meta-date {
+    color: var(--ink-soft);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .peng-meta-cat {
+    color: #1d4ed8; /* Biru */
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .peng-meta-sep {
+    color: #d1d5db;
+  }
+  .peng-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .peng-desc {
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .peng-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border: 1.5px solid #2563eb;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #2563eb;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+  }
+  .peng-btn:hover {
+    background: #2563eb;
+    color: var(--white);
+  }
+
+  /* === SIDEBAR === */
+  .peng-sidebar {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .widget {
+    background: var(--white);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+  }
+  .widget-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    position: relative;
+  }
+  .widget-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 36px;
+    height: 3px;
+    background: var(--secondary);
+    border-radius: 2px;
+  }
+  .filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .filter-list li {
+    padding: 10px 0;
+    border-bottom: 1px dashed #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .filter-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .filter-list a {
+    color: #1d4ed8;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .filter-list a:hover { color: var(--primary); }
+  .filter-count {
+    font-size: 0.75rem;
+    background: #f3f4f6;
+    color: var(--ink-soft);
+    padding: 2px 8px;
+    border-radius: 50px;
+    font-weight: 700;
+  }
+
+  /* Tahun filter */
+  .year-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .year-tag {
+    padding: 6px 14px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .year-tag:hover, .year-tag.active {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+  }
+
+  @media (max-width: 1024px) {
+    .peng-container { flex-direction: column; }
+    .peng-sidebar { width: 100%; min-width: unset; }
+  }
+  @media (max-width: 600px) {
+    .peng-card { flex-direction: column; gap: 16px; }
+    .peng-date-box { display: flex; gap: 8px; align-items: baseline; padding: 8px 14px; width: fit-content; }
+    .peng-date-box .day { font-size: 1.5rem; }
+  }
+</style>
+
+<!-- HEADER -->
+<div class="peng-header">
+  <h1>Pengumuman & Agenda</h1>
+  <p>Informasi Terkini &amp; Unduhan Dokumen</p>
+  <div class="peng-search-wrap">
+    <input type="text" id="searchInput" placeholder="Cari agenda..." oninput="filterPengumuman()">
+  </div>
+</div>
+
+<!-- LAYOUT UTAMA -->
+<div class="peng-container">
+
+  <!-- KIRI: DAFTAR PENGUMUMAN -->
+  <div class="peng-list" id="pengList">
+
+    <!-- Item 1 -->
+    <div class="peng-card" data-cat="Informasi Publik" data-year="2026">
+      <div class="peng-date-box">
+        <span class="day">02</span>
+        <span class="month">JUN</span>
+      </div>
+      <div class="peng-content">
+        <div class="peng-meta">
+          <span class="peng-meta-date">02 - 06 - 2026</span>
+          <span class="peng-meta-sep">|</span>
+          <span class="peng-meta-cat">Informasi Publik</span>
+        </div>
+        <h3 class="peng-title">Pengumuman Kelulusan 2026</h3>
+        <p class="peng-desc">Pengumuman Kelulusan MI dan MTs Dijadwalkan 02 Juni 2026</p>
+        <a href="#" class="peng-btn"><i class="fa-solid fa-download"></i> UNDUH BERKAS</a>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="peng-card" data-cat="Informasi Publik" data-year="2026">
+      <div class="peng-date-box">
+        <span class="day">09</span>
+        <span class="month">MEI</span>
+      </div>
+      <div class="peng-content">
+        <div class="peng-meta">
+          <span class="peng-meta-date">09 - 05 - 2026</span>
+          <span class="peng-meta-sep">|</span>
+          <span class="peng-meta-cat">Informasi Publik</span>
+        </div>
+        <h3 class="peng-title">Tes Pemetaan Siswa Baru 2026–2027</h3>
+        <p class="peng-desc">Pelaksanaan Tes Pemetaan Siswa Baru 2026–2027 Dilaksanakan Tanggal 09 - 10 Mei 2026</p>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="peng-card" data-cat="Kegiatan" data-year="2026">
+      <div class="peng-date-box">
+        <span class="day">02</span>
+        <span class="month">MEI</span>
+      </div>
+      <div class="peng-content">
+        <div class="peng-meta">
+          <span class="peng-meta-date">02 - 05 - 2026</span>
+          <span class="peng-meta-sep">|</span>
+          <span class="peng-meta-cat">Kegiatan</span>
+        </div>
+        <h3 class="peng-title">Asesmen Madrasah</h3>
+        <p class="peng-desc">Kegiatan Asesmen Madrasah Dilaksanakan 2–10 Mei 2026</p>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="peng-card" data-cat="Kegiatan" data-year="2026">
+      <div class="peng-date-box">
+        <span class="day">27</span>
+        <span class="month">APR</span>
+      </div>
+      <div class="peng-content">
+        <div class="peng-meta">
+          <span class="peng-meta-date">27 - 04 - 2026</span>
+          <span class="peng-meta-sep">|</span>
+          <span class="peng-meta-cat">Kegiatan</span>
+        </div>
+        <h3 class="peng-title">Kegiatan Tes Kemampuan Akademik 2026</h3>
+        <p class="peng-desc">Tes Kemampuan Akademik (TKA) Dilaksanakan 27–30 April 2026</p>
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="peng-card" data-cat="Informasi Publik" data-year="2026">
+      <div class="peng-date-box">
+        <span class="day">16</span>
+        <span class="month">APR</span>
+      </div>
+      <div class="peng-content">
+        <div class="peng-meta">
+          <span class="peng-meta-date">16 - 04 - 2026</span>
+          <span class="peng-meta-sep">|</span>
+          <span class="peng-meta-cat">Informasi Publik</span>
+        </div>
+        <h3 class="peng-title">Cek Kesehatan Gratis</h3>
+        <p class="peng-desc">Surat Pemberitahuan Cek Kesehatan Gratis untuk Peserta Didik MIN 4 Jombang</p>
+        <a href="#" class="peng-btn"><i class="fa-solid fa-download"></i> UNDUH BERKAS</a>
+      </div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="peng-card" data-cat="SPMB" data-year="2026">
+      <div class="peng-date-box">
+        <span class="day">01</span>
+        <span class="month">APR</span>
+      </div>
+      <div class="peng-content">
+        <div class="peng-meta">
+          <span class="peng-meta-date">01 - 04 - 2026</span>
+          <span class="peng-meta-sep">|</span>
+          <span class="peng-meta-cat">SPMB</span>
+        </div>
+        <h3 class="peng-title">Informasi PMBM MIN 4 Jombang 2026</h3>
+        <p class="peng-desc">Penerimaan Murid Baru Madrasah (PMBM) Tahun Pelajaran 2026/2027 Sudah Dibuka</p>
+        <a href="#" class="peng-btn"><i class="fa-solid fa-download"></i> UNDUH BERKAS</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- KANAN: SIDEBAR FILTER -->
+  <div class="peng-sidebar">
+    <!-- Filter Kategori -->
+    <div class="widget">
+      <h4 class="widget-title">Kategori</h4>
+      <ul class="filter-list">
+        <li>
+          <a href="#" onclick="filterByCategory('Semua'); return false;">Semua Pengumuman</a>
+          <span class="filter-count">6</span>
+        </li>
+        <li>
+          <a href="#" onclick="filterByCategory('Informasi Publik'); return false;">Informasi Publik</a>
+          <span class="filter-count">3</span>
+        </li>
+        <li>
+          <a href="#" onclick="filterByCategory('Kegiatan'); return false;">Kegiatan</a>
+          <span class="filter-count">2</span>
+        </li>
+        <li>
+          <a href="#" onclick="filterByCategory('SPMB'); return false;">SPMB</a>
+          <span class="filter-count">1</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Filter Tahun -->
+    <div class="widget">
+      <h4 class="widget-title">Tahun</h4>
+      <div class="year-list">
+        <span class="year-tag active" onclick="filterByYear('Semua', this)">Semua</span>
+        <span class="year-tag" onclick="filterByYear('2026', this)">2026</span>
+        <span class="year-tag" onclick="filterByYear('2025', this)">2025</span>
+        <span class="year-tag" onclick="filterByYear('2024', this)">2024</span>
+      </div>
+    </div>
+
+    <!-- Pengumuman Terbaru -->
+    <div class="widget">
+      <h4 class="widget-title">Terbaru</h4>
+      <ul class="filter-list">
+        <li><a href="#">Pengumuman Kelulusan 2026</a></li>
+        <li><a href="#">Tes Pemetaan Siswa Baru 2026–2027</a></li>
+        <li><a href="#">Asesmen Madrasah</a></li>
+        <li><a href="#">Tes Kemampuan Akademik 2026</a></li>
+        <li><a href="#">Cek Kesehatan Gratis</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  let activeCategory = 'Semua';
+  let activeYear = 'Semua';
+
+  function applyFilters() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.peng-card').forEach(card => {
+      const cat   = card.dataset.cat;
+      const year  = card.dataset.year;
+      const title = card.querySelector('.peng-title').textContent.toLowerCase();
+      const desc  = card.querySelector('.peng-desc').textContent.toLowerCase();
+      const matchCat  = activeCategory === 'Semua' || cat === activeCategory;
+      const matchYear = activeYear === 'Semua' || year === activeYear;
+      const matchSearch = !search || title.includes(search) || desc.includes(search);
+      card.style.display = (matchCat && matchYear && matchSearch) ? 'flex' : 'none';
+    });
+  }
+
+  function filterByCategory(cat) {
+    activeCategory = cat;
+    applyFilters();
+  }
+
+  function filterByYear(year, el) {
+    activeYear = year;
+    document.querySelectorAll('.year-tag').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function filterPengumuman() {
+    applyFilters();
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,343 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Berita - MIN 4 Jombang{% endblock %}
+
+{% block content %}
+<style>
+  /* --- PAGE HEADER --- */
+  .page-header {
+    background: transparent;
+    padding: 110px 0 30px;
+    text-align: center;
+    color: var(--primary-dark);
+    position: relative;
+  }
+  .page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* --- MAIN LAYOUT --- */
+  .berita-container {
+    max-width: 1250px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+
+  .berita-main {
+    flex: 3;
+  }
+
+  .berita-sidebar {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  /* --- NEWS GRID --- */
+  .berita-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .b-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+    border: 1px solid #f3f4f6;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .b-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+  }
+  .b-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  .b-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .b-card-meta {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .b-card-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .b-card-excerpt {
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .b-card-footer {
+    margin-top: auto;
+  }
+  .b-card-footer a {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  /* --- SIDEBAR WIDGETS --- */
+  .widget {
+    background: var(--white);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+  }
+  .widget-search input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .widget-search input:focus {
+    border-color: var(--primary);
+  }
+
+  .widget-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 12px;
+  }
+  .widget-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: var(--secondary);
+    border-radius: 2px;
+  }
+
+  /* Categories & Posts Links */
+  .widget-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-links li {
+    padding: 12px 0;
+    border-bottom: 1px dashed #e5e7eb;
+  }
+  .widget-links li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .widget-links a {
+    color: #1e3a8a; /* Warna biru mirip di mockup Kategori Postingan */
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .widget-links a:hover {
+    color: var(--primary);
+  }
+
+  /* Recent Posts with Thumbnails */
+  .recent-post {
+    display: flex;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .recent-post:first-of-type {
+    padding-top: 0;
+  }
+  .recent-post:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .recent-post img {
+    width: 70px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .recent-post-info {
+    flex-grow: 1;
+  }
+  .recent-post-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #374151; /* Warna abu gelap mirip di mockup Postingan Terbaru */
+    text-decoration: none;
+    line-height: 1.4;
+    display: block;
+    margin-bottom: 6px;
+    transition: color 0.2s;
+  }
+  .recent-post-title:hover {
+    color: var(--primary);
+  }
+  .recent-post-date {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 1024px) {
+    .berita-container {
+      flex-direction: column;
+    }
+    .berita-sidebar {
+      width: 100%;
+    }
+    .berita-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 640px) {
+    .berita-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="page-header">
+  <h1>Berita & Postingan</h1>
+</div>
+
+<div class="berita-container">
+  <!-- KONTEN UTAMA (KIRI) -->
+  <div class="berita-main">
+    <div class="berita-grid">
+      <!-- Card 1 -->
+      <div class="b-card">
+        <img src="{% static 'img/prestasi_baru.jpg' %}" alt="Berita">
+        <div class="b-card-body">
+          <div class="b-card-meta">17 Jun 2026</div>
+          <h3 class="b-card-title">MASUK 10 BESAR NILAI TERBAIK TKA KABUPATEN, 4 SISWA MIN 4 JOMBANG TERIMA APRESIASI</h3>
+          <p class="b-card-excerpt">Prestasi membanggakan kembali diukir oleh peserta didik Madrasah Ibtidaiyah Negeri 4 Jombang dalam ajang Tes Kemampuan Akademik (TKA)...</p>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="b-card">
+        <img src="{% static 'img/kegiatan_baru.jpg' %}" alt="Berita">
+        <div class="b-card-body">
+          <div class="b-card-meta">12 Mei 2026</div>
+          <h3 class="b-card-title">ASAH JIWA ENTREPRENEUR MUDA, SISWA KELAS 6 MIN 4 JOMBANG SUKSES GELAR BUSINESS DAY</h3>
+          <p class="b-card-excerpt">Lapangan belakang kantor sekretariat disulap menjadi pasar kreatif yang meriah dalam rangka pelaksanaan kegiatan Business Day.</p>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="b-card">
+        <img src="{% static 'img/fasilitas_baru.jpg' %}" alt="Berita">
+        <div class="b-card-body">
+          <div class="b-card-meta">11 Mei 2026</div>
+          <h3 class="b-card-title">SINERGI PENDIDIKAN, MIN 4 JOMBANG GELAR PERTEMUAN WALI MURID BARU</h3>
+          <p class="b-card-excerpt">Madrasah Ibtidaiyah Negeri 4 Jombang sukses menyelenggarakan kegiatan pertemuan perdana bersama wali murid siswa baru tahun pelajaran 2026/2027.</p>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="b-card">
+        <img src="{% static 'img/prestasi_baru.jpg' %}" alt="Berita">
+        <div class="b-card-body">
+          <div class="b-card-meta">02 Mei 2026</div>
+          <h3 class="b-card-title">MIN 1 Jombang Gelar Upacara Peringatan Hari Pendidikan Nasional 2026</h3>
+          <p class="b-card-excerpt">Upacara bendera dalam rangka memperingati Hari Pendidikan Nasional berlangsung khidmat di halaman madrasah...</p>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="b-card">
+        <img src="{% static 'img/kegiatan_baru.jpg' %}" alt="Berita">
+        <div class="b-card-body">
+          <div class="b-card-meta">14 Apr 2026</div>
+          <h3 class="b-card-title">Empat Siswa MIN 1 Jombang Lolos Grand Final OLIMPABA Jawa Timur 2026</h3>
+          <p class="b-card-excerpt">Perwakilan siswa siswi berprestasi berhasil melaju ke babak grand final olimpiade mata pelajaran bahasa Arab...</p>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="b-card">
+        <img src="{% static 'img/fasilitas_baru.jpg' %}" alt="Berita">
+        <div class="b-card-body">
+          <div class="b-card-meta">30 Mar 2026</div>
+          <h3 class="b-card-title">MIN 1 Jombang Gelar Halal Bihalal 1447 H, Pererat Silaturahmi Keluarga Besar</h3>
+          <p class="b-card-excerpt">Momentum Idul Fitri dimanfaatkan oleh keluarga besar MIN 1 Jombang untuk menyambung tali silaturahmi...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR (KANAN) -->
+  <div class="berita-sidebar">
+    <!-- Widget Cari -->
+    <div class="widget widget-search">
+      <input type="text" placeholder="Cari...">
+    </div>
+
+    <!-- Widget Kategori (Seperti Gambar 1) -->
+    <div class="widget">
+      <h4 class="widget-title">Kategori Postingan</h4>
+      <ul class="widget-links">
+        <li><a href="#">Berita Pendidikan</a></li>
+        <li><a href="#">Uncategorized</a></li>
+      </ul>
+    </div>
+
+
+    <!-- Widget Postingan Terbaru (Seperti Gambar 2) -->
+    <div class="widget">
+      <h4 class="widget-title">Postingan Terbaru</h4>
+      <div class="recent-post">
+        <img src="{% static 'img/kegiatan_baru.jpg' %}" alt="Thumb">
+        <div class="recent-post-info">
+          <a href="#" class="recent-post-title">SD Plus Darul Ulum Jombang Adakan Pembelajaran Penyembelihan Hewan Qurban 1447 H</a>
+          <div class="recent-post-date"><i class="fa-regular fa-calendar"></i> 08 Juni 2026</div>
+        </div>
+      </div>
+      <div class="recent-post">
+        <img src="{% static 'img/prestasi_baru.jpg' %}" alt="Thumb">
+        <div class="recent-post-info">
+          <a href="#" class="recent-post-title">SD Plus Darul Ulum Jombang Gelar Perlombaan Karya Siswa Spesial Pembelajaran Idul Adha 1447 H</a>
+          <div class="recent-post-date"><i class="fa-regular fa-calendar"></i> 08 Juni 2026</div>
+        </div>
+      </div>
+      <div class="recent-post">
+        <img src="{% static 'img/fasilitas_baru.jpg' %}" alt="Thumb">
+        <div class="recent-post-info">
+          <a href="#" class="recent-post-title">Empat Siswa MIN 1 Jombang Lolos Grand Final OLIMPABA</a>
+          <div class="recent-post-date"><i class="fa-regular fa-calendar"></i> 14 April 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

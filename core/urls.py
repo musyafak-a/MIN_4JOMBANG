@@ -12,4 +12,7 @@ urlpatterns = [
     path("direktori/alumni/", views.direktori_alumni, name="direktori_alumni"),
     path("direktori/prestasi/", views.direktori_prestasi, name="direktori_prestasi"),
     path("direktori/dokumen/", views.direktori_dokumen, name="direktori_dokumen"),
+    path("informasi/spmb/", views.spmb, name="spmb"),
+    path("informasi/berita/", views.berita, name="berita"),
+    path("pengumuman/", views.pengumuman, name="pengumuman"),
 ]
