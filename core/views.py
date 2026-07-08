@@ -57,3 +57,32 @@ def struktur(request):
         "profile": profile,
     }
     return render(request, "core/struktur.html", context)
+
+
+def direktori_siswa(request):
+    profile = SchoolProfile.objects.first()
+    
+    # Dummy data to match the mockup exactly
+    dummy_siswa = [
+        {"nama": "ABDU RABBIL ARSYL ADZIM", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "18-08-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250001"},
+        {"nama": "AFKAR NURDIANSYAH PRADIPTA", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "08-12-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250002"},
+        {"nama": "AHMAD HILMI RIZA", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "12-01-2019", "jk": "LAKI - LAKI", "nis": "1111951700806250003"},
+        {"nama": "AHMAD JALALUDDIN AL GHAZALI", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "05-10-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250004"},
+        {"nama": "AHMAD WIDE WIRARAJA", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Lumajang", "tgl_lahir": "31-12-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250005"},
+        {"nama": "ALFIYAH AHSANUL MAIDAH", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "10-08-2018", "jk": "PEREMPUAN", "nis": "1111951700806250006"},
+        {"nama": "ALVIN ZAIDAN FAEYZA", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "03-03-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250007"},
+        {"nama": "ARSYA DWI PUTRA ALFAHRIZA", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "17-05-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250008"},
+        {"nama": "AZKADINA KANZIA NADHIFAH NUR HAFI", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Kediri", "tgl_lahir": "20-02-2019", "jk": "PEREMPUAN", "nis": "1111951700806250009"},
+        {"nama": "CINTYA SHABIRA GEMINTANG", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "06-09-2018", "jk": "PEREMPUAN", "nis": "1111951700806250010"},
+        {"nama": "FANDHI HAFIZ ALFARABI", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Kudus", "tgl_lahir": "20-08-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250011"},
+        {"nama": "FAWWAZ DZAKI ARRAYYAN", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "13-11-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250012"},
+        {"nama": "FEBBY DWI WAHYUNI", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "27-02-2019", "jk": "PEREMPUAN", "nis": "1111951700806250013"},
+        {"nama": "GILBY NAUFAL DHAFIN", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jakarta", "tgl_lahir": "28-04-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250014"},
+        {"nama": "HAMIZAN HAQQI EL-HASAN", "kelas": "3 - AR RAHMAN", "tempat_lahir": "Jombang", "tgl_lahir": "01-07-2018", "jk": "LAKI - LAKI", "nis": "1111951700806250015"},
+    ]
+    
+    context = {
+        "profile": profile,
+        "siswa_list": dummy_siswa,
+    }
+    return render(request, "core/direktori_siswa.html", context)
