@@ -10,4 +10,5 @@ urlpatterns = [
     path("struktur/", views.struktur, name="struktur"),
     path("direktori/siswa/", views.direktori_siswa, name="direktori_siswa"),
     path("direktori/alumni/", views.direktori_alumni, name="direktori_alumni"),
+    path("direktori/prestasi/", views.direktori_prestasi, name="direktori_prestasi"),
 ]

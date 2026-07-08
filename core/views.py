@@ -108,3 +108,27 @@ def direktori_alumni(request):
         "alumni_list": dummy_alumni,
     }
     return render(request, "core/direktori_alumni.html", context)
+
+
+def direktori_prestasi(request):
+    profile = SchoolProfile.objects.first()
+    
+    # Dummy data for prestasi
+    dummy_prestasi = [
+        {"no": 1, "tanggal": "07/07/2026", "nama": "MUTIARA FATMA KHOLIFATUN N...", "juara": "JUARA 2", "kejuaraan": "KOMPETISI ANAK CERDAS DAN BERPRESTASI", "tingkat": "-"},
+        {"no": 2, "tanggal": "17/06/2026", "nama": "YOFI ANDARISTA", "juara": "JUARA 3", "kejuaraan": "TES KEMAMPUAN AKADEMIK (TKA)", "tingkat": "KABUPATEN"},
+        {"no": 3, "tanggal": "07/06/2026", "nama": "AISYAH SYAKILA ANJANIA ALIF", "juara": "JUARA 2", "kejuaraan": "KSATRIA NUSANTARA SERIES CHAMPION 2026", "tingkat": "PROVINSI"},
+        {"no": 4, "tanggal": "17/05/2026", "nama": "ZAURA DEANDRA CALLYSTA", "juara": "JUARA HARAPAN 2", "kejuaraan": "KOMPETISI ANAK CERDAS DAN BERPRESTASI", "tingkat": "KABUPATEN"},
+        {"no": 5, "tanggal": "17/05/2026", "nama": "MUTIARA FATMA KHOLIFATUN N...", "juara": "JUARA 2", "kejuaraan": "KOMPETISI ANAK CERDAS DAN BERPRESTASI", "tingkat": "KABUPATEN"},
+        {"no": 6, "tanggal": "09/05/2026", "nama": "ROSEVIONA CLARISSA HERMAN", "juara": "JUARA 1", "kejuaraan": "TAHFIDZ", "tingkat": "PROVINSI"},
+        {"no": 7, "tanggal": "03/05/2026", "nama": "MUTIARA FATMA KHOLIFATUN N...", "juara": "JUARA HARAPAN 3", "kejuaraan": "LOMBA BAHASA INGGRIS FESTIVAL HARI PENDIDIKAN NASIONAL", "tingkat": "KABUPATEN"},
+        {"no": 8, "tanggal": "26/04/2026", "nama": "MUTIARA FATMA KHOLIFATUN N...", "juara": "JUARA 1", "kejuaraan": "ENGLISH LEVEL 2", "tingkat": "PROVINSI"},
+        {"no": 9, "tanggal": "20/04/2026", "nama": "FAKHIRAH RAMADHANI AL - IKH...", "juara": "JUARA 1", "kejuaraan": "PERINGKAT TERTINGGI NILAI TKA 2026", "tingkat": "KABUPATEN"},
+        {"no": 10, "tanggal": "12/04/2026", "nama": "FAKHIRAH RAMADHANI AL IKHW...", "juara": "JUARA HARAPAN 2", "kejuaraan": "CENDEKIA SCIENCE FEST", "tingkat": "KABUPATEN"},
+    ]
+    
+    context = {
+        "profile": profile,
+        "prestasi_list": dummy_prestasi,
+    }
+    return render(request, "core/direktori_prestasi.html", context)

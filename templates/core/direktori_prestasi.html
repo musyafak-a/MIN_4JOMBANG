@@ -1,0 +1,514 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Daftar Prestasi - {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-color: var(--bg);
+  }
+
+  .prestasi-wrapper {
+    padding: 60px 0 100px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .prestasi-header {
+    margin-bottom: 40px;
+  }
+
+  .prestasi-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 24px;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+  
+  .prestasi-header h1 span {
+    position: relative;
+    display: inline-block;
+    color: var(--ink);
+  }
+
+  /* SVG Brush Stroke Curve */
+  .brush-stroke {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .brush-stroke path {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+  }
+  
+  .stroke-1 {
+    animation: drawCurve 0.5s ease-out 0.1s forwards;
+  }
+  
+  .stroke-2 {
+    animation: drawCurve 0.5s ease-out 0.3s forwards;
+  }
+
+  @keyframes drawCurve {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .prestasi-header p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    max-width: 900px;
+    line-height: 1.6;
+  }
+
+  /* Charts Section */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .chart-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 5px 20px rgba(24, 64, 37, 0.05);
+  }
+
+  .chart-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .chart-header i {
+    font-size: 0.8rem;
+  }
+
+  .chart-header h3 {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+
+  /* Fake Chart CSS */
+  .fake-chart {
+    height: 180px;
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    padding-left: 20px;
+    border-left: 1px dashed #e5e7eb;
+    border-bottom: 1px dashed #e5e7eb;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  /* Y-axis labels */
+  .fake-chart::before {
+    content: '100\A 80\A 60\A 40\A 20\A 0';
+    white-space: pre;
+    position: absolute;
+    left: -20px;
+    bottom: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.55rem;
+    color: #cbd5e1;
+    text-align: right;
+    line-height: 1;
+  }
+
+  .bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+  }
+
+  .bar {
+    width: 100%;
+    max-width: 32px;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .bar-label {
+    font-size: 0.5rem;
+    color: #9ca3af;
+    margin-top: 8px;
+    text-align: center;
+    transform: rotate(-35deg);
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  /* Specific Bar Colors */
+  .chart-purple .bar { background: linear-gradient(180deg, #a855f7 0%, #c084fc 100%); }
+  .chart-purple .bar:nth-child(2) { opacity: 0.5; }
+  .chart-orange .bar { background: linear-gradient(180deg, #f59e0b 0%, #fbbf24 100%); }
+  .chart-orange .bar:nth-child(3), .chart-orange .bar:nth-child(4), .chart-orange .bar:nth-child(5) { opacity: 0.5; }
+  .chart-blue .bar { background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%); }
+  .chart-blue .bar:nth-child(2) { opacity: 0.5; }
+  .chart-green .bar { background: linear-gradient(180deg, #10b981 0%, #34d399 100%); }
+  .chart-green .bar:nth-child(3), .chart-green .bar:nth-child(4) { opacity: 0.5; }
+
+  /* Table Section */
+  .table-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 5px 20px rgba(24, 64, 37, 0.05);
+  }
+
+  .table-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+
+  .search-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 16px;
+  }
+  
+  .search-bar i {
+    color: #9ca3af;
+    margin-right: 12px;
+  }
+
+  .search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .filter-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--white);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .badge-total {
+    background: var(--primary);
+    color: var(--white);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .btn-reset {
+    color: #ef4444;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Table Styles */
+  .prestasi-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .prestasi-table th {
+    background: var(--primary-dark);
+    color: var(--white);
+    padding: 16px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .prestasi-table th:last-child {
+    border-right: none;
+    text-align: center;
+  }
+
+  .prestasi-table td {
+    padding: 16px;
+    font-size: 0.8rem;
+    color: var(--ink);
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .prestasi-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .prestasi-table td.fw-bold {
+    font-weight: bold;
+  }
+
+  .juara-pill {
+    background: rgba(37, 95, 56, 0.1);
+    color: var(--primary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.7rem;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .icon-photo {
+    color: var(--primary);
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Pagination */
+  .table-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .page-nav {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .page-nav.prev {
+    background: #cbd5e1;
+    color: var(--white);
+    pointer-events: none;
+  }
+
+  .page-nav.next {
+    background: var(--primary);
+    color: var(--white);
+  }
+
+  .page-info {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--ink);
+  }
+
+  @media (max-width: 1024px) {
+    .charts-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .table-filters {
+      flex-direction: column;
+    }
+    .search-bar, .filter-buttons {
+      width: 100%;
+    }
+    .filter-btn {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .charts-grid {
+      grid-template-columns: 1fr;
+    }
+    .prestasi-table-wrapper {
+      overflow-x: auto;
+    }
+    .filter-buttons {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<div class="prestasi-wrapper wrap">
+  
+  <div class="prestasi-header">
+    <h1>DAFTAR <span>PRESTASI
+      <svg class="brush-stroke" viewBox="0 0 200 20" preserveAspectRatio="none">
+        <path class="stroke-1" d="M 2,12 Q 100,5 198,14" />
+        <path class="stroke-2" d="M 8,18 Q 100,12 192,19" />
+      </svg>
+    </span></h1>
+    <p>Daftar informasi prestasi MIN 4 Jombang mencakup berbagai jenis prestasi akademik dan non akademik mencakup prestasi lembaga, tenaga pendidik & kependidikan serta peserta didik.</p>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-grid">
+    <div class="chart-card chart-purple">
+      <div class="chart-header">
+        <i class="fa-solid fa-chart-column" style="color: #a855f7;"></i>
+        <h3>TREN TAHUN PRESTASI</h3>
+      </div>
+      <div class="fake-chart">
+        <div class="bar-wrapper"><div class="bar" style="height: 10%;"></div><div class="bar-label">2024</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 90%;"></div><div class="bar-label">2025</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 35%;"></div><div class="bar-label">2026</div></div>
+      </div>
+    </div>
+
+    <div class="chart-card chart-orange">
+      <div class="chart-header">
+        <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
+        <h3>STATISTIK JUARA</h3>
+      </div>
+      <div class="fake-chart">
+        <div class="bar-wrapper"><div class="bar" style="height: 80%;"></div><div class="bar-label">JUARA 1</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 95%;"></div><div class="bar-label">JUARA 2</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 25%;"></div><div class="bar-label">JUARA 3</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 10%;"></div><div class="bar-label">HARAPAN 1</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 15%;"></div><div class="bar-label">HARAPAN 2</div></div>
+      </div>
+    </div>
+
+    <div class="chart-card chart-blue">
+      <div class="chart-header">
+        <i class="fa-solid fa-tag" style="color: #3b82f6;"></i>
+        <h3>JENIS LOMBA</h3>
+      </div>
+      <div class="fake-chart">
+        <div class="bar-wrapper"><div class="bar" style="height: 95%;"></div><div class="bar-label">NON AKADEMIK</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 35%;"></div><div class="bar-label">AKADEMIK</div></div>
+      </div>
+    </div>
+
+    <div class="chart-card chart-green">
+      <div class="chart-header">
+        <i class="fa-solid fa-globe" style="color: #10b981;"></i>
+        <h3>TINGKAT LOMBA</h3>
+      </div>
+      <div class="fake-chart">
+        <div class="bar-wrapper"><div class="bar" style="height: 15%;"></div><div class="bar-label">KECAMATAN</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 95%;"></div><div class="bar-label">KABUPATEN</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 85%;"></div><div class="bar-label">PROVINSI</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 35%;"></div><div class="bar-label">NASIONAL</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height: 40%;"></div><div class="bar-label">INTERNASIONAL</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-card">
+    
+    <div class="table-filters">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="CARI NAMA ATAU KEJUARAAN...">
+      </div>
+      <div class="filter-buttons">
+        <button class="filter-btn"><i class="fa-solid fa-trophy" style="color:#f59e0b"></i> JUARA</button>
+        <button class="filter-btn"><i class="fa-solid fa-tags" style="color:#ef4444"></i> JENIS</button>
+        <button class="filter-btn"><i class="fa-solid fa-globe" style="color:#10b981"></i> TINGKAT</button>
+        <button class="filter-btn"><i class="fa-solid fa-thumbtack" style="color:#8b5cf6"></i> STATUS</button>
+      </div>
+    </div>
+
+    <div class="table-controls">
+      <div class="badge-total"><i class="fa-solid fa-trophy"></i> TOTAL: 113</div>
+      <a href="#" class="btn-reset"><i class="fa-solid fa-arrows-rotate"></i> RESET FILTER</a>
+    </div>
+
+    <div class="prestasi-table-wrapper">
+      <table class="prestasi-table">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>TANGGAL</th>
+            <th>NAMA LENGKAP</th>
+            <th>JUARA</th>
+            <th>NAMA KEJUARAAN</th>
+            <th>TINGKAT</th>
+            <th>FOTO</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in prestasi_list %}
+          <tr>
+            <td>{{ p.no }}</td>
+            <td style="color: #6b7280;">{{ p.tanggal }}</td>
+            <td class="fw-bold">{{ p.nama }}</td>
+            <td><span class="juara-pill">{{ p.juara }}</span></td>
+            <td>{{ p.kejuaraan }}</td>
+            <td>{{ p.tingkat }}</td>
+            <td>
+              <div class="icon-photo"><i class="fa-solid fa-image"></i></div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-pagination">
+      <a href="#" class="page-nav prev"><i class="fa-solid fa-chevron-left"></i></a>
+      <span class="page-info">HAL 1 / 12</span>
+      <a href="#" class="page-nav next"><i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
