@@ -1,96 +1,131 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.5">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.6">
 </head>
+
 <body>
 
-<header class="navbar" id="navbar">
-  <div class="wrap navbar__inner">
-    <a href="{% url 'core:home' %}" class="brand">
-      {% if profile.logo %}
+  <header class="navbar" id="navbar">
+    <div class="wrap navbar__inner">
+      <a href="{% url 'core:home' %}" class="brand">
+        {% if profile.logo %}
         <img src="{{ profile.logo.url }}" alt="Logo {{ profile.nama_sekolah }}" class="brand__logo">
-      {% else %}
+        {% else %}
         <img src="{% static 'img/kemenag.png' %}" alt="Logo Kementerian Agama" class="brand__logo">
-      {% endif %}
-      <span class="brand__text">
-        <strong>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</strong>
-        <small>Madrasah Ibtidaiyah</small>
-      </span>
-    </a>
+        {% endif %}
+        <span class="brand__text">
+          <strong>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</strong>
+          <small>Pondok Pesantren Darul Ulum</small>
+        </span>
+      </a>
 
-    <button class="navbar__toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+      <nav class="navbar__nav" id="navMenu">
+        <a href="{% url 'core:home' %}">Beranda</a>
+        <div class="dropdown">
+          <a href="#" class="dropdown__toggle">Profil <i class="fa-solid fa-chevron-down"></i></a>
+          <div class="dropdown__menu">
+            <a href="#">Sejarah</a>
+            <a href="#">Visi Misi</a>
+            <a href="#">Struktur</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <a href="#" class="dropdown__toggle">Direktori <i class="fa-solid fa-chevron-down"></i></a>
+          <div class="dropdown__menu">
+            <a href="#">Siswa</a>
+            <a href="#">Alumni</a>
+            <a href="#">Prestasi</a>
+            <a href="#">Dokumen</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <a href="#" class="dropdown__toggle">Informasi <i class="fa-solid fa-chevron-down"></i></a>
+          <div class="dropdown__menu">
+            <a href="#">SPMB</a>
+            <a href="#">Berita</a>
+            <a href="#">E-Raport</a>
+          </div>
+        </div>
+        <a href="#">Pengumuman</a>
+      </nav>
 
-    <nav class="navbar__nav" id="navMenu">
-      <a href="#tentang">Tentang</a>
-      <a href="#prestasi">Prestasi</a>
-      <a href="#overview">Fasilitas</a>
-      <a href="#berita">Berita</a>
-      <a href="#dokumentasi">Dokumentasi</a>
-      <a href="#mitra">Kerja Sama</a>
-      <a href="{% url 'admin:index' %}" class="navbar__login">Masuk</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-  {% block content %}{% endblock %}
-</main>
-
-<footer class="footer">
-  <div class="wrap footer__grid">
-    <div class="footer__col footer__brand">
-      <h4>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</h4>
-      <p style="margin-bottom: 16px; line-height: 1.6;">
-        <a href="https://www.google.com/maps/place/MIN+4+Jombang/@-7.5437135,112.2729606,17z/data=!3m1!4b1!4m6!3m5!1s0x2e786ad00c55acd7:0x81793c10000b44f0!8m2!3d-7.5437135!4d112.2755355!16s%2Fg%2F11by_xjzzx?entry=tts&g_ep=EgoyMDI1MTAyMi4wIPu8ASoASAFQAw%3D%3D&skid=c4fe5008-da7b-4789-8fc7-751151b67bf1" target="_blank" style="display: inline; margin: 0;">{{ profile.alamat|default:"Wonokerto Selatan, Peterongan, Kec. Jombang, Kabupaten Jombang, Jawa Timur 61481" }}</a>
-      </p>
-      <p>Berdiri sejak {{ profile.tahun_berdiri|default:"1990" }}</p>
-    </div>
-
-    <div class="footer__col">
-      <h4>Tautan</h4>
-      <a href="#tentang">Tentang Sekolah</a>
-      <a href="#prestasi">Daftar Prestasi</a>
-      <a href="#overview">Fasilitas & Statistik</a>
-      <a href="#berita">Berita & Kegiatan</a>
-      <a href="#dokumentasi">Dokumentasi</a>
-    </div>
-
-    <div class="footer__col">
-      <h4>Portal</h4>
-      <a href="{% url 'admin:index' %}">Portal Wali Murid</a>
-      <a href="{% url 'admin:index' %}">Portal Guru</a>
-      <a href="{% url 'admin:index' %}">Portal Kepala Sekolah</a>
-    </div>
-
-    <div class="footer__col">
-      <h4>Kontak</h4>
-      <p style="margin-bottom: 12px;">Telp: (031) 000-0000</p>
-      <p style="margin-bottom: 16px;">
-        <a href="mailto:minrejoso602030@gmail.com" style="display: inline; margin: 0;">Email: minrejoso602030@gmail.com</a>
-      </p>
-      <div class="footer__social">
-        <a href="https://www.facebook.com/min.rejoso.7/?locale=id_ID" aria-label="Facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/min4jombang/" aria-label="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@min.4.jombang" aria-label="TikTok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://www.youtube.com/@min4jombangtv54" aria-label="YouTube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+      <div class="navbar__actions">
+        <a href="{% url 'admin:index' %}" class="navbar__login">Masuk</a>
+        <button class="navbar__toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-  </div>
-  <div class="footer__bottom">
-    <span>&copy; {% now "Y" %} {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}. Semua hak dilindungi.</span>
-  </div>
-</footer>
+  </header>
 
-<script src="{% static 'js/main.js' %}?v=1.1"></script>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <div class="footer__col footer__brand">
+        <h4>{{ profile.nama_sekolah|default:"MIN 4 Jombang" }}</h4>
+        <p style="margin-bottom: 16px; line-height: 1.6;">
+          <a href="https://www.google.com/maps/place/MIN+4+Jombang/@-7.5437135,112.2729606,17z/data=!3m1!4b1!4m6!3m5!1s0x2e786ad00c55acd7:0x81793c10000b44f0!8m2!3d-7.5437135!4d112.2755355!16s%2Fg%2F11by_xjzzx?entry=tts&g_ep=EgoyMDI1MTAyMi4wIPu8ASoASAFQAw%3D%3D&skid=c4fe5008-da7b-4789-8fc7-751151b67bf1"
+            target="_blank" style="display: inline; margin: 0;">{{ profile.alamat|default:"Wonokerto Selatan,
+            Peterongan, Kec. Jombang, Kabupaten Jombang, Jawa Timur 61481" }}</a>
+        </p>
+        <p>Berdiri sejak {{ profile.tahun_berdiri|default:"1990" }}</p>
+      </div>
+
+      <div class="footer__col">
+        <h4>Tautan</h4>
+        <a href="#tentang">Tentang Sekolah</a>
+        <a href="#prestasi">Daftar Prestasi</a>
+        <a href="#overview">Fasilitas & Statistik</a>
+        <a href="#berita">Berita & Kegiatan</a>
+        <a href="#dokumentasi">Dokumentasi</a>
+      </div>
+
+      <div class="footer__col">
+        <h4>Portal</h4>
+        <a href="{% url 'admin:index' %}">Portal Wali Murid</a>
+        <a href="{% url 'admin:index' %}">Portal Guru</a>
+        <a href="{% url 'admin:index' %}">Portal Kepala Sekolah</a>
+      </div>
+
+      <div class="footer__col">
+        <h4>Kontak</h4>
+        <p style="margin-bottom: 12px;">Telp: (031) 000-0000</p>
+        <p style="margin-bottom: 16px;">
+          <a href="mailto:minrejoso602030@gmail.com" style="display: inline; margin: 0;">Email:
+            minrejoso602030@gmail.com</a>
+        </p>
+        <div class="footer__social">
+          <a href="https://www.facebook.com/min.rejoso.7/?locale=id_ID" aria-label="Facebook" target="_blank"><i
+              class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/min4jombang/" aria-label="Instagram" target="_blank"><i
+              class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@min.4.jombang" aria-label="TikTok" target="_blank"><i
+              class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.youtube.com/@min4jombangtv54" aria-label="YouTube" target="_blank"><i
+              class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; {% now "Y" %} {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}. Semua hak dilindungi.</span>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}?v=1.1"></script>
 </body>
+
 </html>
