@@ -46,3 +46,19 @@ class GalleryPhotoAdmin(admin.ModelAdmin):
 class PartnershipAdmin(admin.ModelAdmin):
     list_display = ("nama", "urutan")
     list_editable = ("urutan",)
+
+from .models import Berita, Alumni
+
+@admin.register(Berita)
+class BeritaAdmin(admin.ModelAdmin):
+    list_display = ("judul", "penulis", "tanggal_publikasi", "status")
+    list_filter = ("status", "tanggal_publikasi")
+    search_fields = ("judul",)
+    prepopulated_fields = {"slug": ("judul",)}
+
+@admin.register(Alumni)
+class AlumniAdmin(admin.ModelAdmin):
+    list_display = ("nama", "tahun_lulus", "pekerjaan_sekarang")
+    list_filter = ("tahun_lulus",)
+    search_fields = ("nama", "pekerjaan_sekarang")
+

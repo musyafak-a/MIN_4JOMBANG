@@ -139,3 +139,38 @@ class Partnership(models.Model):
 
     def __str__(self):
         return self.nama
+
+
+class Berita(models.Model):
+    judul = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
+    konten = models.TextField()
+    gambar = models.ImageField(upload_to="berita/", blank=True, null=True)
+    penulis = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True)
+    tanggal_publikasi = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=15, choices=[("Draft", "Draft"), ("Published", "Published")], default="Published")
+
+    class Meta:
+        ordering = ["-tanggal_publikasi"]
+        verbose_name = "Berita"
+        verbose_name_plural = "Berita"
+
+    def __str__(self):
+        return self.judul
+
+
+class Alumni(models.Model):
+    nama = models.CharField(max_length=150)
+    tahun_lulus = models.IntegerField()
+    pekerjaan_sekarang = models.CharField(max_length=150, blank=True, null=True)
+    testimoni = models.TextField(blank=True, null=True)
+    foto = models.ImageField(upload_to="alumni/", blank=True, null=True)
+
+    class Meta:
+        ordering = ["-tahun_lulus", "nama"]
+        verbose_name = "Alumni"
+        verbose_name_plural = "Alumni"
+
+    def __str__(self):
+        return f"{self.nama} ({self.tahun_lulus})"
+

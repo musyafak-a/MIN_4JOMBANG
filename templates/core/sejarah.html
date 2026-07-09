@@ -117,8 +117,8 @@
 
   .headmaster-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
   }
 
   .headmaster-card {
@@ -201,7 +201,7 @@
       font-size: 2.2rem;
     }
 
-    /* Daftar kepala sekolah menjadi 2 kolom di mobile */
+    /* Daftar kepala sekolah menjadi 2 kolom di tablet/mobile */
     .headmaster-grid {
       grid-template-columns: 1fr 1fr !important;
       gap: 12px;
@@ -209,9 +209,11 @@
     .headmaster-card {
       padding: 12px 14px;
       gap: 10px;
+      flex-direction: row !important;
       align-items: center !important;
       text-align: left !important;
       height: 100% !important;
+      justify-content: flex-start;
     }
     .headmaster-icon {
       width: 36px;
@@ -224,6 +226,20 @@
     }
     .headmaster-info span {
       font-size: 0.72rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    /* Khusus untuk layar HP kecil agar teks tidak kesempitan */
+    .headmaster-grid {
+      gap: 16px;
+    }
+    .headmaster-card {
+      padding: 16px 12px;
+      gap: 12px;
+      flex-direction: column !important;
+      text-align: center !important;
+      justify-content: center;
     }
   }
 </style>

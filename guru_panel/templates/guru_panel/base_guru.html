@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard Guru{% endblock %} - MIN 4 Jombang</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/guru_style.css' %}">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class='bx bxs-school'></i>
+                <span>Portal Guru</span>
+            </div>
+        </div>
+        
+        <div class="user-info">
+            <div class="avatar">
+                <i class='bx bxs-user-circle'></i>
+            </div>
+            <div class="details">
+                <p class="name">{{ request.user.first_name|default:request.user.username }}</p>
+                <p class="role">Guru MIN 4 Jombang</p>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{% url 'guru_panel:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class='bx bxs-dashboard'></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'guru_panel:siswa' %}" class="nav-link {% if request.resolver_match.url_name == 'siswa' %}active{% endif %}">
+                    <i class='bx bxs-group'></i>
+                    <span>Siswa</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'guru_panel:kelas' %}" class="nav-link {% if request.resolver_match.url_name == 'kelas' %}active{% endif %}">
+                    <i class='bx bx-chalkboard'></i>
+                    <span>Kelas</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'guru_panel:nilai' %}" class="nav-link {% if request.resolver_match.url_name == 'nilai' %}active{% endif %}">
+                    <i class='bx bx-task'></i>
+                    <span>Nilai</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'guru_panel:raport' %}" class="nav-link {% if request.resolver_match.url_name == 'raport' %}active{% endif %}">
+                    <i class='bx bxs-report'></i>
+                    <span>Raport</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'guru_panel:jadwal' %}" class="nav-link {% if request.resolver_match.url_name == 'jadwal' %}active{% endif %}">
+                    <i class='bx bx-calendar-event'></i>
+                    <span>Jadwal</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="logout-container">
+            <a href="{% url 'guru_panel:logout' %}" class="nav-link logout-btn">
+                <i class='bx bx-log-out'></i>
+                <span>Keluar</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2 class="page-title">{% block page_title %}Dashboard{% endblock %}</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="notification">
+                    <i class='bx bx-bell'></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+{% extends 'guru_panel/base_guru.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard Ringkasan{% endblock %}
+
+{% block content %}
+<div class="dashboard-cards">
+    <div class="stat-card">
+        <div class="stat-icon bg-blue">
+            <i class='bx bxs-group'></i>
+        </div>
+        <div class="stat-details">
+            <h3>Total Siswa</h3>
+            <p>124</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon bg-green">
+            <i class='bx bx-chalkboard'></i>
+        </div>
+        <div class="stat-details">
+            <h3>Kelas Diampu</h3>
+            <p>4</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon bg-orange">
+            <i class='bx bx-task'></i>
+        </div>
+        <div class="stat-details">
+            <h3>Tugas Menunggu</h3>
+            <p>12</p>
+        </div>
+    </div>
+</div>
+
+<div class="content-section">
+    <div class="section-header">
+        <h3>Jadwal Hari Ini</h3>
+    </div>
+    <div class="card">
+        <p style="color: #666;">Belum ada jadwal yang dimasukkan untuk hari ini.</p>
+    </div>
+</div>
+{% endblock %}

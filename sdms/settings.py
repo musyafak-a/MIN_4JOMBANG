@@ -25,12 +25,12 @@ SECRET_KEY = 'django-insecure-ic17u%xf-rtv^m3e&=)mz7@2777%uvyc9-+ctww67wto&^*oxe
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'accounts',
+    'akademik',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,61 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# JAZZMIN SETTINGS UNTUK DASHBOARD
+JAZZMIN_SETTINGS = {
+    "site_title": "Portal Guru MIN",
+    "site_header": "MIN 4 Jombang",
+    "site_brand": "MIN 4 Jombang",
+    "site_logo": "img/gallery_new/kelas.png",
+    "welcome_sign": "Selamat Datang di Portal Guru",
+    "copyright": "MIN 4 Jombang",
+    "custom_css": "css/admin_custom.css",
+
+    
+    # Menu kustom yang mirip dengan screenshot
+    "custom_links": {
+        "akademik": [{
+            "name": "Dashboard", 
+            "url": "admin:index", 
+            "icon": "fas fa-tachometer-alt"
+        }]
+    },
+    
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "accounts.guru": "fas fa-chalkboard-teacher",
+        "accounts.siswa": "fas fa-user-graduate",
+        "akademik.kelas": "fas fa-chalkboard",
+        "akademik.matapelajaran": "fas fa-book",
+        "akademik.nilai": "fas fa-clipboard-list",
+        "akademik.raport": "fas fa-file-alt",
+        "akademik.tahunajaran": "fas fa-calendar-alt",
+        "core.alumni": "fas fa-graduation-cap",
+        "core.berita": "fas fa-newspaper",
+        "core.achievement": "fas fa-trophy",
+    },
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar": "navbar-dark",
+    "theme": "litera",
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": False,
+    "theme_color": "success", 
+    "accent": "accent-primary",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
