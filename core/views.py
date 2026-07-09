@@ -1,11 +1,17 @@
 from itertools import groupby
 from operator import attrgetter
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import logout
 from .models import (
     SchoolProfile, CarouselSlide, Achievement,
     OverviewStat, GalleryPhoto, Partnership,
 )
+
+
+def custom_logout_view(request):
+    logout(request)
+    return redirect('/')
 
 
 def home(request):

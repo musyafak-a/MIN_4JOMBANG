@@ -144,6 +144,7 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Selamat Datang di Portal Guru",
     "copyright": "MIN 4 Jombang",
     "custom_css": "css/admin_custom.css",
+    "custom_js": "js/admin_custom_v2.js",
 
     
     # Menu kustom yang mirip dengan screenshot
