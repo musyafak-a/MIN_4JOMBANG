@@ -147,13 +147,7 @@ JAZZMIN_SETTINGS = {
 
     
     # Menu kustom yang mirip dengan screenshot
-    "custom_links": {
-        "akademik": [{
-            "name": "Dashboard", 
-            "url": "admin:index", 
-            "icon": "fas fa-tachometer-alt"
-        }]
-    },
+    "custom_links": {},
     
     "icons": {
         "auth": "fas fa-users-cog",

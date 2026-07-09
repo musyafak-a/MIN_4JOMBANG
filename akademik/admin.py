@@ -13,6 +13,7 @@ class DetailRaportInline(admin.TabularInline):
 class TahunAjaranAdmin(admin.ModelAdmin):
     list_display = ('nama', 'semester', 'is_active')
     list_filter = ('semester', 'is_active')
+    list_per_page = 10
 
 @admin.register(Kelas)
 class KelasAdmin(admin.ModelAdmin):
@@ -20,17 +21,20 @@ class KelasAdmin(admin.ModelAdmin):
     list_filter = ('tingkat', 'tahun_ajaran')
     search_fields = ('nama_kelas',)
     inlines = [SiswaKelasInline]
+    list_per_page = 10
 
 @admin.register(MataPelajaran)
 class MataPelajaranAdmin(admin.ModelAdmin):
-    list_display = ('kode_mapel', 'nama_mapel')
+    list_display = ('kode_mapel', 'nama_mapel', 'tingkat_minimal')
     search_fields = ('kode_mapel', 'nama_mapel')
+    list_per_page = 10
 
 @admin.register(Nilai)
 class NilaiAdmin(admin.ModelAdmin):
     list_display = ('siswa', 'mata_pelajaran', 'kelas', 'jenis_nilai', 'nilai')
     list_filter = ('jenis_nilai', 'kelas', 'mata_pelajaran')
     search_fields = ('siswa__nama_lengkap',)
+    list_per_page = 10
 
 @admin.register(Raport)
 class RaportAdmin(admin.ModelAdmin):
@@ -38,3 +42,4 @@ class RaportAdmin(admin.ModelAdmin):
     list_filter = ('kelas', 'semester', 'status_naik_kelas')
     search_fields = ('siswa__nama_lengkap',)
     inlines = [DetailRaportInline]
+    list_per_page = 10

@@ -44,9 +44,10 @@ class SiswaKelas(models.Model):
 
 
 class MataPelajaran(models.Model):
-    kode_mapel = models.CharField(max_length=20, unique=True)
     nama_mapel = models.CharField(max_length=100)
-    deskripsi = models.TextField(blank=True, null=True)
+    kode_mapel = models.CharField(max_length=20, unique=True)
+    guru_pengampu = models.ForeignKey(Guru, on_delete=models.SET_NULL, null=True, blank=True)
+    tingkat_minimal = models.IntegerField(default=1, help_text="Tingkat kelas minimal untuk mapel ini (misal: 1 untuk kelas 1-6, 2 untuk kelas 2-6)")
 
     class Meta:
         verbose_name = "Mata Pelajaran"
@@ -59,9 +60,12 @@ class MataPelajaran(models.Model):
 class Nilai(models.Model):
     JENIS_NILAI_CHOICES = [
         ('Tugas', 'Tugas'),
-        ('UH', 'Ulangan Harian'),
-        ('UTS', 'Ujian Tengah Semester'),
-        ('UAS', 'Ujian Akhir Semester'),
+        ('Ulangan Harian 1', 'Ulangan Harian 1'),
+        ('Ulangan Harian 2', 'Ulangan Harian 2'),
+        ('Ulangan Harian 3', 'Ulangan Harian 3'),
+        ('Ulangan Harian 4', 'Ulangan Harian 4'),
+        ('UTS', 'UTS'),
+        ('UAS', 'UAS')
     ]
     
     siswa = models.ForeignKey(Siswa, on_delete=models.CASCADE, related_name='nilai')
