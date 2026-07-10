@@ -1,6 +1,12 @@
 /* admin_custom.css */
-body {
-    font-family: 'Cambria', serif !important;
+body, 
+body :not(i):not(.fas):not(.far):not(.fab):not(.fa), 
+.main-header :not(i):not(.fa),
+.main-sidebar :not(i):not(.fa),
+.content-wrapper :not(i):not(.fa),
+.brand-text,
+h1, h2, h3, h4, h5, h6, p, a, span:not(.fa), div, input, button, select, textarea, label, td, th {
+    font-family: 'Cambria', Georgia, serif !important;
 }
 
 /* Memaksa background SELURUH navigasi sidebar menjadi hijau gelap */
@@ -27,5 +33,11 @@ aside.main-sidebar::before,
 .nav-sidebar .nav-item > .nav-link.active {
     background-color: #1E88E5 !important;
     color: #ffffff !important;
+}
+
+/* Memastikan tombol hamburger menu (untuk mobile) terlihat jelas */
+.main-header .nav-link[data-widget="pushmenu"] {
+    color: #114232 !important; /* Warna hijau gelap */
+    font-size: 1.2rem;
 }
 

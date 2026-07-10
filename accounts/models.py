@@ -39,6 +39,12 @@ class Guru(models.Model):
         self.user.is_superuser = is_kepsek
         self.user.save()
 
+        # Otomatis masukkan ke grup 'Guru' agar menu admin terbuka
+        from django.contrib.auth.models import Group
+        guru_group, _ = Group.objects.get_or_create(name='Guru')
+        if not is_kepsek:
+            self.user.groups.add(guru_group)
+
 
 class Siswa(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profil_siswa', help_text="Akun untuk siswa (opsional)")
