@@ -16,6 +16,7 @@
 
 <body>
 
+  {% block header %}
   <header class="navbar" id="navbar">
     <div class="wrap navbar__inner">
       <a href="{% url 'core:home' %}" class="brand">
@@ -68,11 +69,13 @@
       </div>
     </div>
   </header>
+  {% endblock header %}
 
   <main>
     {% block content %}{% endblock %}
   </main>
 
+  {% block footer %}
   <footer class="footer">
     <div class="wrap footer__grid">
       <div class="footer__col footer__brand">
@@ -122,6 +125,7 @@
       <span>&copy; {% now "Y" %} {{ profile.nama_sekolah|default:"MIN 4 Jombang" }}. Semua hak dilindungi.</span>
     </div>
   </footer>
+  {% endblock footer %}
 
   <script src="{% static 'js/main.js' %}?v=1.1"></script>
 </body>

@@ -41,3 +41,10 @@ aside.main-sidebar::before,
     font-size: 1.2rem;
 }
 
+/* Menengahkan teks di semua tabel admin */
+.table th, .table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+
