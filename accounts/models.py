@@ -59,3 +59,16 @@ class Siswa(models.Model):
         
     def __str__(self):
         return self.nama_lengkap
+
+class OTPVerification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otp_requests')
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "OTP Verification"
+        verbose_name_plural = "OTP Verifications"
+
+    def __str__(self):
+        return f"OTP for {self.user.username}: {self.otp_code}"

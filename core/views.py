@@ -2,7 +2,10 @@ from itertools import groupby
 from operator import attrgetter
 
 from django.shortcuts import render, redirect
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.decorators import login_required
+from accounts.models import Siswa
+from akademik.models import Raport, DetailRaport
 from .models import (
     SchoolProfile, CarouselSlide, Achievement,
     OverviewStat, GalleryPhoto, Partnership,
@@ -217,4 +220,149 @@ def pengumuman(request):
         "profile": profile,
     }
     return render(request, "core/pengumuman.html", context)
+
+
+def login_siswa(request):
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'profil_siswa'):
+            return redirect('core:dashboard_siswa')
+        else:
+            return redirect('admin:index')
+
+    if request.method == 'POST':
+        nisn = request.POST.get('nisn')
+        password = request.POST.get('password')
+        user = authenticate(request, username=nisn, password=password)
+        if user is not None:
+            if hasattr(user, 'profil_siswa'):
+                login(request, user)
+                return redirect('core:dashboard_siswa')
+            else:
+                context = {'error': 'Akun ini bukan akun siswa.'}
+                return render(request, 'core/login_siswa.html', context)
+        else:
+            context = {'error': 'NISN atau Password salah.'}
+            return render(request, 'core/login_siswa.html', context)
+
+    return render(request, 'core/login_siswa.html')
+
+@login_required(login_url='core:login_siswa')
+def dashboard_siswa(request):
+    try:
+        siswa = request.user.profil_siswa
+    except:
+        return redirect('admin:index') # Bukan siswa
+    
+    raports = Raport.objects.filter(siswa=siswa).order_by('-id')
+    raport_terbaru = raports.first() if raports.exists() else None
+    
+    context = {
+        'siswa': siswa,
+        'raport_terbaru': raport_terbaru,
+    }
+    return render(request, 'core/dashboard_siswa.html', context)
+
+
+import random
+from django.utils import timezone
+from accounts.models import OTPVerification
+from django.contrib import messages
+
+def lupa_password(request):
+    if request.method == 'POST':
+        nisn = request.POST.get('nisn')
+        try:
+            siswa = Siswa.objects.get(nisn=nisn)
+            user = siswa.user
+            
+            # Generate OTP 6 angka
+            otp_code = str(random.randint(100000, 999999))
+            
+            # Nonaktifkan OTP sebelumnya jika ada
+            OTPVerification.objects.filter(user=user, is_used=False).update(is_used=True)
+            
+            # Buat OTP baru
+            OTPVerification.objects.create(user=user, otp_code=otp_code)
+            
+            # Tampilkan ke console untuk testing
+            print("=" * 40)
+            print(f"OTP untuk {siswa.nama_lengkap} (NISN: {nisn}): {otp_code}")
+            print("=" * 40)
+            
+            # Simpan session untuk step selanjutnya
+            request.session['reset_nisn'] = nisn
+            return redirect('core:verifikasi_otp')
+            
+        except Siswa.DoesNotExist:
+            context = {'error': 'Siswa dengan NISN tersebut tidak ditemukan.'}
+            return render(request, 'core/lupa_password.html', context)
+            
+    return render(request, 'core/lupa_password.html')
+
+
+def verifikasi_otp(request):
+    nisn = request.session.get('reset_nisn')
+    if not nisn:
+        return redirect('core:lupa_password')
+        
+    if request.method == 'POST':
+        otp_input = request.POST.get('otp')
+        try:
+            siswa = Siswa.objects.get(nisn=nisn)
+            user = siswa.user
+            
+            # Cari OTP yang valid (kurang dari 10 menit & belum dipakai)
+            waktu_limit = timezone.now() - timezone.timedelta(minutes=10)
+            otp_record = OTPVerification.objects.filter(
+                user=user, 
+                otp_code=otp_input, 
+                is_used=False,
+                created_at__gte=waktu_limit
+            ).first()
+            
+            if otp_record:
+                otp_record.is_used = True
+                otp_record.save()
+                request.session['otp_verified'] = True
+                return redirect('core:reset_password')
+            else:
+                context = {'error': 'Kode verifikasi salah atau sudah kedaluwarsa (lebih dari 10 menit).'}
+                return render(request, 'core/verifikasi_otp.html', context)
+                
+        except Siswa.DoesNotExist:
+            return redirect('core:lupa_password')
+            
+    return render(request, 'core/verifikasi_otp.html')
+
+
+def reset_password(request):
+    nisn = request.session.get('reset_nisn')
+    is_verified = request.session.get('otp_verified')
+    
+    if not nisn or not is_verified:
+        return redirect('core:lupa_password')
+        
+    if request.method == 'POST':
+        password_baru = request.POST.get('password_baru')
+        konfirmasi_password = request.POST.get('konfirmasi_password')
+        
+        if password_baru != konfirmasi_password:
+            context = {'error': 'Kata sandi baru dan konfirmasi kata sandi tidak cocok.'}
+            return render(request, 'core/reset_password.html', context)
+            
+        try:
+            siswa = Siswa.objects.get(nisn=nisn)
+            user = siswa.user
+            user.set_password(password_baru)
+            user.save()
+            
+            # Bersihkan session
+            del request.session['reset_nisn']
+            del request.session['otp_verified']
+            
+            return redirect('core:login_siswa')
+        except Siswa.DoesNotExist:
+            return redirect('core:lupa_password')
+            
+    return render(request, 'core/reset_password.html')
 

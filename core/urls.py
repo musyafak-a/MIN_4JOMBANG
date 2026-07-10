@@ -15,4 +15,9 @@ urlpatterns = [
     path("informasi/spmb/", views.spmb, name="spmb"),
     path("informasi/berita/", views.berita, name="berita"),
     path("pengumuman/", views.pengumuman, name="pengumuman"),
+    path('login/', views.login_siswa, name='login_siswa'),
+    path('lupa-password/', views.lupa_password, name='lupa_password'),
+    path('verifikasi-otp/', views.verifikasi_otp, name='verifikasi_otp'),
+    path('reset-password/', views.reset_password, name='reset_password'),
+    path('dashboard-siswa/', views.dashboard_siswa, name='dashboard_siswa'),
 ]
