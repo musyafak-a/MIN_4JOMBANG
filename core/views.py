@@ -265,8 +265,10 @@ def dashboard_siswa(request):
 
 import random
 from django.utils import timezone
-from accounts.models import OTPVerification
+from accounts.models import OTPVerification, Siswa
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 def lupa_password(request):
     if request.method == 'POST':
@@ -284,10 +286,27 @@ def lupa_password(request):
             # Buat OTP baru
             OTPVerification.objects.create(user=user, otp_code=otp_code)
             
-            # Tampilkan ke console untuk testing
+            # Tampilkan ke console untuk testing/backup
             print("=" * 40)
             print(f"OTP untuk {siswa.nama_lengkap} (NISN: {nisn}): {otp_code}")
             print("=" * 40)
+            
+            # Kirim Email OTP asli
+            if siswa.email:
+                subject = f"Kode Verifikasi Reset Sandi - {otp_code}"
+                message = f"Halo {siswa.nama_lengkap},\n\nAnda meminta reset kata sandi untuk E-Raport MIN 4 Jombang. Berikut adalah kode verifikasi OTP Anda:\n\n{otp_code}\n\nKode ini hanya berlaku selama 10 menit.\n\nSalam,\nAdmin MIN 4 Jombang"
+                try:
+                    send_mail(
+                        subject,
+                        message,
+                        settings.EMAIL_HOST_USER,
+                        [siswa.email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    print(f"Gagal mengirim email: {e}")
+                    # Meskipun gagal kirim, kita tetap biarkan masuk ke step berikutnya
+                    # karena bisa saja untuk testing email password salah tapi di terminal tetap muncul
             
             # Simpan session untuk step selanjutnya
             request.session['reset_nisn'] = nisn

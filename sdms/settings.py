@@ -52,6 +52,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Konfigurasi pengiriman email untuk OTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# PENTING: Isi dengan email dan App Password Google Anda
+EMAIL_HOST_USER = 'ihsandaudy563@gmail.com' # GANTI INI
+EMAIL_HOST_PASSWORD = 'zixqaawzlpsyslxj' # GANTI INI
+
 ROOT_URLCONF = 'sdms.urls'
 
 TEMPLATES = [

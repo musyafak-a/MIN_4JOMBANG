@@ -48,6 +48,7 @@ class Siswa(models.Model):
     jenis_kelamin = models.CharField(max_length=10, choices=[('L', 'Laki-laki'), ('P', 'Perempuan')])
     tempat_lahir = models.CharField(max_length=100)
     tanggal_lahir = models.DateField()
+    email = models.EmailField(blank=True, null=True, verbose_name="Email")
     nama_ayah = models.CharField(max_length=150, blank=True, null=True)
     nama_ibu = models.CharField(max_length=150, blank=True, null=True)
     alamat = models.TextField(blank=True, null=True)
