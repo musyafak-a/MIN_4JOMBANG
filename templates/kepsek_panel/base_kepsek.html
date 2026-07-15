@@ -1,132 +1,74 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Panel Kepala Sekolah{% endblock %} - MIN 4 Jombang</title>
-    {% load static %}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/guru_style.css' %}">
-    <style>
-        .sidebar { background-color: #2c3e50; }
-        .nav-link.active { background-color: #34495e; border-left: 4px solid #e74c3c; }
-        .btn-success { background-color: #2ecc71; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; }
-        .btn-danger { background-color: #e74c3c; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; }
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; }
-        .bg-warning { background-color: #f1c40f; color: #fff; }
-        .bg-success { background-color: #2ecc71; color: #fff; }
-        .bg-danger { background-color: #e74c3c; color: #fff; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
-        th { background-color: #f8f9fa; }
-    </style>
-</head>
-<body>
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin %}
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <i class='bx bxs-institution'></i>
-                <span>Panel Kepsek</span>
-            </div>
-        </div>
-        
-        <div class="user-info">
-            <div class="avatar">
-                <i class='bx bxs-user-circle'></i>
-            </div>
-            <div class="details">
-                <p class="name">{{ request.user.first_name|default:request.user.username }}</p>
-                <p class="role">Kepala Sekolah</p>
-            </div>
-        </div>
-
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="{% url 'kepsek_panel:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                    <i class='bx bxs-dashboard'></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'kepsek_panel:persetujuan_cuti' %}" class="nav-link {% if request.resolver_match.url_name == 'persetujuan_cuti' %}active{% endif %}">
-                    <i class='bx bx-calendar-check'></i>
-                    <span>Persetujuan Cuti</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'kepsek_panel:persetujuan_anggaran' %}" class="nav-link {% if request.resolver_match.url_name == 'persetujuan_anggaran' %}active{% endif %}">
-                    <i class='bx bx-money'></i>
-                    <span>Persetujuan Anggaran</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'kepsek_panel:tanda_tangan_raport' %}" class="nav-link {% if request.resolver_match.url_name == 'tanda_tangan_raport' %}active{% endif %}">
-                    <i class='bx bx-pen'></i>
-                    <span>Tanda Tangan Raport</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'kepsek_panel:laporan_ppdb' %}" class="nav-link {% if request.resolver_match.url_name == 'laporan_ppdb' %}active{% endif %}">
-                    <i class='bx bx-user-plus'></i>
-                    <span>Laporan PPDB</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'kepsek_panel:laporan_mutasi' %}" class="nav-link {% if request.resolver_match.url_name == 'laporan_mutasi' %}active{% endif %}">
-                    <i class='bx bx-transfer'></i>
-                    <span>Laporan Mutasi</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'kepsek_panel:laporan_kelulusan' %}" class="nav-link {% if request.resolver_match.url_name == 'laporan_kelulusan' %}active{% endif %}">
-                    <i class='bx bxs-graduation'></i>
-                    <span>Laporan Kelulusan</span>
-                </a>
-            </li>
-            <li class="nav-item" style="margin-top: 20px;">
-                <a href="{% url 'custom_logout' %}" class="nav-link text-danger">
-                    <i class='bx bx-log-out'></i>
-                    <span>Keluar</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <header class="topbar">
-            <div class="toggle-btn">
-                <i class='bx bx-menu'></i>
-            </div>
-            <div class="page-title">
-                <h2>{% block page_title %}Dashboard{% endblock %}</h2>
-            </div>
-        </header>
-
-        <div class="content-wrapper">
-            {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
+{% block sidebar %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+<aside class="app-sidebar shadow {{ jazzmin_ui.sidebar_classes }}" id="sidebar">
+    <div class="sidebar-brand">
+        <a href="{% url 'kepsek_panel:dashboard' %}" class="brand-link {{ jazzmin_ui.brand_classes }}" id="site-name">
+            {% if jazzmin_settings.site_logo %}
+                <img src="{% static jazzmin_settings.site_logo %}" class="brand-image" alt="{{ jazzmin_settings.site_header }} Logo" {% if jazzmin_settings.site_logo_classes %}class="{{ jazzmin_settings.site_logo_classes }}"{% endif %}>
             {% endif %}
-
-            {% block content %}
-            {% endblock %}
-        </div>
+            <span class="brand-text font-weight-light">{{ jazzmin_settings.site_brand }}</span>
+        </a>
     </div>
 
-    <script>
-        document.querySelector('.toggle-btn').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('collapsed');
-            document.querySelector('.main-content').classList.toggle('expanded');
-        });
-    </script>
-</body>
-</html>
+    <div class="sidebar-wrapper" data-overlayscrollbars="html">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                    <a href="{% url 'kepsek_panel:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-header">MENU KEPALA SEKOLAH</li>
+                <li class="nav-item">
+                    <a href="{% url 'kepsek_panel:persetujuan_cuti' %}" class="nav-link {% if request.resolver_match.url_name == 'persetujuan_cuti' %}active{% endif %}">
+                        <i class="nav-icon fas fa-calendar-check"></i>
+                        <p>Persetujuan Cuti</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'kepsek_panel:persetujuan_anggaran' %}" class="nav-link {% if request.resolver_match.url_name == 'persetujuan_anggaran' %}active{% endif %}">
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
+                        <p>Persetujuan Anggaran</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'kepsek_panel:tanda_tangan_raport' %}" class="nav-link {% if request.resolver_match.url_name == 'tanda_tangan_raport' %}active{% endif %}">
+                        <i class="nav-icon fas fa-pen-nib"></i>
+                        <p>Tanda Tangan Raport</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'kepsek_panel:laporan_ppdb' %}" class="nav-link {% if request.resolver_match.url_name == 'laporan_ppdb' %}active{% endif %}">
+                        <i class="nav-icon fas fa-user-plus"></i>
+                        <p>Laporan PPDB</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'kepsek_panel:laporan_mutasi' %}" class="nav-link {% if request.resolver_match.url_name == 'laporan_mutasi' %}active{% endif %}">
+                        <i class="nav-icon fas fa-exchange-alt"></i>
+                        <p>Laporan Mutasi</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'kepsek_panel:laporan_kelulusan' %}" class="nav-link {% if request.resolver_match.url_name == 'laporan_kelulusan' %}active{% endif %}">
+                        <i class="nav-icon fas fa-user-graduate"></i>
+                        <p>Laporan Kelulusan</p>
+                    </a>
+                </li>
+                <li class="nav-item mt-3">
+                    <a href="{% url 'custom_logout' %}" class="nav-link text-danger">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>Keluar</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+{% endblock %}
+
+{% block content_title %}{% block page_title %}Dashboard Kepala Sekolah{% endblock %}{% endblock %}

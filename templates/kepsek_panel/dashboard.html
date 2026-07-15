@@ -1,47 +1,73 @@
-{% extends 'kepsek_panel/base_kepsek.html' %}
+{% extends "kepsek_panel/base_kepsek.html" %}
+{% load i18n static jazzmin %}
 
-{% block title %}Dashboard Kepsek{% endblock %}
-{% block page_title %}Dashboard Kepala Sekolah{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block content_title %} Dashboard Kepala Sekolah {% endblock %}
 
 {% block content %}
-<div class="dashboard-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-    
-    <div class="stat-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #3498db;">
-        <div class="stat-icon" style="font-size: 2rem; color: #3498db;"><i class='bx bxs-user-detail'></i></div>
-        <div class="stat-details">
-            <h3>{{ total_siswa }}</h3>
-            <p>Total Siswa Aktif</p>
-        </div>
-    </div>
-
-    <div class="stat-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #e74c3c;">
-        <div class="stat-icon" style="font-size: 2rem; color: #e74c3c;"><i class='bx bx-calendar-exclamation'></i></div>
-        <div class="stat-details">
-            <h3>{{ total_cuti_menunggu }}</h3>
-            <p>Pengajuan Cuti Menunggu</p>
+<div class="row">
+    <!-- Kartu Total Siswa -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ total_siswa }}</h3>
+                <p>Total Siswa Aktif</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-users"></i>
+            </div>
         </div>
     </div>
     
-    <div class="stat-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #f1c40f;">
-        <div class="stat-icon" style="font-size: 2rem; color: #f1c40f;"><i class='bx bx-money'></i></div>
-        <div class="stat-details">
-            <h3>{{ total_anggaran_menunggu }}</h3>
-            <p>Proposal Anggaran Menunggu</p>
+    <!-- Kartu Cuti -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{ total_cuti_menunggu }}</h3>
+                <p>Pengajuan Cuti Menunggu</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
         </div>
     </div>
     
-    <div class="stat-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #2ecc71;">
-        <div class="stat-icon" style="font-size: 2rem; color: #2ecc71;"><i class='bx bx-pen'></i></div>
-        <div class="stat-details">
-            <h3>{{ total_raport_belum_ttd }}</h3>
-            <p>Raport Belum Ditandatangani</p>
+    <!-- Kartu Anggaran -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>{{ total_anggaran_menunggu }}</h3>
+                <p>Proposal Anggaran Menunggu</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
         </div>
     </div>
     
+    <!-- Kartu Raport -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{ total_raport_belum_ttd }}</h3>
+                <p>Raport Belum Ditandatangani</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-pen-nib"></i>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="welcome-banner" style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 30px; border-radius: 10px; margin-top: 20px;">
-    <h2>Selamat Datang di Panel Kepala Sekolah!</h2>
-    <p>Gunakan menu di samping untuk mengelola persetujuan dan melihat laporan operasional sekolah secara real-time.</p>
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h4 class="card-title">Selamat Datang di Panel Kepala Sekolah!</h4>
+                <p class="card-text mt-2">Gunakan menu di samping untuk mengelola persetujuan dan melihat laporan operasional sekolah secara real-time.</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -10,7 +10,7 @@ var checkSidebar = setInterval(function() {
             li.innerHTML = `
                 <a href="/logout/" class="nav-link bg-danger text-white" style="border-radius: 5px;">
                     <i class="nav-icon fas fa-sign-out-alt text-white"></i>
-                    <p class="text-white">Logout Guru</p>
+                    <p class="text-white">Logout</p>
                 </a>
             `;
             nav.appendChild(li);

@@ -1,123 +1,68 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Dashboard Guru{% endblock %} - MIN 4 Jombang</title>
-    {% load static %}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/guru_style.css' %}">
-</head>
-<body>
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin %}
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <i class='bx bxs-school'></i>
-                <span>Portal Guru</span>
-            </div>
-        </div>
-        
-        <div class="user-info">
-            <div class="avatar">
-                <i class='bx bxs-user-circle'></i>
-            </div>
-            <div class="details">
-                <p class="name">{{ request.user.first_name|default:request.user.username }}</p>
-                <p class="role">Guru MIN 4 Jombang</p>
-            </div>
-        </div>
-
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="{% url 'guru_panel:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                    <i class='bx bxs-dashboard'></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'guru_panel:siswa' %}" class="nav-link {% if request.resolver_match.url_name == 'siswa' %}active{% endif %}">
-                    <i class='bx bxs-group'></i>
-                    <span>Siswa</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'guru_panel:kelas' %}" class="nav-link {% if request.resolver_match.url_name == 'kelas' %}active{% endif %}">
-                    <i class='bx bx-chalkboard'></i>
-                    <span>Kelas</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'guru_panel:nilai' %}" class="nav-link {% if request.resolver_match.url_name == 'nilai' %}active{% endif %}">
-                    <i class='bx bx-task'></i>
-                    <span>Nilai</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'guru_panel:raport' %}" class="nav-link {% if request.resolver_match.url_name == 'raport' %}active{% endif %}">
-                    <i class='bx bxs-report'></i>
-                    <span>Raport</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'guru_panel:jadwal' %}" class="nav-link {% if request.resolver_match.url_name == 'jadwal' %}active{% endif %}">
-                    <i class='bx bx-calendar-event'></i>
-                    <span>Jadwal</span>
-                </a>
-            </li>
-        </ul>
-        
-        <div class="logout-container">
-            <a href="{% url 'guru_panel:logout' %}" class="nav-link logout-btn">
-                <i class='bx bx-log-out'></i>
-                <span>Keluar</span>
-            </a>
-        </div>
+{% block sidebar %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+<aside class="app-sidebar shadow {{ jazzmin_ui.sidebar_classes }}" id="sidebar">
+    <div class="sidebar-brand">
+        <a href="{% url 'guru_panel:dashboard' %}" class="brand-link {{ jazzmin_ui.brand_classes }}" id="site-name">
+            {% if jazzmin_settings.site_logo %}
+                <img src="{% static jazzmin_settings.site_logo %}" class="brand-image" alt="{{ jazzmin_settings.site_header }} Logo" {% if jazzmin_settings.site_logo_classes %}class="{{ jazzmin_settings.site_logo_classes }}"{% endif %}>
+            {% endif %}
+            <span class="brand-text font-weight-light">{{ jazzmin_settings.site_brand }}</span>
+        </a>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <header class="topbar">
-            <div class="topbar-left">
-                <i class='bx bx-menu' id="sidebarToggle" class="sidebar-toggle"></i>
-                <h2 class="page-title">{% block page_title %}Dashboard{% endblock %}</h2>
-            </div>
-            <div class="topbar-right">
-                <div class="notification">
-                    <i class='bx bx-bell'></i>
-                </div>
-            </div>
-        </header>
-
-        <div class="content-wrapper">
-            {% block content %}
-            {% endblock %}
-        </div>
+    <div class="sidebar-wrapper" data-overlayscrollbars="html">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                    <a href="{% url 'guru_panel:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-header">MENU GURU</li>
+                <li class="nav-item">
+                    <a href="{% url 'guru_panel:siswa' %}" class="nav-link {% if request.resolver_match.url_name == 'siswa' %}active{% endif %}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Siswa</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'guru_panel:kelas' %}" class="nav-link {% if request.resolver_match.url_name == 'kelas' %}active{% endif %}">
+                        <i class="nav-icon fas fa-chalkboard"></i>
+                        <p>Kelas</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'guru_panel:nilai' %}" class="nav-link {% if request.resolver_match.url_name == 'nilai' %}active{% endif %}">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>Nilai</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'guru_panel:raport' %}" class="nav-link {% if request.resolver_match.url_name == 'raport' %}active{% endif %}">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>Raport</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'guru_panel:jadwal' %}" class="nav-link {% if request.resolver_match.url_name == 'jadwal' %}active{% endif %}">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                        <p>Jadwal</p>
+                    </a>
+                </li>
+                <li class="nav-item mt-3">
+                    <a href="{% url 'guru_panel:logout' %}" class="nav-link text-danger">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>Keluar</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
+</aside>
+{% endblock %}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.querySelector('.sidebar');
-
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function(e) {
-                    sidebar.classList.toggle('active');
-                    e.stopPropagation();
-                });
-            }
-            
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(e) {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-                    if (!sidebar.contains(e.target) && e.target !== sidebarToggle) {
-                        sidebar.classList.remove('active');
-                    }
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+{% block content_title %}{% block page_title %}Dashboard Guru{% endblock %}{% endblock %}

@@ -150,11 +150,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # JAZZMIN SETTINGS UNTUK DASHBOARD
 JAZZMIN_SETTINGS = {
-    "site_title": "Portal Guru MIN",
+    "site_title": "Portal Sistem MIN",
     "site_header": "MIN 4 Jombang",
     "site_brand": "MIN 4 Jombang",
     "site_logo": "img/gallery_new/kelas.png",
-    "welcome_sign": "Selamat Datang di Portal Guru",
+    "welcome_sign": "Selamat Datang di Portal MIN 4 Jombang",
     "copyright": "MIN 4 Jombang",
     "custom_css": "css/admin_custom.css",
     "custom_js": "js/admin_custom_v2.js",
@@ -176,7 +176,21 @@ JAZZMIN_SETTINGS = {
         "core.alumni": "fas fa-graduation-cap",
         "core.berita": "fas fa-newspaper",
         "core.achievement": "fas fa-trophy",
+        "kepsek_panel.persetujuancuti": "fas fa-calendar-check",
+        "kepsek_panel.persetujuananggaran": "fas fa-money-bill-wave",
+        "kepsek_panel.tandatanganraport": "fas fa-pen-nib",
+        "kepsek_panel.laporanppdb": "fas fa-user-plus",
+        "kepsek_panel.laporanmutasi": "fas fa-exchange-alt",
+        "kepsek_panel.laporankelulusan": "fas fa-user-graduate",
     },
+    "order_with_respect_to": [
+        "kepsek_panel.persetujuancuti",
+        "kepsek_panel.persetujuananggaran",
+        "kepsek_panel.tandatanganraport",
+        "kepsek_panel.laporanppdb",
+        "kepsek_panel.laporanmutasi",
+        "kepsek_panel.laporankelulusan",
+    ],
     "show_ui_builder": False,
 }
 

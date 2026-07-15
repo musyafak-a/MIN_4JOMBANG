@@ -1,0 +1,190 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin kepsek_tags %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block content_title %} {% trans 'Dashboard' %} {% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Dashboard' %}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    {% if request.user.profil_guru.posisi == 'Kepala Sekolah' %}
+    {% get_total_siswa as ts %}
+    {% get_total_cuti as tc %}
+    {% get_total_anggaran as ta %}
+    {% get_total_raport as tr %}
+    
+    <!-- Custom Cards for Kepala Sekolah -->
+    <div class="row">
+        <!-- Kartu Total Siswa -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ ts }}</h3>
+                    <p>Total Siswa Aktif</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <a href="{% url 'admin:accounts_siswa_changelist' %}" class="small-box-footer">Lebih detail <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        
+        <!-- Kartu Cuti -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ tc }}</h3>
+                    <p>Pengajuan Cuti Menunggu</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <a href="{% url 'admin:kepsek_panel_persetujuancuti_changelist' %}" class="small-box-footer">Lebih detail <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        
+        <!-- Kartu Anggaran -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ ta }}</h3>
+                    <p>Proposal Anggaran Menunggu</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <a href="{% url 'admin:kepsek_panel_persetujuananggaran_changelist' %}" class="small-box-footer">Lebih detail <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        
+        <!-- Kartu Raport -->
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ tr }}</h3>
+                    <p>Raport Belum Ditandatangani</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-pen-nib"></i>
+                </div>
+                <a href="{% url 'admin:kepsek_panel_tandatanganraport_changelist' %}" class="small-box-footer">Lebih detail <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h4 class="card-title">Selamat Datang di Panel Kepala Sekolah!</h4>
+                    <p class="card-text mt-2">Gunakan menu di samping untuk mengelola persetujuan dan melihat laporan operasional sekolah secara real-time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% get_side_menu using="app_list" as dashboard_list %}
+    {% if dashboard_list %}
+        {% widthratio dashboard_list|length 2 1 as middle %}
+    {% endif %}
+
+    <div class="col-lg-9 col-12">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                {% for app in dashboard_list %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">{{ app.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                {% for model in app.models %}
+                                    <tr>
+                                        <td>
+                                            {% if model.url %}<a href="{{ model.url }}">{{ model.name }}</a>{% else %}{{ model.name }}{% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-right">
+                                                {% if model.add_url %}
+                                                    <a href="{{ model.add_url }}" class="btn btn-sm {{ jazzmin_ui.button_classes.success }} addlink">{% trans 'Add' %}</a>
+                                                {% endif %}
+                                                {% if model.url %}
+                                                    {% if model.view_only %}
+                                                        <a href="{{ model.url }}" class="btn btn-sm {{ jazzmin_ui.button_classes.info }} viewlink">{% trans 'View' %}</a>
+                                                    {% else %}
+                                                        <a href="{{ model.url }}" class="btn btn-sm {{ jazzmin_ui.button_classes.info }} changelink">{% if model.custom %}{% trans 'Go' %}{% else %}{% trans 'Change' %}{% endif %}</a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {% if forloop.counter == middle|add:"0" %}
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                    {% endif %}
+
+                {% endfor %}
+                </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-12">
+        <div id="content-related">
+            <div class="module" id="recent-actions-module">
+                <h4 class="mb-3">{% trans 'Recent actions' %}</h4>
+                {% load log %}
+                {% get_admin_log 6 as admin_log for_user user %}
+                {% if not admin_log %}
+                    <p>{% trans 'None available' %}</p>
+                {% else %}
+                    <div class="timeline">
+                        {% for entry in admin_log %}
+                            <div>
+                                {% if entry.is_change %}
+                                    <i class="fas fa-edit bg-gray text-xs"></i>
+                                {% elif entry.is_deletion %}
+                                    <i class="fas fa-trash bg-danger text-xs"></i>
+                                {% elif entry.is_addition %}
+                                    <i class="fas fa-plus-circle bg-success text-xs"></i>
+                                {% endif %}
+
+                                <div class="timeline-item">
+                                    <span class="time"><i class="fas fa-clock"></i> {% blocktrans with timesince=entry.action_time|timesince %}{{ timesince }} ago{% endblocktrans %}</span>
+                                    <h3 class="timeline-header no-border">
+                                        {% if entry.is_deletion or not entry.get_admin_url %}
+                                            {{ entry.object_repr }}
+                                        {% else %}
+                                            <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                        {% endif %}
+
+                                        {% if entry.model %}
+                                            <span class="mini quiet">
+                                                {% filter capfirst %}
+                                                    {{ entry.model }}
+                                                {% endfilter %}
+                                            </span>
+                                        {% endif %}
+                                    </h3>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

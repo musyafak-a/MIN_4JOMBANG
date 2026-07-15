@@ -62,7 +62,8 @@
       </nav>
 
       <div class="navbar__actions">
-        <a href="{% url 'core:login_siswa' %}" class="navbar__login">Masuk</a>
+        <a href="{% url 'guru_panel:login' %}" class="navbar__login" style="background-color: #27ae60;">Login Pegawai</a>
+        <a href="{% url 'core:login_siswa' %}" class="navbar__login">Login Siswa</a>
         <button class="navbar__toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>

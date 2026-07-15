@@ -5,6 +5,8 @@ from django.contrib import messages
 
 def login_view(request):
     if request.user.is_authenticated:
+        if hasattr(request.user, 'profil_guru') and request.user.profil_guru.posisi == 'Kepala Sekolah':
+            return redirect('kepsek_panel:dashboard')
         return redirect('guru_panel:dashboard')
         
     if request.method == 'POST':
@@ -13,6 +15,8 @@ def login_view(request):
         user = authenticate(request, username=nip, password=password)
         if user is not None:
             login(request, user)
+            if hasattr(user, 'profil_guru') and user.profil_guru.posisi == 'Kepala Sekolah':
+                return redirect('kepsek_panel:dashboard')
             return redirect('guru_panel:dashboard')
         else:
             messages.error(request, 'NIP atau Password salah.')

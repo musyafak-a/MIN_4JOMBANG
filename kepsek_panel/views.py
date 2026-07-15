@@ -98,3 +98,4 @@ def laporan_kelulusan(request):
     kelulusan_list = Raport.objects.filter(kelas__tingkat='6', status_naik_kelas=True).select_related('siswa', 'kelas')
     return render(request, 'kepsek_panel/laporan_kelulusan.html', {'kelulusan_list': kelulusan_list})
 
+

@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', core_views.custom_logout_view, name='custom_logout'),
     path('kepsek/', include('kepsek_panel.urls')),
+    path('guru/', include('guru_panel.urls')),
     path('admin-sekolah/', include('admin_sekolah_panel.urls')),
     path('', include('core.urls')),
 ]
