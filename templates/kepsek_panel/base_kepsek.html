@@ -3,7 +3,7 @@
 
 {% block sidebar %}
 {% get_jazzmin_ui_tweaks as jazzmin_ui %}
-<aside class="app-sidebar shadow {{ jazzmin_ui.sidebar_classes }}" id="sidebar">
+<aside class="app-sidebar bg-body-secondary shadow {{ jazzmin_ui.sidebar_classes }}" id="jazzy-sidebar" data-bs-theme="dark">
     <div class="sidebar-brand">
         <a href="{% url 'kepsek_panel:dashboard' %}" class="brand-link {{ jazzmin_ui.brand_classes }}" id="site-name">
             {% if jazzmin_settings.site_logo %}
@@ -15,7 +15,7 @@
 
     <div class="sidebar-wrapper" data-overlayscrollbars="html">
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav sidebar-menu flex-column {{ jazzmin_ui.sidebar_list_classes }}" data-lte-toggle="treeview" role="navigation" aria-label="Main navigation" data-accordion="false" id="jazzy-navigation">
                 <li class="nav-item">
                     <a href="{% url 'kepsek_panel:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>

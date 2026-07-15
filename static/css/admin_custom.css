@@ -24,6 +24,10 @@ aside.main-sidebar::before,
 }
 
 /* Warna hover pada menu sidebar */
+.nav-sidebar .nav-item > .nav-link,
+.nav-sidebar .nav-header {
+    color: #ffffff !important;
+}
 .nav-sidebar .nav-item > .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
@@ -32,6 +36,11 @@ aside.main-sidebar::before,
 /* Warna menu aktif */
 .nav-sidebar .nav-item > .nav-link.active {
     background-color: #1E88E5 !important;
+    color: #ffffff !important;
+}
+
+/* Memastikan teks pada card (small-box) berwarna putih */
+.small-box .inner h3, .small-box .inner p {
     color: #ffffff !important;
 }
 
