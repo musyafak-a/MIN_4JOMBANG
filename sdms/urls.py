@@ -24,6 +24,7 @@ from core import views as core_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', core_views.custom_logout_view, name='custom_logout'),
+    path('kepsek/', include('kepsek_panel.urls')),
     path('', include('core.urls')),
 ]
 

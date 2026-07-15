@@ -95,6 +95,8 @@ class Raport(models.Model):
     alpa = models.PositiveIntegerField(default=0)
     rata_rata = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, help_text="Rata-rata nilai keseluruhan")
     status_naik_kelas = models.BooleanField(default=True, help_text="Centang jika naik kelas / lulus")
+    is_signed_by_kepsek = models.BooleanField(default=False, help_text="Ditandatangani digital oleh Kepala Sekolah")
+    signature_date = models.DateField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Raport"
@@ -116,3 +118,43 @@ class DetailRaport(models.Model):
         
     def __str__(self):
         return f"{self.mata_pelajaran.nama_mapel} - {self.nilai_akhir}"
+
+class PendaftarPPDB(models.Model):
+    STATUS_CHOICES = [
+        ('Menunggu', 'Menunggu'),
+        ('Diterima', 'Diterima'),
+        ('Ditolak', 'Ditolak'),
+    ]
+    
+    nama_lengkap = models.CharField(max_length=150)
+    asal_sekolah = models.CharField(max_length=150, blank=True, null=True)
+    tanggal_daftar = models.DateField(auto_now_add=True)
+    status_diterima = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Menunggu')
+    
+    class Meta:
+        verbose_name = "Pendaftar PPDB"
+        verbose_name_plural = "Pendaftar PPDB"
+
+    def __str__(self):
+        return self.nama_lengkap
+
+
+class MutasiSiswa(models.Model):
+    JENIS_CHOICES = [
+        ('Masuk', 'Masuk'),
+        ('Keluar', 'Keluar'),
+    ]
+    
+    siswa = models.ForeignKey(Siswa, on_delete=models.CASCADE, related_name='mutasi')
+    jenis_mutasi = models.CharField(max_length=10, choices=JENIS_CHOICES)
+    tanggal = models.DateField()
+    alasan = models.TextField()
+    keterangan_sekolah = models.CharField(max_length=150, help_text="Sekolah Asal (jika masuk) atau Sekolah Tujuan (jika keluar)")
+
+    class Meta:
+        verbose_name = "Mutasi Siswa"
+        verbose_name_plural = "Mutasi Siswa"
+
+    def __str__(self):
+        return f"{self.siswa.nama_lengkap} - {self.jenis_mutasi} ({self.tanggal})"
+

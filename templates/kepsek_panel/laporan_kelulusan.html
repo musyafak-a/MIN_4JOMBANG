@@ -1,0 +1,40 @@
+{% extends 'kepsek_panel/base_kepsek.html' %}
+
+{% block title %}Laporan Kelulusan{% endblock %}
+{% block page_title %}Laporan Kelulusan Siswa{% endblock %}
+
+{% block content %}
+<div class="card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <div style="margin-bottom: 20px; text-align: right;">
+        <button class="btn-success" style="border: none; padding: 8px 15px; cursor: pointer;"><i class='bx bx-printer'></i> Cetak Laporan</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Siswa</th>
+                <th>NISN</th>
+                <th>Kelas Terakhir</th>
+                <th>Tahun Ajaran</th>
+                <th>Status Kelulusan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for raport in kelulusan_list %}
+            <tr>
+                <td>{{ raport.siswa.nama_lengkap }}</td>
+                <td>{{ raport.siswa.nisn }}</td>
+                <td>{{ raport.kelas.nama_kelas }}</td>
+                <td>{{ raport.kelas.tahun_ajaran }}</td>
+                <td>
+                    <span class="badge bg-success">Lulus</span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center;">Belum ada data kelulusan.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

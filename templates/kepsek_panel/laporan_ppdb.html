@@ -1,0 +1,44 @@
+{% extends 'kepsek_panel/base_kepsek.html' %}
+
+{% block title %}Laporan PPDB{% endblock %}
+{% block page_title %}Laporan Penerimaan Peserta Didik Baru (PPDB){% endblock %}
+
+{% block content %}
+<div class="card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <div style="margin-bottom: 20px; text-align: right;">
+        <button class="btn-success" style="border: none; padding: 8px 15px; cursor: pointer;"><i class='bx bx-printer'></i> Cetak Laporan</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal Daftar</th>
+                <th>Nama Lengkap</th>
+                <th>Asal Sekolah / TK</th>
+                <th>Status Pendaftaran</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pendaftar in pendaftar_list %}
+            <tr>
+                <td>{{ pendaftar.tanggal_daftar|date:"d M Y" }}</td>
+                <td>{{ pendaftar.nama_lengkap }}</td>
+                <td>{{ pendaftar.asal_sekolah|default:"-" }}</td>
+                <td>
+                    {% if pendaftar.status_diterima == 'Menunggu' %}
+                        <span class="badge bg-warning">Menunggu Verifikasi</span>
+                    {% elif pendaftar.status_diterima == 'Diterima' %}
+                        <span class="badge bg-success">Diterima</span>
+                    {% else %}
+                        <span class="badge bg-danger">Ditolak / Cadangan</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center;">Belum ada data pendaftar.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

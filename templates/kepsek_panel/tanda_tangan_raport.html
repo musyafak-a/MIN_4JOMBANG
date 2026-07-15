@@ -1,0 +1,60 @@
+{% extends 'kepsek_panel/base_kepsek.html' %}
+
+{% block title %}Tanda Tangan Raport{% endblock %}
+{% block page_title %}Tanda Tangan Digital Raport / Ijazah{% endblock %}
+
+{% block content %}
+<div class="card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <table>
+        <thead>
+            <tr>
+                <th>Kelas</th>
+                <th>Siswa</th>
+                <th>Semester</th>
+                <th>Status Tanda Tangan</th>
+                <th>Tanggal TTD</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for raport in raport_list %}
+            <tr>
+                <td>{{ raport.kelas.nama_kelas }}</td>
+                <td>{{ raport.siswa.nama_lengkap }}</td>
+                <td>{{ raport.semester }}</td>
+                <td>
+                    {% if raport.is_signed_by_kepsek %}
+                        <span class="badge bg-success">Sudah Ditandatangani</span>
+                    {% else %}
+                        <span class="badge bg-warning">Belum Ditandatangani</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if raport.signature_date %}
+                        {{ raport.signature_date|date:"d M Y" }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not raport.is_signed_by_kepsek %}
+                    <form action="{% url 'kepsek_panel:sign_raport' raport.id %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-success" style="border: none; cursor: pointer;" onclick="return confirm('Tandatangani raport ini secara digital?')">
+                            <i class='bx bx-pen'></i> TTD Digital
+                        </button>
+                    </form>
+                    {% else %}
+                    <span style="color: green;"><i class='bx bx-check-double'></i> Selesai</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Belum ada data raport.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
