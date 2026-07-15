@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'akademik',
     'guru_panel',
     'kepsek_panel',
+    'admin_sekolah_panel',
 ]
 
 MIDDLEWARE = [

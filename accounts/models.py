@@ -79,3 +79,17 @@ class OTPVerification(models.Model):
 
     def __str__(self):
         return f"OTP for {self.user.username}: {self.otp_code}"
+
+class AdminSekolah(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profil_admin_sekolah')
+    nama_lengkap = models.CharField(max_length=150)
+    no_telepon = models.CharField(max_length=15, blank=True, null=True)
+    foto = models.ImageField(upload_to='foto_admin_sekolah/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Admin Sekolah"
+        verbose_name_plural = "Admin Sekolah"
+
+    def __str__(self):
+        return self.nama_lengkap
+

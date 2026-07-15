@@ -1,0 +1,47 @@
+{% extends 'admin_sekolah_panel/base_admin_sekolah.html' %}
+
+{% block title %}Kelola Berita{% endblock %}
+{% block page_title %}Kelola Berita & Artikel{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="margin-bottom: 20px; text-align: right;">
+        <a href="{% url 'admin_sekolah_panel:tambah_berita' %}" class="btn-primary"><i class='bx bx-plus'></i> Tambah Berita Baru</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Judul</th>
+                <th>Penulis</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for berita in berita_list %}
+            <tr>
+                <td>{{ berita.tanggal_publikasi|date:"d M Y H:i" }}</td>
+                <td>{{ berita.judul }}</td>
+                <td>{{ berita.penulis.first_name|default:berita.penulis.username }}</td>
+                <td>
+                    {% if berita.status == 'Published' %}
+                        <span class="badge bg-success">Published</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Draft</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'admin_sekolah_panel:edit_berita' berita.id %}" class="btn-warning"><i class='bx bx-edit'></i> Edit</a>
+                    <a href="{% url 'admin_sekolah_panel:hapus_berita' berita.id %}" class="btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus berita ini?')"><i class='bx bx-trash'></i> Hapus</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center;">Belum ada berita.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'admin_sekolah_panel/base_admin_sekolah.html' %}
+
+{% block title %}{% if berita %}Edit Berita{% else %}Tambah Berita{% endif %}{% endblock %}
+{% block page_title %}{% if berita %}Edit Berita{% else %}Tambah Berita Baru{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="judul">Judul Berita</label>
+            <input type="text" id="judul" name="judul" value="{{ berita.judul|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="konten">Konten / Isi Berita</label>
+            <textarea id="konten" name="konten" rows="10" required>{{ berita.konten|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="gambar">Gambar (Opsional)</label>
+            <input type="file" id="gambar" name="gambar" accept="image/*">
+            {% if berita and berita.gambar %}
+            <p style="margin-top: 10px; font-size: 12px;">Gambar saat ini: <a href="{{ berita.gambar.url }}" target="_blank">Lihat Gambar</a></p>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="status">Status Publikasi</label>
+            <select id="status" name="status">
+                <option value="Published" {% if berita.status == 'Published' %}selected{% endif %}>Published</option>
+                <option value="Draft" {% if berita.status == 'Draft' %}selected{% endif %}>Draft</option>
+            </select>
+        </div>
+        
+        <div class="form-group" style="margin-top: 20px; text-align: right;">
+            <a href="{% url 'admin_sekolah_panel:kelola_berita' %}" class="btn-secondary" style="padding: 10px 15px; text-decoration: none; color: #333; background: #eee; border-radius: 5px; margin-right: 10px;">Batal</a>
+            <button type="submit" class="btn-primary" style="padding: 10px 15px;">Simpan Berita</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

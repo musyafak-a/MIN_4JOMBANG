@@ -1,0 +1,47 @@
+{% extends 'admin_sekolah_panel/base_admin_sekolah.html' %}
+
+{% block title %}Kelola Pengumuman{% endblock %}
+{% block page_title %}Kelola Pengumuman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="margin-bottom: 20px; text-align: right;">
+        <a href="{% url 'admin_sekolah_panel:tambah_pengumuman' %}" class="btn-primary"><i class='bx bx-plus'></i> Tambah Pengumuman Baru</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Judul Pengumuman</th>
+                <th>Pembuat</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pengumuman in pengumuman_list %}
+            <tr>
+                <td>{{ pengumuman.tanggal_publikasi|date:"d M Y H:i" }}</td>
+                <td>{{ pengumuman.judul }}</td>
+                <td>{{ pengumuman.penulis.first_name|default:pengumuman.penulis.username }}</td>
+                <td>
+                    {% if pengumuman.status == 'Published' %}
+                        <span class="badge bg-success">Published</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Draft</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'admin_sekolah_panel:edit_pengumuman' pengumuman.id %}" class="btn-warning"><i class='bx bx-edit'></i> Edit</a>
+                    <a href="{% url 'admin_sekolah_panel:hapus_pengumuman' pengumuman.id %}" class="btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')"><i class='bx bx-trash'></i> Hapus</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center;">Belum ada pengumuman.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

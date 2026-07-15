@@ -174,3 +174,21 @@ class Alumni(models.Model):
     def __str__(self):
         return f"{self.nama} ({self.tahun_lulus})"
 
+class Pengumuman(models.Model):
+    judul = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
+    isi = models.TextField()
+    gambar = models.ImageField(upload_to="pengumuman/", blank=True, null=True)
+    penulis = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True)
+    tanggal_publikasi = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=15, choices=[("Draft", "Draft"), ("Published", "Published")], default="Published")
+
+    class Meta:
+        ordering = ["-tanggal_publikasi"]
+        verbose_name = "Pengumuman"
+        verbose_name_plural = "Pengumuman"
+
+    def __str__(self):
+        return self.judul
+
+
