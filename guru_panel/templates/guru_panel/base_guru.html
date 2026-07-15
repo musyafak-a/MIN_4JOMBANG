@@ -24,33 +24,33 @@
                 </li>
                 <li class="nav-header">MENU GURU</li>
                 <li class="nav-item">
-                    <a href="{% url 'guru_panel:siswa' %}" class="nav-link {% if request.resolver_match.url_name == 'siswa' %}active{% endif %}">
+                    <a href="{% url 'admin:accounts_siswa_changelist' %}" class="nav-link">
                         <i class="nav-icon fas fa-users"></i>
                         <p>Siswa</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'guru_panel:kelas' %}" class="nav-link {% if request.resolver_match.url_name == 'kelas' %}active{% endif %}">
+                    <a href="{% url 'admin:akademik_kelas_changelist' %}" class="nav-link">
                         <i class="nav-icon fas fa-chalkboard"></i>
                         <p>Kelas</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'guru_panel:nilai' %}" class="nav-link {% if request.resolver_match.url_name == 'nilai' %}active{% endif %}">
+                    <a href="{% url 'admin:akademik_nilai_changelist' %}" class="nav-link">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>Nilai</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'guru_panel:raport' %}" class="nav-link {% if request.resolver_match.url_name == 'raport' %}active{% endif %}">
+                    <a href="{% url 'admin:akademik_raport_changelist' %}" class="nav-link">
                         <i class="nav-icon fas fa-file-alt"></i>
                         <p>Raport</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'guru_panel:jadwal' %}" class="nav-link {% if request.resolver_match.url_name == 'jadwal' %}active{% endif %}">
+                    <a href="{% url 'admin:akademik_matapelajaran_changelist' %}" class="nav-link">
                         <i class="nav-icon fas fa-calendar-alt"></i>
-                        <p>Jadwal</p>
+                        <p>Mata Pelajaran</p>
                     </a>
                 </li>
                 <li class="nav-item mt-3">
