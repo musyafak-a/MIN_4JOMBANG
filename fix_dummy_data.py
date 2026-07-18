@@ -14,7 +14,7 @@ def run():
     
     # Hapus juga akun usernya (yang bukan staff)
     User.objects.filter(is_staff=False, is_superuser=False).delete()
-    print("Siswa lama berhasil dihapus.")
+    print("Siswa lama berhasil dihapus")
     
     # Buat kelas 1A sampai 6D jika belum ada
     tahun_ajaran = TahunAjaran.objects.first()
