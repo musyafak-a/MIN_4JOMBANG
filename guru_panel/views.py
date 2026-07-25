@@ -68,32 +68,48 @@ def raport_view(request):
 @login_required(login_url='guru_panel:login')
 def jadwal_view(request):
     tahun_ajaran_aktif = TahunAjaran.objects.filter(is_active=True).first()
-    kelas_list = Kelas.objects.all().order_by('nama_kelas')
     
-    selected_kelas_id = request.GET.get('kelas_id')
-    selected_kelas = None
+    suffixes = ['A', 'B', 'C', 'D']
+    selected_suffix = request.GET.get('suffix', 'A')
+    if selected_suffix not in suffixes:
+        selected_suffix = 'A'
+        
+    hari_list = ['Sabtu', 'Ahad', 'Senin', 'Selasa', 'Rabu', 'Kamis']
+    jam_ke_list = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
+    tingkat_list = list(range(1, 7))
     
-    if selected_kelas_id:
-        selected_kelas = Kelas.objects.filter(id=selected_kelas_id).first()
+    class_names = [f"{tingkat}{selected_suffix}" for tingkat in tingkat_list]
+    
+    jadwal_qs = Jadwal.objects.filter(
+        kelas__tahun_ajaran=tahun_ajaran_aktif,
+        kelas__nama_kelas__in=class_names
+    ).select_related('mata_pelajaran', 'kelas', 'mata_pelajaran__guru_pengampu')
+    
+    jadwal_map = {}
+    for j in jadwal_qs:
+        tingkat = int(j.kelas.tingkat)
+        jadwal_map[(j.hari, j.jam_ke, tingkat)] = j
         
-    if not selected_kelas:
-        if hasattr(request.user, 'profil_guru'):
-            selected_kelas = Kelas.objects.filter(wali_kelas=request.user.profil_guru).first()
-        if not selected_kelas:
-            selected_kelas = kelas_list.first()
-
-    jadwal_list = []
-    if selected_kelas:
-        jadwal_list = list(Jadwal.objects.filter(kelas=selected_kelas).select_related('mata_pelajaran', 'mata_pelajaran__guru_pengampu'))
-        # Urutkan berdasarkan hari kerja
-        hari_order = {'Senin': 0, 'Selasa': 1, 'Rabu': 2, 'Kamis': 3, 'Jumat': 4, 'Sabtu': 5}
-        jadwal_list.sort(key=lambda x: (hari_order.get(x.hari, 99), x.jam))
-        
+    matrix_rows = []
+    for hari in hari_list:
+        for jam_ke in jam_ke_list:
+            row_schedules = []
+            for tingkat in tingkat_list:
+                j = jadwal_map.get((hari, jam_ke, tingkat))
+                row_schedules.append(j)
+            matrix_rows.append({
+                'hari': hari,
+                'jam_ke': jam_ke,
+                'schedules': row_schedules
+            })
+            
     context = {
         'tahun_ajaran_aktif': tahun_ajaran_aktif,
-        'kelas_list': kelas_list,
-        'selected_kelas': selected_kelas,
-        'jadwal_list': jadwal_list,
+        'suffixes': suffixes,
+        'selected_suffix': selected_suffix,
+        'tingkat_list': tingkat_list,
+        'matrix_rows': matrix_rows,
+        'rowspan_count': len(jam_ke_list)
     }
     return render(request, 'guru_panel/jadwal.html', context)
 

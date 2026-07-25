@@ -167,8 +167,20 @@ class Jadwal(models.Model):
         ('Kamis', 'Kamis'),
         ('Jumat', 'Jumat'),
         ('Sabtu', 'Sabtu'),
+        ('Ahad', 'Ahad'),
+    ]
+    JAM_KE_CHOICES = [
+        ('I', 'I'),
+        ('II', 'II'),
+        ('III', 'III'),
+        ('IV', 'IV'),
+        ('V', 'V'),
+        ('VI', 'VI'),
+        ('VII', 'VII'),
+        ('VIII', 'VIII'),
     ]
     hari = models.CharField(max_length=10, choices=HARI_CHOICES)
+    jam_ke = models.CharField(max_length=5, choices=JAM_KE_CHOICES, default='I')
     jam = models.CharField(max_length=50, help_text="Contoh: 07:00 - 08:30")
     mata_pelajaran = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE, related_name='jadwal')
     kelas = models.ForeignKey(Kelas, on_delete=models.CASCADE, related_name='jadwal')
@@ -179,8 +191,8 @@ class Jadwal(models.Model):
     class Meta:
         verbose_name = "Jadwal Pelajaran"
         verbose_name_plural = "Jadwal Pelajaran"
-        ordering = ['hari', 'jam']
+        ordering = ['hari', 'jam_ke', 'jam']
 
     def __str__(self):
-        return f"{self.kelas.nama_kelas} - {self.hari} ({self.jam}) - {self.mata_pelajaran.nama_mapel}"
+        return f"{self.kelas.nama_kelas} - {self.hari} (Jam Ke-{self.jam_ke}) - {self.mata_pelajaran.nama_mapel}"
 
