@@ -1,11 +1,44 @@
 {% extends 'guru_panel/base_guru.html' %}
 
-{% block title %}Halaman Kosong{% endblock %}
-{% block page_title %}Sedang Dalam Pengembangan{% endblock %}
+{% block title %}Daftar Raport{% endblock %}
+{% block page_title %}Daftar Raport Siswa{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h3>Konten Belum Tersedia</h3>
-    <p>Halaman ini sedang dalam tahap pengembangan struktur dasar.</p>
+<div class="card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Siswa</th>
+                <th>Kelas</th>
+                <th>Semester</th>
+                <th>Kehadiran (S/I/A)</th>
+                <th>Rata-rata Nilai</th>
+                <th>TTD Kepala Sekolah</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for raport in raport_list %}
+            <tr>
+                <td><strong>{{ raport.siswa.nama_lengkap }}</strong></td>
+                <td>{{ raport.kelas.nama_kelas }}</td>
+                <td>{{ raport.semester }}</td>
+                <td>S: {{ raport.sakit }} | I: {{ raport.izin }} | A: {{ raport.alpa }}</td>
+                <td><strong style="color: var(--primary);">{{ raport.rata_rata }}</strong></td>
+                <td>
+                    {% if raport.is_signed_by_kepsek %}
+                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Sudah Ditandatangani</span>
+                        <div class="text-muted" style="font-size: 0.75rem; margin-top: 2px;">Pada: {{ raport.signature_date|date:"d M Y" }}</div>
+                    {% else %}
+                        <span class="badge bg-warning"><i class="fas fa-hourglass-half"></i> Belum Ditandatangani</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Belum ada data raport.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

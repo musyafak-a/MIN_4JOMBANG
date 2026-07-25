@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from accounts.models import Siswa
+from akademik.models import Kelas, Nilai, Raport, MataPelajaran
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -33,20 +35,25 @@ def dashboard_view(request):
 
 @login_required(login_url='guru_panel:login')
 def siswa_view(request):
-    return render(request, 'guru_panel/siswa.html')
+    siswa_list = Siswa.objects.all().order_by('nama_lengkap')
+    return render(request, 'guru_panel/siswa.html', {'siswa_list': siswa_list})
 
 @login_required(login_url='guru_panel:login')
 def kelas_view(request):
-    return render(request, 'guru_panel/kelas.html')
+    kelas_list = Kelas.objects.all().order_by('nama_kelas')
+    return render(request, 'guru_panel/kelas.html', {'kelas_list': kelas_list})
 
 @login_required(login_url='guru_panel:login')
 def nilai_view(request):
-    return render(request, 'guru_panel/nilai.html')
+    nilai_list = Nilai.objects.all().order_by('-tanggal')
+    return render(request, 'guru_panel/nilai.html', {'nilai_list': nilai_list})
 
 @login_required(login_url='guru_panel:login')
 def raport_view(request):
-    return render(request, 'guru_panel/raport.html')
+    raport_list = Raport.objects.all().order_by('siswa__nama_lengkap')
+    return render(request, 'guru_panel/raport.html', {'raport_list': raport_list})
 
 @login_required(login_url='guru_panel:login')
 def jadwal_view(request):
-    return render(request, 'guru_panel/jadwal.html')
+    mapel_list = MataPelajaran.objects.all().order_by('nama_mapel')
+    return render(request, 'guru_panel/jadwal.html', {'mapel_list': mapel_list})
