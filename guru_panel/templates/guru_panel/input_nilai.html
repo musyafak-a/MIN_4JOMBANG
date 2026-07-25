@@ -1,0 +1,80 @@
+{% extends 'guru_panel/base_guru.html' %}
+
+{% block title %}Input Nilai Siswa{% endblock %}
+{% block page_title %}Input Nilai Peserta Didik{% endblock %}
+
+{% block content %}
+<div class="card" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;">
+    <h3 style="margin-bottom: 25px; color: var(--primary);"><i class="fas fa-edit"></i> Form Input Nilai</h3>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Mata Pelajaran -->
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="mata_pelajaran" style="display: block; margin-bottom: 8px; font-weight: 600;">Mata Pelajaran</label>
+            {% if is_single_mapel %}
+                <!-- Display disabled select dropdown -->
+                <select id="mata_pelajaran_dummy" class="form-control" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #f5f5f5; cursor: not-allowed;" disabled>
+                    <option value="{{ single_mapel.id }}">{{ single_mapel.nama_mapel }} ({{ single_mapel.kode_mapel }})</option>
+                </select>
+                <!-- Hidden input to submit the value -->
+                <input type="hidden" name="mata_pelajaran" value="{{ single_mapel.id }}">
+                <small style="color: #666; display: block; margin-top: 4px;"><i class="fas fa-lock"></i> Mata pelajaran otomatis terkunci karena Anda mengampu mata pelajaran ini.</small>
+            {% else %}
+                <select id="mata_pelajaran" name="mata_pelajaran" class="form-control" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                    <option value="">-- Pilih Mata Pelajaran --</option>
+                    {% for mapel in mapel_diampu %}
+                        <option value="{{ mapel.id }}">{{ mapel.nama_mapel }} ({{ mapel.kode_mapel }})</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+
+        <!-- Siswa -->
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="siswa" style="display: block; margin-bottom: 8px; font-weight: 600;">Siswa</label>
+            <select id="siswa" name="siswa" class="form-control" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                <option value="">-- Pilih Siswa --</option>
+                {% for siswa in siswa_list %}
+                    <option value="{{ siswa.id }}">{{ siswa.nama_lengkap }} (NIS: {{ siswa.nis }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Kelas -->
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="kelas" style="display: block; margin-bottom: 8px; font-weight: 600;">Kelas</label>
+            <select id="kelas" name="kelas" class="form-control" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                <option value="">-- Pilih Kelas --</option>
+                {% for kelas in kelas_list %}
+                    <option value="{{ kelas.id }}">{{ kelas.nama_kelas }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Jenis Nilai -->
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="jenis_nilai" style="display: block; margin-bottom: 8px; font-weight: 600;">Jenis Nilai</label>
+            <select id="jenis_nilai" name="jenis_nilai" class="form-control" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                <option value="">-- Pilih Jenis Nilai --</option>
+                {% for choice_val, choice_lbl in jenis_nilai_choices %}
+                    <option value="{{ choice_val }}">{{ choice_lbl }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Nilai -->
+        <div class="form-group" style="margin-bottom: 25px;">
+            <label for="nilai" style="display: block; margin-bottom: 8px; font-weight: 600;">Nilai (0-100)</label>
+            <input type="number" step="0.01" min="0" max="100" id="nilai" name="nilai" class="form-control" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" placeholder="Contoh: 85.50" required>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <a href="{% url 'guru_panel:nilai' %}" class="btn btn-secondary" style="padding: 10px 20px; border-radius: 5px;">Batal</a>
+            <button type="submit" class="btn btn-success" style="padding: 10px 20px; border-radius: 5px; cursor: pointer;">Simpan Nilai</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

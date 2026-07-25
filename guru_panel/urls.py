@@ -10,6 +10,7 @@ urlpatterns = [
     path('siswa/', views.siswa_view, name='siswa'),
     path('kelas/', views.kelas_view, name='kelas'),
     path('nilai/', views.nilai_view, name='nilai'),
+    path('nilai/tambah/', views.input_nilai_view, name='input_nilai'),
     path('raport/', views.raport_view, name='raport'),
     path('jadwal/', views.jadwal_view, name='jadwal'),
 ]
