@@ -262,30 +262,45 @@ p {
   width: 100%;
 }
 
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .navbar__login1 {
-  background: transparent;
-  color: white;
+  background: var(--primary);
+  color: var(--white);
   border: 2px solid var(--primary);
   padding: 8px 30px;
   border-radius: 10px;
   transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.navbar__login1:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: var(--white) !important;
 }
 
 .navbar__login2 {
   background: transparent;
-  color: black;
+  color: var(--primary);
   border: 2px solid var(--primary);
   padding: 8px 30px;
   border-radius: 10px;
   transition: all 0.2s ease;
+  font-weight: 600;
 }
 
-.navbar__login:hover {
+.navbar__login2:hover {
   background: var(--primary);
   color: var(--white) !important;
 }
 
-.navbar__login::after {
+.navbar__login1::after,
+.navbar__login2::after {
   display: none;
 }
 
