@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for nilai in nilai_list %}
+            {% for nilai in page_obj %}
             <tr>
                 <td><strong>{{ nilai.siswa.nama_lengkap }}</strong></td>
                 <td>{{ nilai.kelas.nama_kelas }}</td>
@@ -33,5 +33,23 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="color: #666; font-size: 0.9rem;">
+            Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }} (Total {{ page_obj.paginator.count }} data nilai)
+        </div>
+        <div style="display: flex; gap: 5px;">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="btn btn-sm btn-outline-primary" style="padding: 5px 10px; border: 1px solid var(--primary); border-radius: 5px; text-decoration: none; color: var(--primary);">&laquo; Pertama</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-primary" style="padding: 5px 10px; border: 1px solid var(--primary); border-radius: 5px; text-decoration: none; color: var(--primary);">Sebelumnya</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-primary" style="padding: 5px 10px; border: 1px solid var(--primary); border-radius: 5px; text-decoration: none; color: var(--primary);">Selanjutnya</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-primary" style="padding: 5px 10px; border: 1px solid var(--primary); border-radius: 5px; text-decoration: none; color: var(--primary);">Terakhir &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

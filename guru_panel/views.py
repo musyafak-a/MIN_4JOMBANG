@@ -29,6 +29,8 @@ def logout_view(request):
     logout(request)
     return redirect('guru_panel:login')
 
+from django.core.paginator import Paginator
+
 @login_required(login_url='guru_panel:login')
 def dashboard_view(request):
     return render(request, 'guru_panel/dashboard.html')
@@ -36,22 +38,31 @@ def dashboard_view(request):
 @login_required(login_url='guru_panel:login')
 def siswa_view(request):
     siswa_list = Siswa.objects.all().order_by('nama_lengkap')
-    return render(request, 'guru_panel/siswa.html', {'siswa_list': siswa_list})
+    paginator = Paginator(siswa_list, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'guru_panel/siswa.html', {'page_obj': page_obj})
 
 @login_required(login_url='guru_panel:login')
 def kelas_view(request):
-    kelas_list = Kelas.objects.all().order_by('nama_kelas')
+    kelas_list = Kelas.objects.all().select_related('wali_kelas', 'tahun_ajaran').order_by('nama_kelas')
     return render(request, 'guru_panel/kelas.html', {'kelas_list': kelas_list})
 
 @login_required(login_url='guru_panel:login')
 def nilai_view(request):
-    nilai_list = Nilai.objects.all().order_by('-tanggal')
-    return render(request, 'guru_panel/nilai.html', {'nilai_list': nilai_list})
+    nilai_list = Nilai.objects.all().select_related('siswa', 'kelas', 'mata_pelajaran').order_by('-tanggal')
+    paginator = Paginator(nilai_list, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'guru_panel/nilai.html', {'page_obj': page_obj})
 
 @login_required(login_url='guru_panel:login')
 def raport_view(request):
-    raport_list = Raport.objects.all().order_by('siswa__nama_lengkap')
-    return render(request, 'guru_panel/raport.html', {'raport_list': raport_list})
+    raport_list = Raport.objects.all().select_related('siswa', 'kelas').order_by('siswa__nama_lengkap')
+    paginator = Paginator(raport_list, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'guru_panel/raport.html', {'page_obj': page_obj})
 
 @login_required(login_url='guru_panel:login')
 def jadwal_view(request):
