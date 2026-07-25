@@ -1,30 +1,61 @@
 {% extends 'guru_panel/base_guru.html' %}
 
-{% block title %}Daftar Mata Pelajaran{% endblock %}
-{% block page_title %}Daftar Mata Pelajaran Madrasah{% endblock %}
+{% block title %}Jadwal Pelajaran{% endblock %}
+{% block page_title %}Jadwal Pelajaran Kelas{% endblock %}
 
 {% block content %}
-<div class="card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Kode Mapel</th>
-                <th>Nama Mata Pelajaran</th>
+<!-- Kelas Selector -->
+<form method="GET" style="margin-bottom: 25px; display: flex; gap: 10px; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e3e6f0;">
+    <label for="kelas_id" style="font-weight: 600; margin-bottom: 0; color: #333;"><i class="fas fa-filter"></i> Pilih Kelas:</label>
+    <select name="kelas_id" id="kelas_id" class="form-control" style="width: auto; min-width: 200px; display: inline-block; padding: 6px 12px; border-radius: 5px; border: 1px solid #ccc;" onchange="this.form.submit()">
+        {% for kelas in kelas_list %}
+            <option value="{{ kelas.id }}" {% if kelas.id == selected_kelas.id %}selected{% endif %}>{{ kelas.nama_kelas }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+<div class="card" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px;">
+    <div style="margin-bottom: 25px;">
+        <h2 style="font-size: 1.8rem; font-weight: 300; color: #333; margin-bottom: 8px;">Tahun Akademik : {{ tahun_ajaran_aktif.nama|default:"2025/2026" }} {{ tahun_ajaran_aktif.semester|default:"Genap" }}</h2>
+        <h3 style="font-size: 1.5rem; font-weight: 300; color: #555; margin-top: 0;">Kelas : {{ selected_kelas.nama_kelas }}</h3>
+    </div>
+    
+    <table class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+        <thead style="background-color: #f8f9fa;">
+            <tr style="text-align: center; vertical-align: middle; text-transform: uppercase; font-size: 0.85rem; font-weight: 700; color: #495057;">
+                <th style="width: 50px;">No</th>
+                <th style="width: 100px;">Hari</th>
+                <th style="width: 130px;">Jam</th>
+                <th style="width: 120px;">Kode Mapel</th>
+                <th>Mata Pelajaran</th>
                 <th>Guru Pengampu</th>
-                <th>Tingkat Minimal</th>
+                <th style="width: 120px;">IDZoom</th>
+                <th style="width: 100px;">Passcode</th>
+                <th style="width: 100px;">Link URL</th>
             </tr>
         </thead>
         <tbody>
-            {% for mapel in mapel_list %}
-            <tr>
-                <td><code style="font-size: 0.95rem;">{{ mapel.kode_mapel }}</code></td>
-                <td><strong>{{ mapel.nama_mapel }}</strong></td>
-                <td>{{ mapel.guru_pengampu.nama_lengkap|default:"-" }}</td>
-                <td>Kelas {{ mapel.tingkat_minimal }}</td>
+            {% for jadwal in jadwal_list %}
+            <tr style="vertical-align: middle;">
+                <td style="text-align: center;">{{ forloop.counter }}</td>
+                <td style="text-align: center;">{{ jadwal.hari }}</td>
+                <td style="text-align: center; white-space: nowrap;">{{ jadwal.jam }}</td>
+                <td style="text-align: center;"><code style="font-size: 0.9rem;">{{ jadwal.mata_pelajaran.kode_mapel }}</code></td>
+                <td><strong>{{ jadwal.mata_pelajaran.nama_mapel }}</strong></td>
+                <td>{{ jadwal.mata_pelajaran.guru_pengampu.nama_lengkap|default:"-" }}</td>
+                <td style="text-align: center; font-family: monospace;">{{ jadwal.id_zoom|default:"-" }}</td>
+                <td style="text-align: center; font-family: monospace;">{{ jadwal.passcode|default:"-" }}</td>
+                <td style="text-align: center;">
+                    {% if jadwal.link_url %}
+                        <a href="{{ jadwal.link_url }}" target="_blank" class="btn btn-sm btn-outline-primary" style="padding: 2px 8px; border-radius: 4px; text-decoration: none;"><i class="fas fa-video"></i> Gabung</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4" style="text-align: center;">Belum ada data mata pelajaran.</td>
+                <td colspan="9" style="text-align: center; padding: 20px; color: #666;">Belum ada jadwal pelajaran untuk kelas ini.</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from decimal import Decimal
 from accounts.models import Siswa
-from akademik.models import Kelas, Nilai, Raport, MataPelajaran
+from akademik.models import Kelas, Nilai, Raport, MataPelajaran, Jadwal, TahunAjaran
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -67,8 +67,35 @@ def raport_view(request):
 
 @login_required(login_url='guru_panel:login')
 def jadwal_view(request):
-    mapel_list = MataPelajaran.objects.all().order_by('nama_mapel')
-    return render(request, 'guru_panel/jadwal.html', {'mapel_list': mapel_list})
+    tahun_ajaran_aktif = TahunAjaran.objects.filter(is_active=True).first()
+    kelas_list = Kelas.objects.all().order_by('nama_kelas')
+    
+    selected_kelas_id = request.GET.get('kelas_id')
+    selected_kelas = None
+    
+    if selected_kelas_id:
+        selected_kelas = Kelas.objects.filter(id=selected_kelas_id).first()
+        
+    if not selected_kelas:
+        if hasattr(request.user, 'profil_guru'):
+            selected_kelas = Kelas.objects.filter(wali_kelas=request.user.profil_guru).first()
+        if not selected_kelas:
+            selected_kelas = kelas_list.first()
+
+    jadwal_list = []
+    if selected_kelas:
+        jadwal_list = list(Jadwal.objects.filter(kelas=selected_kelas).select_related('mata_pelajaran', 'mata_pelajaran__guru_pengampu'))
+        # Urutkan berdasarkan hari kerja
+        hari_order = {'Senin': 0, 'Selasa': 1, 'Rabu': 2, 'Kamis': 3, 'Jumat': 4, 'Sabtu': 5}
+        jadwal_list.sort(key=lambda x: (hari_order.get(x.hari, 99), x.jam))
+        
+    context = {
+        'tahun_ajaran_aktif': tahun_ajaran_aktif,
+        'kelas_list': kelas_list,
+        'selected_kelas': selected_kelas,
+        'jadwal_list': jadwal_list,
+    }
+    return render(request, 'guru_panel/jadwal.html', context)
 
 @login_required(login_url='guru_panel:login')
 def input_nilai_view(request):

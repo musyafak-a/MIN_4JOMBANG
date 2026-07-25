@@ -35,8 +35,9 @@
 </div>
 
 <div class="content-section">
-    <div class="section-header">
+    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
         <h3>Jadwal Hari Ini</h3>
+        <a href="{% url 'guru_panel:jadwal' %}" class="btn btn-success btn-sm" style="font-size: 0.85rem; font-weight: 600; padding: 6px 12px; border-radius: 5px; text-decoration: none;"><i class="fas fa-calendar-alt"></i> Lihat Jadwal Lengkap</a>
     </div>
     <div class="card">
         <p style="color: #666;">Belum ada jadwal yang dimasukkan untuk hari ini.</p>

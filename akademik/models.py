@@ -158,3 +158,29 @@ class MutasiSiswa(models.Model):
     def __str__(self):
         return f"{self.siswa.nama_lengkap} - {self.jenis_mutasi} ({self.tanggal})"
 
+
+class Jadwal(models.Model):
+    HARI_CHOICES = [
+        ('Senin', 'Senin'),
+        ('Selasa', 'Selasa'),
+        ('Rabu', 'Rabu'),
+        ('Kamis', 'Kamis'),
+        ('Jumat', 'Jumat'),
+        ('Sabtu', 'Sabtu'),
+    ]
+    hari = models.CharField(max_length=10, choices=HARI_CHOICES)
+    jam = models.CharField(max_length=50, help_text="Contoh: 07:00 - 08:30")
+    mata_pelajaran = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE, related_name='jadwal')
+    kelas = models.ForeignKey(Kelas, on_delete=models.CASCADE, related_name='jadwal')
+    id_zoom = models.CharField(max_length=50, blank=True, null=True, verbose_name="ID Zoom")
+    passcode = models.CharField(max_length=50, blank=True, null=True)
+    link_url = models.URLField(blank=True, null=True, verbose_name="Link URL")
+
+    class Meta:
+        verbose_name = "Jadwal Pelajaran"
+        verbose_name_plural = "Jadwal Pelajaran"
+        ordering = ['hari', 'jam']
+
+    def __str__(self):
+        return f"{self.kelas.nama_kelas} - {self.hari} ({self.jam}) - {self.mata_pelajaran.nama_mapel}"
+

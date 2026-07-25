@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TahunAjaran, Kelas, SiswaKelas, MataPelajaran, Nilai, Raport, DetailRaport
+from .models import TahunAjaran, Kelas, SiswaKelas, MataPelajaran, Nilai, Raport, DetailRaport, Jadwal
 
 class SiswaKelasInline(admin.TabularInline):
     model = SiswaKelas
@@ -43,3 +43,11 @@ class RaportAdmin(admin.ModelAdmin):
     search_fields = ('siswa__nama_lengkap',)
     inlines = [DetailRaportInline]
     list_per_page = 10
+
+
+@admin.register(Jadwal)
+class JadwalAdmin(admin.ModelAdmin):
+    list_display = ('kelas', 'hari', 'jam', 'mata_pelajaran')
+    list_filter = ('kelas', 'hari')
+    search_fields = ('mata_pelajaran__nama_mapel', 'kelas__nama_kelas')
+    list_per_page = 15
