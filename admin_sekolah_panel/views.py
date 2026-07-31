@@ -1,14 +1,48 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from core.models import Berita, Pengumuman
 from django.utils.text import slugify
 
 def is_admin_sekolah(user):
-    return user.is_authenticated and hasattr(user, 'profil_admin_sekolah')
+    return user.is_authenticated and (hasattr(user, 'profil_admin_sekolah') or user.is_superuser)
 
-@login_required
-@user_passes_test(is_admin_sekolah)
+def login_view(request):
+    if request.user.is_authenticated:
+        if is_admin_sekolah(request.user):
+            return redirect('admin_sekolah_panel:dashboard')
+        elif hasattr(request.user, 'profil_guru'):
+            if request.user.profil_guru.posisi == 'Kepala Sekolah':
+                return redirect('kepsek_panel:dashboard')
+            return redirect('guru_panel:dashboard')
+        elif hasattr(request.user, 'profil_siswa'):
+            return redirect('core:dashboard_siswa')
+        else:
+            return redirect('admin:index')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            if hasattr(user, 'profil_admin_sekolah') or user.is_superuser:
+                login(request, user)
+                return redirect('admin_sekolah_panel:dashboard')
+            else:
+                messages.error(request, 'Akun ini bukan akun Admin Sekolah.')
+        else:
+            messages.error(request, 'Username atau Password salah.')
+
+    return render(request, 'admin_sekolah_panel/login.html')
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, 'Anda telah keluar.')
+    return redirect('admin_sekolah_panel:login')
+
+@login_required(login_url='admin_sekolah_panel:login')
+@user_passes_test(is_admin_sekolah, login_url='admin_sekolah_panel:login')
 def dashboard(request):
     total_berita = Berita.objects.count()
     total_pengumuman = Pengumuman.objects.count()
@@ -21,14 +55,14 @@ def dashboard(request):
 
 # --- Kelola Berita ---
 
-@login_required
-@user_passes_test(is_admin_sekolah)
+@login_required(login_url='admin_sekolah_panel:login')
+@user_passes_test(is_admin_sekolah, login_url='admin_sekolah_panel:login')
 def kelola_berita(request):
     berita_list = Berita.objects.all().order_by('-tanggal_publikasi')
     return render(request, 'admin_sekolah_panel/kelola_berita.html', {'berita_list': berita_list})
 
-@login_required
-@user_passes_test(is_admin_sekolah)
+@login_required(login_url='admin_sekolah_panel:login')
+@user_passes_test(is_admin_sekolah, login_url='admin_sekolah_panel:login')
 def form_berita(request, id=None):
     berita = get_object_or_404(Berita, id=id) if id else None
     if request.method == 'POST':
@@ -52,8 +86,8 @@ def form_berita(request, id=None):
         
     return render(request, 'admin_sekolah_panel/form_berita.html', {'berita': berita})
 
-@login_required
-@user_passes_test(is_admin_sekolah)
+@login_required(login_url='admin_sekolah_panel:login')
+@user_passes_test(is_admin_sekolah, login_url='admin_sekolah_panel:login')
 def hapus_berita(request, id):
     berita = get_object_or_404(Berita, id=id)
     berita.delete()
@@ -62,14 +96,14 @@ def hapus_berita(request, id):
 
 # --- Kelola Pengumuman ---
 
-@login_required
-@user_passes_test(is_admin_sekolah)
+@login_required(login_url='admin_sekolah_panel:login')
+@user_passes_test(is_admin_sekolah, login_url='admin_sekolah_panel:login')
 def kelola_pengumuman(request):
     pengumuman_list = Pengumuman.objects.all().order_by('-tanggal_publikasi')
     return render(request, 'admin_sekolah_panel/kelola_pengumuman.html', {'pengumuman_list': pengumuman_list})
 
-@login_required
-@user_passes_test(is_admin_sekolah)
+@login_required(login_url='admin_sekolah_panel:login')
+@user_passes_test(is_admin_sekolah, login_url='admin_sekolah_panel:login')
 def form_pengumuman(request, id=None):
     pengumuman = get_object_or_404(Pengumuman, id=id) if id else None
     if request.method == 'POST':
@@ -93,10 +127,11 @@ def form_pengumuman(request, id=None):
         
     return render(request, 'admin_sekolah_panel/form_pengumuman.html', {'pengumuman': pengumuman})
 
-@login_required
-@user_passes_test(is_admin_sekolah)
+@login_required(login_url='admin_sekolah_panel:login')
+@user_passes_test(is_admin_sekolah, login_url='admin_sekolah_panel:login')
 def hapus_pengumuman(request, id):
     pengumuman = get_object_or_404(Pengumuman, id=id)
     pengumuman.delete()
     messages.success(request, 'Pengumuman berhasil dihapus!')
     return redirect('admin_sekolah_panel:kelola_pengumuman')
+

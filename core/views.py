@@ -14,6 +14,7 @@ from .models import (
 
 def custom_logout_view(request):
     logout(request)
+    messages.info(request, 'Anda telah keluar.')
     return redirect('/')
 
 
@@ -226,6 +227,12 @@ def login_siswa(request):
     if request.user.is_authenticated:
         if hasattr(request.user, 'profil_siswa'):
             return redirect('core:dashboard_siswa')
+        elif hasattr(request.user, 'profil_guru'):
+            if request.user.profil_guru.posisi == 'Kepala Sekolah':
+                return redirect('kepsek_panel:dashboard')
+            return redirect('guru_panel:dashboard')
+        elif hasattr(request.user, 'profil_admin_sekolah'):
+            return redirect('admin_sekolah_panel:dashboard')
         else:
             return redirect('admin:index')
 
@@ -248,11 +255,16 @@ def login_siswa(request):
 
 @login_required(login_url='core:login_siswa')
 def dashboard_siswa(request):
-    try:
-        siswa = request.user.profil_siswa
-    except:
-        return redirect('admin:index') # Bukan siswa
+    if not hasattr(request.user, 'profil_siswa'):
+        if hasattr(request.user, 'profil_guru'):
+            if request.user.profil_guru.posisi == 'Kepala Sekolah':
+                return redirect('kepsek_panel:dashboard')
+            return redirect('guru_panel:dashboard')
+        elif hasattr(request.user, 'profil_admin_sekolah'):
+            return redirect('admin_sekolah_panel:dashboard')
+        return redirect('admin:index')
     
+    siswa = request.user.profil_siswa
     raports = Raport.objects.filter(siswa=siswa).order_by('-id')
     raport_terbaru = raports.first() if raports.exists() else None
     

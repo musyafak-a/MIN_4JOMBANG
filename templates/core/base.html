@@ -62,8 +62,23 @@
       </nav>
 
       <div class="navbar__actions">
-        <a href="{% url 'guru_panel:login' %}" class="navbar__login1">Login Pegawai</a>
-        <a href="{% url 'core:login_siswa' %}" class="navbar__login2">Login Siswa</a>
+        {% if user.is_authenticated %}
+          {% if user.profil_siswa %}
+            <a href="{% url 'core:dashboard_siswa' %}" class="navbar__login1"><i class="fa-solid fa-user-graduate"></i> Dashboard Siswa</a>
+          {% elif user.profil_guru and user.profil_guru.posisi == 'Kepala Sekolah' %}
+            <a href="{% url 'kepsek_panel:dashboard' %}" class="navbar__login1"><i class="fa-solid fa-user-tie"></i> Dashboard Kepsek</a>
+          {% elif user.profil_guru %}
+            <a href="{% url 'guru_panel:dashboard' %}" class="navbar__login1"><i class="fa-solid fa-chalkboard-user"></i> Dashboard Guru</a>
+          {% elif user.profil_admin_sekolah %}
+            <a href="{% url 'admin_sekolah_panel:dashboard' %}" class="navbar__login1"><i class="fa-solid fa-server"></i> Admin Sekolah</a>
+          {% else %}
+            <a href="{% url 'admin:index' %}" class="navbar__login1"><i class="fa-solid fa-user-shield"></i> Admin Panel</a>
+          {% endif %}
+          <a href="{% url 'custom_logout' %}" class="navbar__login2" style="background-color: #d9534f; border-color: #d9534f; color: white;"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
+        {% else %}
+          <a href="{% url 'guru_panel:login' %}" class="navbar__login1">Login Pegawai</a>
+          <a href="{% url 'core:login_siswa' %}" class="navbar__login2">Login Siswa</a>
+        {% endif %}
         <button class="navbar__toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>

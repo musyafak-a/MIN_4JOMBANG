@@ -1,26 +1,39 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from decimal import Decimal
 from accounts.models import Siswa
 from akademik.models import Kelas, Nilai, Raport, MataPelajaran, Jadwal, TahunAjaran
 
+def is_guru_user(user):
+    return user.is_authenticated and (hasattr(user, 'profil_guru') or user.is_superuser or user.is_staff)
+
 def login_view(request):
     if request.user.is_authenticated:
-        if hasattr(request.user, 'profil_guru') and request.user.profil_guru.posisi == 'Kepala Sekolah':
-            return redirect('kepsek_panel:dashboard')
-        return redirect('guru_panel:dashboard')
+        if hasattr(request.user, 'profil_guru'):
+            if request.user.profil_guru.posisi == 'Kepala Sekolah':
+                return redirect('kepsek_panel:dashboard')
+            return redirect('guru_panel:dashboard')
+        elif hasattr(request.user, 'profil_admin_sekolah'):
+            return redirect('admin_sekolah_panel:dashboard')
+        elif hasattr(request.user, 'profil_siswa'):
+            return redirect('core:dashboard_siswa')
+        else:
+            return redirect('admin:index')
         
     if request.method == 'POST':
-        nip = request.POST.get('nip')
+        nip = request.POST.get('nip') or request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=nip, password=password)
         if user is not None:
-            login(request, user)
-            if hasattr(user, 'profil_guru') and user.profil_guru.posisi == 'Kepala Sekolah':
-                return redirect('kepsek_panel:dashboard')
-            return redirect('guru_panel:dashboard')
+            if hasattr(user, 'profil_guru') or user.is_staff or user.is_superuser:
+                login(request, user)
+                if hasattr(user, 'profil_guru') and user.profil_guru.posisi == 'Kepala Sekolah':
+                    return redirect('kepsek_panel:dashboard')
+                return redirect('guru_panel:dashboard')
+            else:
+                messages.error(request, 'Akun ini bukan akun Guru atau Kepala Sekolah.')
         else:
             messages.error(request, 'NIP atau Password salah.')
             
@@ -28,15 +41,18 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    messages.info(request, 'Anda telah keluar.')
     return redirect('guru_panel:login')
 
 from django.core.paginator import Paginator
 
 @login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
 def dashboard_view(request):
     return render(request, 'guru_panel/dashboard.html')
 
 @login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
 def siswa_view(request):
     siswa_list = Siswa.objects.all().order_by('nama_lengkap')
     paginator = Paginator(siswa_list, 50)
@@ -45,11 +61,13 @@ def siswa_view(request):
     return render(request, 'guru_panel/siswa.html', {'page_obj': page_obj})
 
 @login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
 def kelas_view(request):
     kelas_list = Kelas.objects.all().select_related('wali_kelas', 'tahun_ajaran').order_by('nama_kelas')
     return render(request, 'guru_panel/kelas.html', {'kelas_list': kelas_list})
 
 @login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
 def nilai_view(request):
     nilai_list = Nilai.objects.all().select_related('siswa', 'kelas', 'mata_pelajaran').order_by('-tanggal')
     paginator = Paginator(nilai_list, 50)
@@ -58,6 +76,7 @@ def nilai_view(request):
     return render(request, 'guru_panel/nilai.html', {'page_obj': page_obj})
 
 @login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
 def raport_view(request):
     raport_list = Raport.objects.all().select_related('siswa', 'kelas').order_by('siswa__nama_lengkap')
     paginator = Paginator(raport_list, 50)
@@ -66,6 +85,7 @@ def raport_view(request):
     return render(request, 'guru_panel/raport.html', {'page_obj': page_obj})
 
 @login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
 def jadwal_view(request):
     tahun_ajaran_aktif = TahunAjaran.objects.filter(is_active=True).first()
     
@@ -114,6 +134,7 @@ def jadwal_view(request):
     return render(request, 'guru_panel/jadwal.html', context)
 
 @login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
 def input_nilai_view(request):
     if not hasattr(request.user, 'profil_guru'):
         messages.error(request, "Hanya Guru yang dapat memasukkan nilai.")

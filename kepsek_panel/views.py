@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils import timezone
@@ -6,10 +7,43 @@ from guru_panel.models import CutiGuru, PengajuanAnggaran
 from akademik.models import Raport, PendaftarPPDB, MutasiSiswa, Siswa
 
 def is_kepsek(user):
-    return user.is_authenticated and hasattr(user, 'profil_guru') and user.profil_guru.posisi == 'Kepala Sekolah'
+    return user.is_authenticated and ((hasattr(user, 'profil_guru') and user.profil_guru.posisi == 'Kepala Sekolah') or user.is_superuser)
 
-@login_required
-@user_passes_test(is_kepsek)
+def login_view(request):
+    if request.user.is_authenticated:
+        if is_kepsek(request.user):
+            return redirect('kepsek_panel:dashboard')
+        elif hasattr(request.user, 'profil_guru'):
+            return redirect('guru_panel:dashboard')
+        elif hasattr(request.user, 'profil_admin_sekolah'):
+            return redirect('admin_sekolah_panel:dashboard')
+        elif hasattr(request.user, 'profil_siswa'):
+            return redirect('core:dashboard_siswa')
+        else:
+            return redirect('admin:index')
+
+    if request.method == 'POST':
+        nip = request.POST.get('nip') or request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=nip, password=password)
+        if user is not None:
+            if is_kepsek(user):
+                login(request, user)
+                return redirect('kepsek_panel:dashboard')
+            else:
+                messages.error(request, 'Akun ini bukan akun Kepala Sekolah.')
+        else:
+            messages.error(request, 'NIP/Username atau Password salah.')
+
+    return render(request, 'kepsek_panel/login.html')
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, 'Anda telah keluar.')
+    return redirect('kepsek_panel:login')
+
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def dashboard(request):
     total_cuti_menunggu = CutiGuru.objects.filter(status='Menunggu').count()
     total_anggaran_menunggu = PengajuanAnggaran.objects.filter(status='Menunggu').count()
@@ -24,14 +58,14 @@ def dashboard(request):
     }
     return render(request, 'kepsek_panel/dashboard.html', context)
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def persetujuan_cuti(request):
     cuti_list = CutiGuru.objects.all().order_by('-tanggal_pengajuan')
     return render(request, 'kepsek_panel/persetujuan_cuti.html', {'cuti_list': cuti_list})
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def action_cuti(request, cuti_id, action):
     cuti = get_object_or_404(CutiGuru, id=cuti_id)
     if action == 'approve':
@@ -43,14 +77,14 @@ def action_cuti(request, cuti_id, action):
     cuti.save()
     return redirect('kepsek_panel:persetujuan_cuti')
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def persetujuan_anggaran(request):
     anggaran_list = PengajuanAnggaran.objects.all().order_by('-tanggal_pengajuan')
     return render(request, 'kepsek_panel/persetujuan_anggaran.html', {'anggaran_list': anggaran_list})
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def action_anggaran(request, anggaran_id, action):
     anggaran = get_object_or_404(PengajuanAnggaran, id=anggaran_id)
     if action == 'approve':
@@ -62,14 +96,14 @@ def action_anggaran(request, anggaran_id, action):
     anggaran.save()
     return redirect('kepsek_panel:persetujuan_anggaran')
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def tanda_tangan_raport(request):
     raport_list = Raport.objects.all().select_related('siswa', 'kelas').order_by('kelas__nama_kelas', 'siswa__nama_lengkap')
     return render(request, 'kepsek_panel/tanda_tangan_raport.html', {'raport_list': raport_list})
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def sign_raport(request, raport_id):
     raport = get_object_or_404(Raport, id=raport_id)
     if not raport.is_signed_by_kepsek:
@@ -79,23 +113,24 @@ def sign_raport(request, raport_id):
         messages.success(request, f"Raport {raport.siswa.nama_lengkap} berhasil ditandatangani.")
     return redirect('kepsek_panel:tanda_tangan_raport')
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def laporan_ppdb(request):
     pendaftar_list = PendaftarPPDB.objects.all().order_by('-tanggal_daftar')
     return render(request, 'kepsek_panel/laporan_ppdb.html', {'pendaftar_list': pendaftar_list})
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def laporan_mutasi(request):
     mutasi_list = MutasiSiswa.objects.all().order_by('-tanggal')
     return render(request, 'kepsek_panel/laporan_mutasi.html', {'mutasi_list': mutasi_list})
 
-@login_required
-@user_passes_test(is_kepsek)
+@login_required(login_url='kepsek_panel:login')
+@user_passes_test(is_kepsek, login_url='kepsek_panel:login')
 def laporan_kelulusan(request):
     # Asumsi lulus jika kelas tingkat 6 dan status_naik_kelas (dalam hal ini artinya lulus)
     kelulusan_list = Raport.objects.filter(kelas__tingkat='6', status_naik_kelas=True).select_related('siswa', 'kelas')
     return render(request, 'kepsek_panel/laporan_kelulusan.html', {'kelulusan_list': kelulusan_list})
+
 
 

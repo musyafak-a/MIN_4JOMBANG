@@ -214,3 +214,6 @@ JAZZMIN_UI_TWEAKS = {
     }
 }
 
+LOGIN_URL = 'core:login_siswa'
+
+
