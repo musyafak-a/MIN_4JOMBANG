@@ -1,0 +1,114 @@
+{% extends 'guru_panel/base_guru.html' %}
+{% load static %}
+
+{% block title %}Mata Pelajaran{% endblock %}
+{% block page_title %}Daftar Mata Pelajaran & Guru Pengampu{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0" style="border-radius: 12px; background: white;">
+            <div class="card-body p-4">
+                <!-- Search & Header Bar -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                    <h4 class="font-weight-bold text-dark mb-2 mb-md-0">
+                        <i class="fas fa-book text-success mr-2"></i> Data Mata Pelajaran
+                        <span class="badge badge-success ml-2 px-3 py-1 font-weight-normal" style="font-size: 0.85rem;">Total: {{ total_mapel }} Mapel</span>
+                    </h4>
+                    
+                    <form method="GET" class="form-inline">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control form-control-sm" placeholder="Cari nama / kode / guru..." value="{{ search_query }}" style="border-radius: 8px 0 0 8px; width: 250px;">
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-success px-3" type="submit" style="border-radius: 0 8px 8px 0;">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% if search_query %}
+                        <a href="{% url 'guru_panel:mapel' %}" class="btn btn-sm btn-outline-secondary ml-2" style="border-radius: 8px;">
+                            <i class="fas fa-times mr-1"></i> Reset
+                        </a>
+                        {% endif %}
+                    </form>
+                </div>
+
+                <!-- Table Content -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th style="width: 50px;">No</th>
+                                <th>Kode Mapel</th>
+                                <th>Nama Mata Pelajaran</th>
+                                <th>Tingkat Minimal</th>
+                                <th>Guru Pengampu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mapel in page_obj %}
+                            <tr>
+                                <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                                <td><span class="badge badge-dark px-2 py-1" style="font-family: monospace; font-size: 0.85rem;">{{ mapel.kode_mapel }}</span></td>
+                                <td><strong class="text-dark">{{ mapel.nama_mapel }}</strong></td>
+                                <td><span class="badge badge-info px-2 py-1">Tingkat {{ mapel.tingkat_minimal }}+</span></td>
+                                <td>
+                                    {% if mapel.guru_pengampu %}
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-success text-white rounded-circle d-flex align-items-center justify-content-center mr-2" style="width: 32px; height: 32px; font-weight: bold; font-size: 0.85rem;">
+                                                <i class="fas fa-user-tie"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-weight-bold text-dark d-block">{{ mapel.guru_pengampu.nama_lengkap }}</span>
+                                                <small class="text-muted">NIP: {{ mapel.guru_pengampu.nip|default:"-" }}</small>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <span class="badge badge-warning text-dark px-2 py-1"><i class="fas fa-exclamation-triangle mr-1"></i> Belum Ditentukan</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    <i class="fas fa-folder-open fa-2x mb-2 text-secondary"></i>
+                                    <p class="mb-0">Tidak ada data mata pelajaran yang ditemukan.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <small class="text-muted">Menampilkan {{ page_obj.start_index }} - {{ page_obj.end_index }} dari {{ page_obj.paginator.count }} data</small>
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">&laquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                        {% endif %}
+
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                            <li class="page-item active"><span class="page-link bg-success border-success">{{ i }}</span></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}{% if search_query %}&q={{ search_query }}{% endif %}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">&raquo;</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

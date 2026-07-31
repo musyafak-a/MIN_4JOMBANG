@@ -48,9 +48,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{% url 'guru_panel:mapel' %}" class="nav-link {% if request.resolver_match.url_name == 'mapel' %}active{% endif %}">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>Mata Pelajaran</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{% url 'guru_panel:jadwal' %}" class="nav-link {% if request.resolver_match.url_name == 'jadwal' %}active{% endif %}">
                         <i class="nav-icon fas fa-calendar-alt"></i>
-                        <p>Mata Pelajaran</p>
+                        <p>Jadwal Pelajaran</p>
                     </a>
                 </li>
                 <li class="nav-item mt-3">

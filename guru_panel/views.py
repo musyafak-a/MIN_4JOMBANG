@@ -102,6 +102,32 @@ def raport_view(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'guru_panel/raport.html', {'page_obj': page_obj})
 
+from django.db.models import Q
+
+@login_required(login_url='guru_panel:login')
+@user_passes_test(is_guru_user, login_url='guru_panel:login')
+def mapel_view(request):
+    search_query = request.GET.get('q', '')
+    mapel_qs = MataPelajaran.objects.all().select_related('guru_pengampu').order_by('kode_mapel', 'nama_mapel')
+    
+    if search_query:
+        mapel_qs = mapel_qs.filter(
+            Q(nama_mapel__icontains=search_query) |
+            Q(kode_mapel__icontains=search_query) |
+            Q(guru_pengampu__nama_lengkap__icontains=search_query)
+        )
+        
+    paginator = Paginator(mapel_qs, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'total_mapel': mapel_qs.count(),
+    }
+    return render(request, 'guru_panel/mapel.html', context)
+
 @login_required(login_url='guru_panel:login')
 @user_passes_test(is_guru_user, login_url='guru_panel:login')
 def jadwal_view(request):
