@@ -1,46 +1,287 @@
 {% extends 'guru_panel/base_guru.html' %}
+{% load i18n static jazzmin %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard Guru{% endblock %}
 {% block page_title %}Dashboard Ringkasan{% endblock %}
 
 {% block content %}
-<div class="dashboard-cards">
-    <div class="stat-card">
-        <div class="stat-icon bg-blue">
-            <i class='bx bxs-group'></i>
-        </div>
-        <div class="stat-details">
-            <h3>Total Siswa</h3>
-            <p>124</p>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon bg-green">
-            <i class='bx bx-chalkboard'></i>
-        </div>
-        <div class="stat-details">
-            <h3>Kelas Diampu</h3>
-            <p>4</p>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon bg-orange">
-            <i class='bx bx-task'></i>
-        </div>
-        <div class="stat-details">
-            <h3>Tugas Menunggu</h3>
-            <p>12</p>
+<style>
+    .welcome-card {
+        background: linear-gradient(135deg, #114232 0%, #1e824c 100%);
+        color: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 15px rgba(17, 66, 50, 0.15);
+    }
+    .welcome-card h2 {
+        font-weight: 700;
+        font-size: 1.6rem;
+        margin-bottom: 6px;
+    }
+    .welcome-card p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+    .quick-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        display: inline-block;
+        margin-top: 8px;
+    }
+    .kpi-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    .kpi-card .inner {
+        padding: 20px;
+    }
+    .kpi-card h3 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 4px;
+    }
+    .kpi-card p {
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0;
+        opacity: 0.85;
+    }
+    .kpi-icon {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 2.8rem;
+        opacity: 0.25;
+    }
+    .table-modern th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #dee2e6;
+    }
+    .table-modern td {
+        vertical-align: middle;
+        font-size: 0.92rem;
+    }
+    .action-btn-group .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 8px 16px;
+    }
+</style>
+
+<!-- Banner Selamat Datang -->
+<div class="row">
+    <div class="col-12">
+        <div class="welcome-card d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h2><i class="fas fa-hand-wave mr-2"></i> Selamat Datang, {{ guru.nama_lengkap|default:request.user.username }}!</h2>
+                <p>Portal Sistem Informasi & Akademik Guru MIN 4 Jombang.</p>
+                <div class="quick-badge">
+                    <i class="fas fa-id-badge mr-1"></i> NIP: {{ guru.nip|default:"-" }} &bull; Posisi: <strong>{{ guru.posisi|default:"Guru" }}</strong>
+                </div>
+            </div>
+            <div class="mt-3 mt-md-0 action-btn-group">
+                <a href="{% url 'guru_panel:input_nilai' %}" class="btn btn-light text-success shadow-sm mr-2">
+                    <i class="fas fa-plus-circle mr-1"></i> Input Nilai
+                </a>
+                <a href="{% url 'guru_panel:jadwal' %}" class="btn btn-outline-light">
+                    <i class="fas fa-calendar-alt mr-1"></i> Lihat Jadwal
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="content-section">
-    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>Jadwal Hari Ini</h3>
-        <a href="{% url 'guru_panel:jadwal' %}" class="btn btn-success btn-sm" style="font-size: 0.85rem; font-weight: 600; padding: 6px 12px; border-radius: 5px; text-decoration: none;"><i class="fas fa-calendar-alt"></i> Lihat Jadwal Lengkap</a>
+<!-- Grid Kartu Statistik / KPI -->
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="card kpi-card bg-primary text-white position-relative overflow-hidden mb-4">
+            <div class="inner">
+                <h3>{{ total_siswa }}</h3>
+                <p>Total Siswa Aktif</p>
+            </div>
+            <div class="kpi-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <a href="{% url 'guru_panel:siswa' %}" class="card-footer text-white d-flex justify-content-between align-items-center text-decoration-none py-2 px-3" style="background: rgba(0,0,0,0.1);">
+                <small>Lihat Detail Siswa</small>
+                <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
     </div>
-    <div class="card">
-        <p style="color: #666;">Belum ada jadwal yang dimasukkan untuk hari ini.</p>
+
+    <div class="col-lg-3 col-6">
+        <div class="card kpi-card bg-success text-white position-relative overflow-hidden mb-4">
+            <div class="inner">
+                <h3>{{ total_kelas }}</h3>
+                <p>Total Kelas</p>
+            </div>
+            <div class="kpi-icon">
+                <i class="fas fa-chalkboard"></i>
+            </div>
+            <a href="{% url 'guru_panel:kelas' %}" class="card-footer text-white d-flex justify-content-between align-items-center text-decoration-none py-2 px-3" style="background: rgba(0,0,0,0.1);">
+                <small>Kelola Kelas</small>
+                <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="card kpi-card bg-warning text-dark position-relative overflow-hidden mb-4">
+            <div class="inner">
+                <h3>{{ total_nilai }}</h3>
+                <p>Nilai Terinput</p>
+            </div>
+            <div class="kpi-icon">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <a href="{% url 'guru_panel:nilai' %}" class="card-footer text-dark d-flex justify-content-between align-items-center text-decoration-none py-2 px-3" style="background: rgba(0,0,0,0.05);">
+                <small>Daftar Nilai</small>
+                <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="card kpi-card bg-info text-white position-relative overflow-hidden mb-4">
+            <div class="inner">
+                <h3>{{ total_raport }}</h3>
+                <p>Raport Terdaftar</p>
+            </div>
+            <div class="kpi-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <a href="{% url 'guru_panel:raport' %}" class="card-footer text-white d-flex justify-content-between align-items-center text-decoration-none py-2 px-3" style="background: rgba(0,0,0,0.1);">
+                <small>Kelola Raport</small>
+                <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Konten Utama 2 Kolom -->
+<div class="row">
+    <!-- Tabel Nilai Terakhir Input -->
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center" style="border-bottom: 1px solid #eef2f5;">
+                <h5 class="card-title font-weight-bold text-dark mb-0">
+                    <i class="fas fa-history text-primary mr-2"></i> Input Nilai Terbaru
+                </h5>
+                <a href="{% url 'guru_panel:nilai' %}" class="btn btn-sm btn-outline-primary font-weight-bold" style="border-radius: 6px;">
+                    Lihat Semua &rarr;
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if nilai_terakhir %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-modern mb-0">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Siswa</th>
+                                <th>Kelas</th>
+                                <th>Mata Pelajaran</th>
+                                <th>Jenis</th>
+                                <th class="text-center">Nilai</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for n in nilai_terakhir %}
+                            <tr>
+                                <td><small class="text-muted"><i class="far fa-calendar-alt mr-1"></i>{{ n.tanggal|date:"d M Y" }}</small></td>
+                                <td><strong>{{ n.siswa.nama_lengkap }}</strong></td>
+                                <td><span class="badge badge-light border">{{ n.kelas.nama_kelas }}</span></td>
+                                <td>{{ n.mata_pelajaran.nama_mapel }}</td>
+                                <td><span class="badge badge-info">{{ n.jenis_nilai }}</span></td>
+                                <td class="text-center font-weight-bold text-success" style="font-size: 1.05rem;">{{ n.nilai }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="p-4 text-center text-muted">
+                    <i class="fas fa-info-circle fa-2x mb-2 text-secondary"></i>
+                    <p class="mb-0">Belum ada data nilai yang diinputkan.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Kanan: Mata Pelajaran Diampu & Akses Cepat -->
+    <div class="col-lg-4 mb-4">
+        <!-- Card Mata Pelajaran Diampu -->
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3" style="border-bottom: 1px solid #eef2f5;">
+                <h5 class="card-title font-weight-bold text-dark mb-0">
+                    <i class="fas fa-book-reader text-success mr-2"></i> Mata Pelajaran Diampu
+                </h5>
+            </div>
+            <div class="card-body p-3">
+                {% if mapel_diampu %}
+                <ul class="list-group list-group-flush">
+                    {% for mapel in mapel_diampu %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-2 py-3">
+                        <div>
+                            <strong class="text-dark">{{ mapel.nama_mapel }}</strong>
+                            <div class="small text-muted"><i class="fas fa-code mr-1"></i> Kode: {{ mapel.kode_mapel }}</div>
+                        </div>
+                        <span class="badge badge-success badge-pill px-3 py-2">Tingkat Min: {{ mapel.tingkat_minimal }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-center text-muted py-3">
+                    <i class="fas fa-book fa-2x mb-2 text-muted"></i>
+                    <p class="small mb-0">Mata pelajaran diampu akan ditampilkan di sini.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Card Akses Cepat Menu -->
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3" style="border-bottom: 1px solid #eef2f5;">
+                <h5 class="card-title font-weight-bold text-dark mb-0">
+                    <i class="fas fa-bolt text-warning mr-2"></i> Akses Cepat Menu
+                </h5>
+            </div>
+            <div class="card-body p-3">
+                <div class="d-flex flex-column gap-2">
+                    <a href="{% url 'guru_panel:input_nilai' %}" class="btn btn-outline-success text-left mb-2 py-2" style="border-radius: 8px;">
+                        <i class="fas fa-edit mr-2"></i> Input Nilai Siswa
+                    </a>
+                    <a href="{% url 'guru_panel:siswa' %}" class="btn btn-outline-primary text-left mb-2 py-2" style="border-radius: 8px;">
+                        <i class="fas fa-user-graduate mr-2"></i> Direktori Siswa
+                    </a>
+                    <a href="{% url 'guru_panel:kelas' %}" class="btn btn-outline-info text-left mb-2 py-2" style="border-radius: 8px;">
+                        <i class="fas fa-school mr-2"></i> Data Kelas & Wali Kelas
+                    </a>
+                    <a href="{% url 'guru_panel:raport' %}" class="btn btn-outline-secondary text-left py-2" style="border-radius: 8px;">
+                        <i class="fas fa-print mr-2"></i> Cetak & Lihat Raport
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

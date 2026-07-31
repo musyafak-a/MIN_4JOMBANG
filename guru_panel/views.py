@@ -49,7 +49,25 @@ from django.core.paginator import Paginator
 @login_required(login_url='guru_panel:login')
 @user_passes_test(is_guru_user, login_url='guru_panel:login')
 def dashboard_view(request):
-    return render(request, 'guru_panel/dashboard.html')
+    guru = getattr(request.user, 'profil_guru', None)
+    total_siswa = Siswa.objects.count()
+    total_kelas = Kelas.objects.count()
+    total_nilai = Nilai.objects.count()
+    total_raport = Raport.objects.count()
+    
+    mapel_diampu = MataPelajaran.objects.filter(guru_pengampu=guru) if guru else MataPelajaran.objects.none()
+    nilai_terakhir = Nilai.objects.select_related('siswa', 'kelas', 'mata_pelajaran').order_by('-tanggal')[:5]
+    
+    context = {
+        'guru': guru,
+        'total_siswa': total_siswa,
+        'total_kelas': total_kelas,
+        'total_nilai': total_nilai,
+        'total_raport': total_raport,
+        'mapel_diampu': mapel_diampu,
+        'nilai_terakhir': nilai_terakhir,
+    }
+    return render(request, 'guru_panel/dashboard.html', context)
 
 @login_required(login_url='guru_panel:login')
 @user_passes_test(is_guru_user, login_url='guru_panel:login')
