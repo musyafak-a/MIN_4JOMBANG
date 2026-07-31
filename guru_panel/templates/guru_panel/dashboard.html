@@ -208,9 +208,9 @@
                             <tr>
                                 <td><small class="text-muted"><i class="far fa-calendar-alt mr-1"></i>{{ n.tanggal|date:"d M Y" }}</small></td>
                                 <td><strong>{{ n.siswa.nama_lengkap }}</strong></td>
-                                <td><span class="badge badge-light border">{{ n.kelas.nama_kelas }}</span></td>
+                                <td><span class="badge border" style="color: #000000 !important; background-color: #f1f5f9; font-weight: 600; padding: 5px 10px;">{{ n.kelas.nama_kelas }}</span></td>
                                 <td>{{ n.mata_pelajaran.nama_mapel }}</td>
-                                <td><span class="badge badge-info">{{ n.jenis_nilai }}</span></td>
+                                <td><span class="badge border" style="color: #000000 !important; background-color: #e2e8f0; font-weight: 600; padding: 5px 10px;">{{ n.jenis_nilai }}</span></td>
                                 <td class="text-center font-weight-bold text-success" style="font-size: 1.05rem;">{{ n.nilai }}</td>
                             </tr>
                             {% endfor %}
